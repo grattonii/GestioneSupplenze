@@ -26,8 +26,8 @@ function Login() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/login", {
-        user,
+      const response = await axios.post("http://localhost:5000/auth/login", {
+        username: user,
         password,
       });
 
