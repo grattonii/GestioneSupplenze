@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard";
 import GestioneSupplenze from "./pages/GestioneSupplenze";
 import DisponibilitaDocenti from "./pages/DisponibilitaDocenti";
 import Report from "./pages/Report";
+import SetAdmin from "./pages/SetAdmin";
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/gestione-supplenze" element={<GestioneSupplenze />} />
         <Route path="/disponibilita-docenti" element={<DisponibilitaDocenti />} />
         <Route path="/report" element={<Report />} />
+        <Route path="/SetAdmin" element={<SetAdmin />} />
+
       </Routes>
     </Router>
   );
