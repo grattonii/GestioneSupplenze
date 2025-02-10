@@ -60,7 +60,7 @@ function GestioneFile() {
       <form onSubmit={handleUpload}>
         <div id="formFiles">
           <p>
-            Carica il file dei Professori{" "}
+            Carica il file contenente i dati dei docenti{" "}
             <FaQuestionCircle
               data-tooltip-id="professoriTip"
               style={{ cursor: "pointer", color: "#007BFF" }}
@@ -85,7 +85,7 @@ function GestioneFile() {
           </label>
 
           <p>
-            Carica il file degli Orari{" "}
+            Carica il file con l'orario dei docenti{" "}
             <FaQuestionCircle
               data-tooltip-id="orariTip"
               style={{ cursor: "pointer", color: "#007BFF" }}
@@ -109,7 +109,7 @@ function GestioneFile() {
             📂 {fileName2}
           </label>
 
-          <div id="containerPulsanti">
+          <div id="containerPulsanti" className="side">
             <button type="submit">Avanti</button>
           </div>
         </div>
