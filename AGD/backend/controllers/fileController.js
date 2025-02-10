@@ -18,7 +18,7 @@ function generateUsername(nome, cognome) {
 }
 
 // Funzione per caricare Excel e creare utenti
-export const uploadProfessors = async (req, res) => {
+export const uploadProf = async (req, res) => {
     const filePath = req.file.path;
 
     try {

@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Importiamo le route
-app.use("/auth", authRoutes);  // Per login e registrazione
+app.use("/auth", authRoutes);  // Per login
 app.use("/files", fileRoutes); // Per la gestione dei file
 
 app.listen(5000, () => console.log("Server in ascolto sulla porta 5000"));

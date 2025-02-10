@@ -21,32 +21,6 @@ if (!existsSync(USERS_FILE)) {
     }
 }
 
-// Funzione per registrare un utente
-export const register = async (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ message: "Compila tutti i campi!" });
-    }
-
-    try {
-        const users = JSON.parse(readFileSync(USERS_FILE));
-
-        if (users.some(user => user.username === username)) {
-            return res.status(400).json({ message: "Utente già esistente!" });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        users.push({ username, password: hashedPassword, role: "professore" });
-
-        writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-
-        res.json({ success: true, message: "Utente registrato!" });
-    } catch (error) {
-        res.status(500).json({ message: "Errore del server!" });
-    }
-};
-
 // Funzione per il login
 export const login = async (req, res) => {
     const { username, password } = req.body;
