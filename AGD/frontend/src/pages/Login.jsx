@@ -33,7 +33,21 @@ function Login() {
 
       console.log("Risposta dal server:", response.data);
       alert("Login riuscito!");
-      navigate("/gestione-supplenze");
+
+      const userRole = response.data.role;
+
+      // Esegui un'azione in base al ruolo
+      if (userRole === "admin") {
+        // Se l'utente è admin, naviga nella pagina di gestione admin
+        navigate("/gestione-file");
+      } else if (userRole === "professore") {
+        // Se l'utente è professore, naviga nella pagina di gestione professori
+        navigate("/disponibilita-docenti");
+      } else {
+        alert("Ruolo non riconosciuto");
+        return;
+      }
+
     } catch (error) {
       console.error("Errore durante il login", error);
       alert("Credenziali errate!");
