@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/App.css";
 import { FaQuestionCircle } from "react-icons/fa";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 function GestioneFile() {
   const [file1, setFile1] = useState(null);
@@ -28,7 +29,7 @@ function GestioneFile() {
   // Invia entrambi i file al backend
   const handleUpload = async (e) => {
     e.preventDefault();
-    
+
     if (!file1 || !file2) {
       return alert("Seleziona entrambi i file!");
     }
@@ -60,25 +61,51 @@ function GestioneFile() {
         <div id="formFiles">
           <p>
             Carica il file dei Professori{" "}
-            <FaQuestionCircle 
-              title="Il file deve contenere: Nome, Cognome, Email"
-              style={{ cursor: "pointer", color: "#007BFF" }} 
+            <FaQuestionCircle
+              data-tooltip-id="professoriTip"
+              style={{ cursor: "pointer", color: "#007BFF" }}
             />
           </p>
+          <ReactTooltip id="professoriTip" place="right" effect="solid">
+            <strong>Formato del file Excel:</strong>
+            <ul>
+              <li>Nome</li>
+              <li>Cognome</li>
+              <li>Email dei professori</li>
+              <li>Ordinato alfabeticamente</li>
+            </ul>
+          </ReactTooltip>
           <label className="custom-file-upload">
-            <input type="file" accept=".xls,.xlsx" onChange={handleFileChange1} />
+            <input
+              type="file"
+              accept=".xls,.xlsx"
+              onChange={handleFileChange1}
+            />
             📂 {fileName1}
           </label>
 
           <p>
             Carica il file degli Orari{" "}
-            <FaQuestionCircle 
-              title="Il file deve contenere: Giorno, Ora, Materia, Aula"
-              style={{ cursor: "pointer", color: "#007BFF" }} 
+            <FaQuestionCircle
+              data-tooltip-id="orariTip"
+              style={{ cursor: "pointer", color: "#007BFF" }}
             />
           </p>
+          <ReactTooltip id="orariTip" place="right" effect="solid">
+            <strong>Formato del file Excel:</strong>
+            <ul>
+              <li>Cognome del docente (stesso ordine del file precedente)</li>
+              <li>Orari per ogni giorno della settimana (Lunedì - Sabato)</li>
+              <li>Le classi assegnate in ogni ora</li>
+              <li>Ore di disponibilità indicate con il simbolo 'D'</li>
+            </ul>
+          </ReactTooltip>
           <label className="custom-file-upload">
-            <input type="file" accept=".xls,.xlsx" onChange={handleFileChange2} />
+            <input
+              type="file"
+              accept=".xls,.xlsx"
+              onChange={handleFileChange2}
+            />
             📂 {fileName2}
           </label>
 
