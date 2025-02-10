@@ -32,7 +32,6 @@ function Login() {
       });
 
       console.log("Risposta dal server:", response.data);
-      alert("Login riuscito!");
 
       const userRole = response.data.role;
 
