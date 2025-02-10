@@ -18,7 +18,7 @@ function App() {
         <Route path="/gestione-supplenze" element={<GestioneSupplenze />} />
         <Route path="/disponibilita-docenti" element={<DisponibilitaDocenti />} />
         <Route path="/report" element={<Report />} />
-        <Route path="/SetAdmin" element={<SetAdmin />} />
+        <Route path="/gestione-account" element={<SetAdmin />} />
 
       </Routes>
     </Router>

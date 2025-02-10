@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
+import "../styles/App.css";
 
 function Login() {
   // Stati per username e password
@@ -38,7 +38,7 @@ function Login() {
       // Esegui un'azione in base al ruolo
       if (userRole === "admin") {
         // Se l'utente è admin, naviga nella pagina di gestione admin
-        navigate("/gestione-file");
+        navigate("/gestione-account");
       } else if (userRole === "professore") {
         // Se l'utente è professore, naviga nella pagina di gestione professori
         navigate("/disponibilita-docenti");

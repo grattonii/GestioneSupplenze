@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import "../styles/Admin.css";
+import "../styles/App.css";
 
 
 function SetAdmin() {
@@ -37,7 +37,7 @@ function SetAdmin() {
 
       console.log("Risposta dal server:", response.data);
       alert("Login riuscito!");
-      navigate("/gestione-supplenze");
+      navigate("/gestione-file");
     } catch (error) {
       console.error("Errore durante il login", error);
       alert("Credenziali errate!");
@@ -45,7 +45,7 @@ function SetAdmin() {
   };
 
   return (
-    <div id="loginBox">
+    <div id="AdminBox">
       <div id="titolo">
         <h1>Crea L'Account</h1>
       </div>

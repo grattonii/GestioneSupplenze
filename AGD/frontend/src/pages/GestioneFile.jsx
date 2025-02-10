@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/File.css";
+import "../styles/App.css";
 import { FaQuestionCircle } from "react-icons/fa";
 
 function GestioneFile() {
@@ -43,6 +43,7 @@ function GestioneFile() {
       });
 
       alert("File caricati con successo!");
+      navigate("/Dashboard");
     } catch (error) {
       console.error("Errore durante il caricamento", error);
       alert("Errore durante il caricamento dei file");
