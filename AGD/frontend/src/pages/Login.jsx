@@ -35,12 +35,11 @@ function Login() {
 
       const userRole = response.data.role;
 
-      // Esegui un'azione in base al ruolo
+      localStorage.setItem("token", response.data.token); // Salva il token
+
       if (userRole === "admin") {
-        // Se l'utente è admin, naviga nella pagina di gestione admin
         navigate("/gestione-account");
       } else if (userRole === "professore") {
-        // Se l'utente è professore, naviga nella pagina di gestione professori
         navigate("/disponibilita-docenti");
       } else {
         alert("Ruolo non riconosciuto");

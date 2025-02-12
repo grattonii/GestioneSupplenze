@@ -30,17 +30,25 @@ function SetAdmin() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
-        username: user,
-        password,
-      });
-
-      console.log("Risposta dal server:", response.data);
-      alert("Login riuscito!");
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        alert("Devi essere autenticato per cambiare le credenziali!");
+        return;
+      }
+  
+      const response = await axios.put(
+        "http://localhost:5000/auth/update",
+        { newUsername: user, newPassword: password },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      alert(response.data.message);
+      localStorage.setItem("token", response.data.token);
       navigate("/gestione-file");
     } catch (error) {
-      console.error("Errore durante il login", error);
-      alert("Credenziali errate!");
+      console.error("Errore durante l'aggiornamento", error);
+      alert("Errore durante l'aggiornamento delle credenziali!");
     }
   };
 

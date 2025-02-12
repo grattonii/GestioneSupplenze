@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
 const USERS_FILE = "./data/users.json";
+const SECRET_KEY = "supersegreto"; // Chiave segreta per JWT (meglio in variabili d'ambiente)
 
 // Se il file non esiste, creiamo l'admin di default
 if (!existsSync(USERS_FILE)) {
@@ -12,7 +14,6 @@ if (!existsSync(USERS_FILE)) {
     
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
 } else {
-    // Se il file esiste, assicuriamoci che contenga almeno l'utente admin
     const users = JSON.parse(readFileSync(USERS_FILE));
     if (!users.some(user => user.username === "admin")) {
         const hashedAdminPassword = bcrypt.hashSync("admin", 10);
@@ -42,7 +43,53 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
-        res.json({ success: true, message: "Login riuscito!", role: user.role });
+        const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
+
+        res.json({ success: true, message: "Login riuscito!", token, role: user.role });
+    } catch (error) {
+        res.status(500).json({ message: "Errore del server!" });
+    }
+};
+
+// Middleware per verificare il token
+export const authenticateToken = (req, res, next) => {
+    const token = req.headers["authorization"]?.split(" ")[1];
+
+    if (!token) {
+        return res.status(403).json({ message: "Token mancante, accesso negato!" });
+    }
+
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: "Token non valido!" });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+// Funzione per aggiornare username e password
+export const updateUser = async (req, res) => {
+    const { newUsername, newPassword } = req.body;
+
+    if (!newUsername || !newPassword) {
+        return res.status(400).json({ message: "Compila tutti i campi!" });
+    }
+
+    try {
+        let users = JSON.parse(readFileSync(USERS_FILE));
+        const userIndex = users.findIndex(u => u.username === req.user.username);
+
+        if (userIndex === -1) {
+            return res.status(404).json({ message: "Utente non trovato!" });
+        }
+
+        users[userIndex].username = newUsername;
+        users[userIndex].password = bcrypt.hashSync(newPassword, 10);
+
+        writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+
+        res.json({ success: true, message: "Username e password aggiornati!" });
     } catch (error) {
         res.status(500).json({ message: "Errore del server!" });
     }
