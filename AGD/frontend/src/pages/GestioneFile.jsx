@@ -94,7 +94,7 @@ function GestioneFile() {
           <ReactTooltip id="orariTip" place="right" effect="solid">
             <strong>Formato del file Excel:</strong>
             <ul>
-              <li>Cognome del docente (stesso ordine del file precedente)</li>
+              <li>Cognome del docente in ordine alfabetico</li>
               <li>Orari per ogni giorno della settimana (Lunedì - Sabato)</li>
               <li>Le classi assegnate in ogni ora</li>
               <li>Ore di disponibilità indicate con il simbolo 'D'</li>
