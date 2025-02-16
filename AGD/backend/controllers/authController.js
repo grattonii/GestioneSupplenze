@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
 const USERS_FILE = "./data/users.json";
-const SECRET_KEY = "supersegreto"; // Chiave segreta per JWT (meglio in variabili d'ambiente)
+const SECRET_KEY = "G7X9B2M4Q5Z1";
 
 // Se il file non esiste, creiamo l'admin di default
 if (!existsSync(USERS_FILE)) {
@@ -13,13 +13,6 @@ if (!existsSync(USERS_FILE)) {
     ];
     
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
-} else {
-    const users = JSON.parse(readFileSync(USERS_FILE));
-    if (!users.some(user => user.username === "admin")) {
-        const hashedAdminPassword = bcrypt.hashSync("admin", 10);
-        users.push({ username: "admin", password: hashedAdminPassword, role: "admin" });
-        writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-    }
 }
 
 // Funzione per il login
