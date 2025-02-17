@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import "../styles/Accesso.css";
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faUser} from "@fortawesome/free-solid-svg-icons";
 
 function SetAdmin() {
   const [user, setUser] = useState("");
@@ -59,19 +61,22 @@ function SetAdmin() {
       <form onSubmit={handleSubmit}>
         <div id="formLogin">
           <div className="input">
-            <h3>Username</h3>
-            <input type="text" name="user" placeholder="username" value={user} onChange={handleChange} />
+          <h3><FontAwesomeIcon icon={faUser}/> <span>Username </span>   </h3> <input type="text" name="user" placeholder="username" value={user} onChange={handleChange} />
           </div>
 
           <div className="input">
-            <h3>Password</h3>
+          
+          <h3> <FontAwesomeIcon icon={faLock} /> <span>Password</span>   </h3>
+      
             <input type="password" name="password" placeholder="password" value={password} onChange={handleChange} />
           </div>
 
           
           <div className="input">
-            <h3>Conferma password</h3>
-            <input type="password" name="confirmPassword" placeholder="password" value={confirmPassword} onChange={handleChange} />
+            
+          <h3>  <FontAwesomeIcon icon={faLock} /> <span>Conferma Password</span> </h3>
+            <input type="password" name="confirmPassword" placeholder="conferma password" value={confirmPassword} onChange={handleChange} />
+          
           </div>
 
           <div id="containerPulsanti">

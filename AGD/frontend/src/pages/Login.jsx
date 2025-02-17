@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Accesso.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faUser} from "@fortawesome/free-solid-svg-icons";
 function Login() {
   // Stati per username e password
   const [user, setUser] = useState("");
@@ -65,12 +66,12 @@ function Login() {
         <form onSubmit={handleSubmit}>
           <div id="formLogin">
             <div className="input">
-              <h3>Username</h3>
+              <h3> <FontAwesomeIcon icon={faUser}/> <span>Username</span> </h3>
               <input type="text" name="user" placeholder="username" value={user} onChange={handleChange} />
             </div>
 
             <div className="input">
-              <h3>Password</h3>
+              <h3> <FontAwesomeIcon icon={faLock}/> <span> Password </span> </h3>
               <input type="password" name="password" placeholder="password" value={password} onChange={handleChange} />
             </div>
 
