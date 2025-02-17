@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/App.css";
+import "../styles/Accesso.css";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import "../styles/Accesso.css";
 import { useNavigate } from 'react-router-dom';
-import "../styles/App.css";
-
 
 function SetAdmin() {
   const [user, setUser] = useState("");

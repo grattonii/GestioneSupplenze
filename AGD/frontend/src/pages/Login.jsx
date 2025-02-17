@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/App.css";
+import "../styles/Accesso.css";
 
 function Login() {
   // Stati per username e password
