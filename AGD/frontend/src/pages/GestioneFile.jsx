@@ -3,7 +3,7 @@ import axios from "axios";
 import "../styles/Accesso.css";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileExcel, faFileArrowUp, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
 
 function GestioneFile() {
   const [file1, setFile1] = useState(null);
@@ -74,15 +74,26 @@ function GestioneFile() {
               <li>Ordinato alfabeticamente</li>
             </ul>
           </ReactTooltip>
-          <label className="custom-file-upload">
+
+          <div className="uploadBottoni">
+
+          <button className="apriSheets" type="button" onClick={() => window.open('https://docs.google.com/spreadsheets', '_blank')}>
+          
+          <FontAwesomeIcon icon={faArrowUpRightFromSquare} style={{color : "007BFF" } }/> <span>Apri google sheets</span>
+          </button>
+
+          <button className="custom-file-upload" type="button" onClick={() => document.getElementById('fileInput1').click()}>
             <input
+              id="fileInput1"
               type="file"
               accept=".xls,.xlsx"
               onChange={handleFileChange1}
+              style={{ display: 'none' }}
             />
-            <FontAwesomeIcon icon={file1 ? faFileExcel : faFileArrowUp}  style={{ color: file1  ? "#217346" : "black" }} /> {fileName1}
-          </label>
-
+            <FontAwesomeIcon icon={file1 ? faFileExcel : faFileArrowUp}  style={{ color: file1  ? "#217346" : "#007BFF" }} /> <span>{fileName1} </span>
+          </button>
+          
+          </div>
     
           <h3>
             <span>  Carica il file con l'orario dei docenti{" "}  </span>
@@ -101,14 +112,26 @@ function GestioneFile() {
             </ul>
             
           </ReactTooltip>
-          <label className="custom-file-upload">
-            <input
-              type="file"
-              accept=".xls,.xlsx"
-              onChange={handleFileChange2}
-            />
-            <FontAwesomeIcon icon={file2 ? faFileExcel : faFileArrowUp}  style={{ color: file2 ? "#217346" : "black" }}  /> {fileName2}
-          </label>
+
+            <div className="uploadBottoni">
+
+            <button className="apriSheets" type="button" onClick={() => window.open('https://docs.google.com/spreadsheets', '_blank')}>
+          
+          <FontAwesomeIcon icon={faArrowUpRightFromSquare} style={{color : "007BFF" } }/> <span>Apri google sheets</span>
+          </button>
+
+            <button className="custom-file-upload" type="button" onClick={() => document.getElementById('fileInput2').click()}>
+              <input
+                id="fileInput2"
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={handleFileChange2}
+                style={{ display: 'none' }}
+              />
+              <FontAwesomeIcon icon={file2 ? faFileExcel : faFileArrowUp}  style={{ color: file2 ? "#217346" : "#007BFF" }}  /> {fileName2}
+            </button>
+
+            </div>
 
           <div id="containerPulsanti" className="side">
             <button type="submit">Avanti</button>
