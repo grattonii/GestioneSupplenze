@@ -108,7 +108,7 @@ h3 {
   width: 100%;
   background: transparent;
   border: none;
-  border: 2px solid rgb(74, 144, 226);
+  border: 2px solid rgb(218, 218, 218);
   border-radius: 10px;
   font-size: 15px;
   color: rgb(218, 218, 218);
@@ -119,6 +119,7 @@ h3 {
 .input input:focus {
   outline: none; /* Rimuove il bordo bianco predefinito */
   border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
+  transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }
 
 #containerPulsanti {
@@ -165,4 +166,22 @@ h1 {
 body {
   background-color: rgb(21, 21, 21);
   font-family: "Poppins", serif;
+}
+.password-container {
+  position: relative;
+}
+
+.show-password-button {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: rgb(218, 218, 218);
+}
+
+.input {
+  position: relative;
 }
