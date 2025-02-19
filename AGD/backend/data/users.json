@@ -1,7 +1,8 @@
 [
   {
     "username": "isitgo",
-    "password": "$2b$10$E1.5IgAUoEFUd6geTiihm.FyiIqhtGlDc.BfQDkl8gq0UG24NQ0Y2",
-    "role": "admin"
+    "password": "$2b$10$xsRlhBSP.S8kx.sVY0NUTelYJdHycKMyqxwpuTp/9Hs87N9gFWfly",
+    "role": "admin",
+    "firstLogin": false
   }
 ]

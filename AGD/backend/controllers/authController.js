@@ -9,9 +9,9 @@ const SECRET_KEY = "G7X9B2M4Q5Z1";
 if (!existsSync(USERS_FILE)) {
     const hashedAdminPassword = bcrypt.hashSync("admin", 10);
     const defaultUsers = [
-        { username: "admin", password: hashedAdminPassword, role: "admin" }
+        { username: "admin", password: hashedAdminPassword, role: "admin", firstLogin: true }
     ];
-    
+
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
 }
 
@@ -24,21 +24,37 @@ export const login = async (req, res) => {
     }
 
     try {
-        const users = JSON.parse(readFileSync(USERS_FILE));
+        let users = JSON.parse(readFileSync(USERS_FILE));
         const user = users.find(u => u.username === username);
 
         if (!user) {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+
+        const isMatch = bcrypt.compareSync(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
         const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
-        res.json({ success: true, message: "Login riuscito!", token, role: user.role });
+        // Controlliamo se è il primo login
+        const userIndex = users.findIndex(u => u.username === username);
+        const firstLogin = user.firstLogin;
+        if (firstLogin) {
+            users[userIndex].firstLogin = false;
+            writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+        }
+
+        res.json({
+            success: true,
+            message: "Login riuscito!",
+            token,
+            role: user.role,
+            firstLogin
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Errore del server!" });
     }

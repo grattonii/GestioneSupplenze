@@ -55,7 +55,6 @@ function SetAdmin() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert(response.data.message);
       localStorage.setItem("token", response.data.token);
       navigate("/gestione-file");
     } catch (error) {

@@ -36,13 +36,16 @@ function Login() {
 
       console.log("Risposta dal server:", response.data);
 
-      const userRole = response.data.role;
+      const { role, firstLogin, token } = response.data;
 
-      localStorage.setItem("token", response.data.token); // Salva il token
+      localStorage.setItem("token", token); // Salva il token
 
-      if (userRole === "admin") {
-        navigate("/gestione-account");
-      } else if (userRole === "professore") {
+      if (role === "admin") {
+        if (firstLogin) 
+          navigate("/gestione-account");
+        else
+          navigate("/dashboard");
+      } else if (role === "professore") {
         navigate("/disponibilita-docenti");
       } else {
         alert("Ruolo non riconosciuto");
