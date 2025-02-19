@@ -1,0 +1,49 @@
+/* Stili generali */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-container {
+  padding: 40px;
+  background-color: rgb(27, 38, 59);
+  min-height: 80vh; /* Altezza minima per evitare sovrapposizioni */
+  max-width: 90%;
+  width: 1500px; /* Larghezza fissa */
+  border-radius: 15px;
+}
+
+.dashboard-title {
+  text-align: center;
+}
+
+/* Layout con CSS Grid */
+.grid-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 25px;
+}
+
+/* Stili per i widget */
+.widget {
+  background-color: rgb(218, 218, 218) !important;
+  height: 320px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Dimensioni specifiche per i widget */
+.large {
+  grid-column: span 3; /* Occupa tutta la riga */
+}
+
+.medium {
+  grid-column: span 2; /* Occupa due colonne */
+}

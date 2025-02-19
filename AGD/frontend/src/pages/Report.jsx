@@ -3,8 +3,8 @@ import React from "react";
 function Report() {
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Benvenuto nella dashboard!</p>
+      <h1>Report</h1>
+      <p>Benvenuto nella report!</p>
     </div>
   );
 }
