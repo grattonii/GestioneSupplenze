@@ -22,17 +22,17 @@
 /* Layout con CSS Grid */
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr;
   gap: 25px;
 }
 
 /* Stili per i widget */
 .widget {
-  background-color: rgb(218, 218, 218) !important;
+  background-color: rgb(218, 218, 218);
   height: 320px;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,9 +41,9 @@
 
 /* Dimensioni specifiche per i widget */
 .large {
-  grid-column: span 3; /* Occupa tutta la riga */
+  grid-column: span 2; /* Occupa tutta la riga */
 }
 
 .medium {
-  grid-column: span 2; /* Occupa due colonne */
+  grid-column: span 1; /* Occupa una colonna */
 }

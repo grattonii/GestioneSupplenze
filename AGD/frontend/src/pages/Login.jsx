@@ -34,7 +34,6 @@ function Login() {
         password,
       });
 
-      console.log("Risposta dal server:", response.data);
 
       const { role, firstLogin, token } = response.data;
 
