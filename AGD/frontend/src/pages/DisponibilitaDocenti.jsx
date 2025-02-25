@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab} from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import DisponibilitaTabella from "./DisponibilitaTabella.jsx";
+import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 

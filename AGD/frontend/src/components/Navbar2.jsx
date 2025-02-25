@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCog, FaSignOutAlt, FaEllipsisV } from "react-icons/fa";
+import { FaCog, FaSignOutAlt, FaEllipsisV, FaChevronLeft } from "react-icons/fa";
 import "../styles/Navbar.css";
 
 function Navbar2() {
@@ -16,7 +16,7 @@ function Navbar2() {
     <nav className="navbar navbar-secondaria">
       <div className="navbar-left">
         <button className="bn-indietro" onClick={() => navigate(-1)}>
-          Indietro
+          <FaChevronLeft className="icon" />Indietro
         </button>
       </div>
       <div className="navbar-right">
