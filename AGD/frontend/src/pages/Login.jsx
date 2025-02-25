@@ -45,7 +45,7 @@ function Login() {
         else
           navigate("/dashboard");
       } else if (role === "professore") {
-        navigate("/disponibilita-docenti");
+        navigate("/professori");
       } else {
         alert("Ruolo non riconosciuto");
         return;
