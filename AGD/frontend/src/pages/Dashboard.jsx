@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar } from "react-icons/fa";
 import "../styles/Dashboard.css";
-import Navbar from "./Navbar.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();

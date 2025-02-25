@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SupplenzeTable from "./SupplenzeTabella.jsx";
-import Navbar from "./Navbar.jsx";
+import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 
 function GestioneSupplenze() {

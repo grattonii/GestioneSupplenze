@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab} from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import DisponibilitaTabella from "./DisponibilitaTabella.jsx";
-import Navbar from "./Navbar2.jsx";
+import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 
 function DisponibilitaDocenti() {
