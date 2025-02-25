@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCog, FaSignOutAlt, FaEllipsisV } from "react-icons/fa";
 import "../styles/Navbar.css";
 
-function Navbar() {
+function Navbar2() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -13,7 +13,12 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-principale">
+    <nav className="navbar navbar-secondaria">
+      <div className="navbar-left">
+        <button className="bn-indietro" onClick={() => navigate(-1)}>
+          Indietro
+        </button>
+      </div>
       <div className="navbar-right">
         <div className="dropdown">
           <button className="nav-button" onClick={() => setShowMenu(!showMenu)}>
@@ -35,4 +40,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Navbar2;

@@ -1,57 +1,77 @@
+/* Stili generali */
 .navbar {
     width: 100%;
-    height: 60px; 
+    height: 60px;
     display: flex;
-    justify-content: center;
     align-items: center;
     background-color: #2c3e50;
     color: rgb(218, 218, 218);
-    position: fixed; 
-    top: 0; 
+    position: fixed;
+    top: 0;
     left: 0;
-    z-index: 1000; 
+    z-index: 1000;
+    padding: 0 20px;
 }
 
-.navbar-links {
-    display: flex;
-    gap: 15px;
-    position: absolute;
-    right: 20px;
+/* Navbar della pagina principale */
+.navbar-principale {
+    justify-content: flex-end;
 }
 
-.nav-button {
+/* Navbar secondaria con bottone Indietro */
+.navbar-secondaria {
+    justify-content: space-between;
+}
+
+/* Sezioni della navbar secondaria */
+.navbar-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Bottone Indietro */
+.bn-indietro {
     background: none;
     border: none;
     color: rgb(218, 218, 218);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.nav-button:hover {
+.bn-indietro:hover {
     color: #3498db;
 }
 
+/* Dropdown */
 .dropdown {
     position: relative;
+    display: inline-block; /* Assicura che il dropdown rimanga vicino al bottone */
 }
 
 .dropdown-menu {
     position: absolute;
     top: 40px;
-    font-size: 1rem;
-    right: 0;
+    left: auto;  /* Evita che si sposti a sinistra */
+    right: 0;    /* Allinea il menu alla destra del pulsante */
     background: #2c3e50;
     border-radius: 5px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     min-width: 150px;
+    max-width: 200px; /* Previene che il menu sia troppo largo */
+    overflow: hidden; /* Evita che il contenuto esca fuori */
+    z-index: 2000; /* Assicura che il menu sia sopra gli altri elementi */
 }
 
+/* Stile per i pulsanti nel menu */
 .dropdown-menu button {
     background: none;
     border: none;
@@ -62,6 +82,7 @@
     cursor: pointer;
     transition: 0.3s;
     width: 100%;
+    white-space: nowrap; /* Evita che il testo vada a capo */
 }
 
 .dropdown-menu button:hover {
