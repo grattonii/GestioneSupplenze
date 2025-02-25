@@ -49,96 +49,131 @@ function GestioneFile() {
   };
 
   return (
-    <div id="FilesBox">
-      <div id="titolo">
-        <h1>Caricamento File</h1>
-      </div>
+    <>
+      <script
+        src="https://kit.fontawesome.com/2f5f6d0fd4.js"
+        crossorigin="anonymous"
+      ></script>
+      <div id="FilesBox">
+        <div id="titolo">
+          <h1>Caricamento File</h1>
+        </div>
 
-      <form onSubmit={handleUpload}>
-        <div id="formFiles">
-          
-          <h3>
-            
-            <span> Carica il file contenente i dati dei docenti{" "} </span>
-            <FontAwesomeIcon icon={faCircleQuestion} 
-              data-tooltip-id="professoriTip"
-              style={{ cursor: "pointer", color: "#007BFF" }}
-            />
-          </h3>
-          <ReactTooltip id="professoriTip" place="right" effect="solid">
-            <strong>Formato del file Excel:</strong>
-            <ul>
-              <li>Nome</li>
-              <li>Cognome</li>
-              <li>Email dei professori</li>
-              <li>Ordinato alfabeticamente</li>
-            </ul>
-          </ReactTooltip>
-
-          <div className="uploadBottoni">
-
-          <button className="apriSheets" type="button" onClick={() => window.open('https://docs.google.com/spreadsheets', '_blank')}>
-          
-          <FontAwesomeIcon icon={faArrowUpRightFromSquare} style={{color : "007BFF" } }/> <span>Apri google sheets</span>
-          </button>
-
-          <button className="custom-file-upload" type="button" onClick={() => document.getElementById('fileInput1').click()}>
-            <input
-              id="fileInput1"
-              type="file"
-              accept=".xls,.xlsx"
-              onChange={handleFileChange1}
-              style={{ display: 'none' }}
-            />
-            <FontAwesomeIcon icon={file1 ? faFileExcel : faFileArrowUp}  style={{ color: file1  ? "#217346" : "#007BFF" }} /> <span>{fileName1} </span>
-          </button>
-          
-          </div>
-    
-          <h3>
-            <span>  Carica il file con l'orario dei docenti{" "}  </span>
-            <FontAwesomeIcon icon={faCircleQuestion}
-              data-tooltip-id="orariTip"
-              style={{ cursor: "pointer", color: "#007BFF" }}
-            />
-          </h3>
-          <ReactTooltip id="orariTip" place="right" effect="solid">
-            <strong>Formato del file Excel:</strong>
-            <ul>
-              <li>Cognome del docente in ordine alfabetico</li>
-              <li>Orari per ogni giorno della settimana (Lunedì - Sabato)</li>
-              <li>Le classi assegnate in ogni ora</li>
-              <li>Ore di disponibilità indicate con il simbolo 'D'</li>
-            </ul>
-            
-          </ReactTooltip>
+        <form onSubmit={handleUpload}>
+          <div id="formFiles">
+            <h3>
+              <span> Carica il file contenente i dati dei docenti </span>
+              <FontAwesomeIcon
+                icon={faCircleQuestion}
+                data-tooltip-id="professoriTip"
+                style={{ cursor: "pointer", color: "#007BFF" }}
+              />
+            </h3>
+            <ReactTooltip id="professoriTip" place="right" effect="solid">
+              <strong>Formato del file Excel:</strong>
+              <ul>
+                <li>Nome</li>
+                <li>Cognome</li>
+                <li>Email dei professori</li>
+                <li>Ordinato alfabeticamente</li>
+              </ul>
+            </ReactTooltip>
 
             <div className="uploadBottoni">
+              <button
+                className="apriSheets"
+                type="button"
+                onClick={() =>
+                  window.open("https://docs.google.com/spreadsheets", "_blank")
+                }
+              >
+                <FontAwesomeIcon
+                  icon={faArrowUpRightFromSquare}
+                  style={{ color: "007BFF" }}
+                />{" "}
+                <span>Apri google sheets</span>
+              </button>
 
-            <button className="apriSheets" type="button" onClick={() => window.open('https://docs.google.com/spreadsheets', '_blank')}>
-          
-          <FontAwesomeIcon icon={faArrowUpRightFromSquare} style={{color : "007BFF" } }/> <span>Apri google sheets</span>
-          </button>
-
-            <button className="custom-file-upload" type="button" onClick={() => document.getElementById('fileInput2').click()}>
-              <input
-                id="fileInput2"
-                type="file"
-                accept=".xls,.xlsx"
-                onChange={handleFileChange2}
-                style={{ display: 'none' }}
-              />
-              <FontAwesomeIcon icon={file2 ? faFileExcel : faFileArrowUp}  style={{ color: file2 ? "#217346" : "#007BFF" }}  /> {fileName2}
-            </button>
-
+              <button
+                className="custom-file-upload"
+                type="button"
+                onClick={() => document.getElementById("fileInput1").click()}
+              >
+                <input
+                  id="fileInput1"
+                  type="file"
+                  accept=".xls,.xlsx"
+                  onChange={handleFileChange1}
+                  style={{ display: "none" }}
+                />
+                <FontAwesomeIcon
+                  icon={file1 ? faFileExcel : faFileArrowUp}
+                  style={{ color: file1 ? "#217346" : "#007BFF" }}
+                />{" "}
+                <span>{fileName1} </span>
+              </button>
             </div>
 
-          <div id="containerPulsanti" className="side">
-            <button type="submit">Avanti</button>
+            <h3>
+              <span> Carica il file con l'orario dei docenti </span>
+              <FontAwesomeIcon
+                icon={faCircleQuestion}
+                data-tooltip-id="orariTip"
+                style={{ cursor: "pointer", color: "#007BFF" }}
+              />
+            </h3>
+            <ReactTooltip id="orariTip" place="right" effect="solid">
+              <strong>Formato del file Excel:</strong>
+              <ul>
+                <li>Cognome del docente in ordine alfabetico</li>
+                <li>Orari per ogni giorno della settimana (Lunedì - Sabato)</li>
+                <li>Le classi assegnate in ogni ora</li>
+                <li>Ore di disponibilità indicate con il simbolo 'D'</li>
+              </ul>
+            </ReactTooltip>
+
+            <div className="uploadBottoni">
+              <button
+                className="apriSheets"
+                type="button"
+                onClick={() =>
+                  window.open("https://docs.google.com/spreadsheets", "_blank")
+                }
+              >
+                <FontAwesomeIcon
+                  icon={faArrowUpRightFromSquare}
+                  style={{ color: "007BFF" }}
+                />{" "}
+                <span>Apri google sheets</span>
+              </button>
+
+              <button
+                className="custom-file-upload"
+                type="button"
+                onClick={() => document.getElementById("fileInput2").click()}
+              >
+                <input
+                  id="fileInput2"
+                  type="file"
+                  accept=".xls,.xlsx"
+                  onChange={handleFileChange2}
+                  style={{ display: "none" }}
+                />
+                <FontAwesomeIcon
+                  icon={file2 ? faFileExcel : faFileArrowUp}
+                  style={{ color: file2 ? "#217346" : "#007BFF" }}
+                />{" "}
+                {fileName2}
+              </button>
+            </div>
+
+            <div id="containerPulsanti" className="side">
+              <button type="submit">Avanti</button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 }
 

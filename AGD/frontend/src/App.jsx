@@ -6,20 +6,20 @@ import GestioneSupplenze from "./pages/GestioneSupplenze";
 import DisponibilitaDocenti from "./pages/DisponibilitaDocenti";
 import Report from "./pages/Report";
 import SetAdmin from "./pages/SetAdmin";
-
+import StoricoSupplenze from "./pages/storicoSupplenze";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/gestione-file" element={<GestioneFile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/gestione-supplenze" element={<GestioneSupplenze />} />
-        <Route path="/disponibilita-docenti" element={<DisponibilitaDocenti />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/gestione-account" element={<SetAdmin />} />
-
+        <Route path="/gestione-file" element={<GestioneFile/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/gestione-supplenze" element={<GestioneSupplenze/>} />
+        <Route path="/disponibilita-docenti" element={<DisponibilitaDocenti/>} />
+        <Route path="/report" element={<Report/>} />
+        <Route path="/gestione-account" element={<SetAdmin/>} />
+        <Route path="/storico-supplenze" element={<StoricoSupplenze/>} />
       </Routes>
     </Router>
   );
