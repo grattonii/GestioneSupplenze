@@ -12,19 +12,19 @@ function SupplenzeTabella({ rows, setRows }) {
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: "#2c3e50" }}>
-            <TableCell sx={{ color: "white" }}>Docente</TableCell>
-            <TableCell sx={{ color: "white" }}>Materia</TableCell>
-            <TableCell sx={{ color: "white" }}>Ora</TableCell>
-            <TableCell sx={{ color: "white" }}>Azioni</TableCell>
+            <TableCell sx={{ color: "white", textAlign: "center" }}>Docente</TableCell>
+            <TableCell sx={{ color: "white", textAlign: "center" }}>Materia</TableCell>
+            <TableCell sx={{ color: "white", textAlign: "center" }}>Ora</TableCell>
+            <TableCell sx={{ color: "white", textAlign: "center" }}>Azioni</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.docente}</TableCell>
-              <TableCell>{row.materia}</TableCell>
-              <TableCell>{row.ora}</TableCell>
-              <TableCell>
+              <TableCell sx={{textAlign: "center"}}>{row.docente}</TableCell>
+              <TableCell sx={{textAlign: "center"}}>{row.materia}</TableCell>
+              <TableCell sx={{textAlign: "center"}}>{row.ora}</TableCell>
+              <TableCell sx={{textAlign: "center"}}>
                 <IconButton onClick={() => handleDelete(row.id)}>
                   <FaTrash color="red" />
                 </IconButton>

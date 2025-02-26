@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
+import { data } from "react-router-dom";
 
 function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([
@@ -9,6 +10,7 @@ function GestioneSupplenze() {
       id: 1,
       docente: "Mario Rossi",
       classe: "3A",
+      data: "12/03/2025",
       ora: "08:00-09:00",
       stato: "Accettata",
     },
@@ -16,17 +18,19 @@ function GestioneSupplenze() {
       id: 2,
       docente: "Luca Bianchi",
       classe: "2B",
+      data: "13/03/2025",
       ora: "09:00-10:00",
       stato: "Rifiutata",
     },
+    {
+      id: 2,
+      docente: "Michele Tarantino",
+      classe: "4Bi",
+      data: "14/03/2025",
+      ora: "09:00-10:00",
+      stato: "In attesa",
+    },
   ]);
-
-  const [newSupplenza, setNewSupplenza] = useState({
-    docente: "",
-    classe: "",
-    ora: "",
-    stato: "Accettata",
-  });
 
   return (
     <div>
