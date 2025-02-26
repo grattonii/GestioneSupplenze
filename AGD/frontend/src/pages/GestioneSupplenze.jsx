@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
-import { data } from "react-router-dom";
 
 function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([
@@ -23,7 +22,7 @@ function GestioneSupplenze() {
       stato: "Rifiutata",
     },
     {
-      id: 2,
+      id: 3,
       docente: "Michele Tarantino",
       classe: "4Bi",
       data: "14/03/2025",

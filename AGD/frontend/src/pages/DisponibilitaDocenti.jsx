@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab} from "@mui/material";
+import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
@@ -10,20 +10,20 @@ function DisponibilitaDocenti() {
     {
       id: 1,
       docente: "Mario Rossi",
-      materia: "Informatica",
+      giorno: "Lunedi",
       ora: "08:00-09:00",
     },
     {
       id: 2,
       docente: "Luca Bianchi",
-      materia: "Matematica",
+      giorno: "Martedi",
       ora: "09:00-10:00",
     },
   ]);
 
   const [newDisponibilita, setNewDisponibilita] = useState({
     docente: "",
-    materia: "",
+    giorno: "",
     ora: "",
   });
   const [open, setOpen] = useState(false);
@@ -31,11 +31,11 @@ function DisponibilitaDocenti() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setNewDisponibilita({ docente: "", materia: "", ora: "" });
+    setNewDisponibilita({ docente: "", giorno: "", ora: "" });
   };
 
   const handleAdd = () => {
-    if (newDisponibilita.docente && newDisponibilita.classe && newDisponibilita.ora) {
+    if (newDisponibilita.docente && newDisponibilita.giorno && newDisponibilita.ora) {
       setDisponibilita((prev) => [...prev, { ...newDisponibilita, id: Date.now() }]); // Aggiorna la tabella
       handleClose();
     }
@@ -78,14 +78,23 @@ function DisponibilitaDocenti() {
               />
             </Grid2>
             <Grid2 item xs={12}>
-              <TextField
-                label="Materia"
-                fullWidth
-                value={newDisponibilita.classe}
-                onChange={(e) =>
-                  setNewDisponibilita({ ...newDisponibilita, materia: e.target.value })
-                }
-              />
+            <FormControl fullWidth margin="dense">
+                <InputLabel>Giorno</InputLabel>
+                <Select
+                  name="giorno"
+                  value={newDisponibilita.giorno}
+                  onChange={(e) =>
+                    setNewDisponibilita({ ...newDisponibilita, giorno: e.target.value })
+                  }
+                >
+                  <MenuItem value="Lunedi">Lunedì</MenuItem>
+                  <MenuItem value="Martedi">Martedì</MenuItem>
+                  <MenuItem value="Mercoledi">Mercoledì</MenuItem>
+                  <MenuItem value="Giovedi">Giovedì</MenuItem>
+                  <MenuItem value="Venerdi">Venerdì</MenuItem>
+                  <MenuItem value="Sabato">Sabato</MenuItem>
+                </Select>
+              </FormControl>
             </Grid2>
             <Grid2 item xs={12}>
               <TextField

@@ -64,11 +64,6 @@ function Login() {
 
   return (
     <>
-      <script
-        src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossorigin="anonymous"
-      ></script>
-
       <div id="loginBox">
 
         <div id="titolo">

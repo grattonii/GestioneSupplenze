@@ -50,10 +50,6 @@ function GestioneFile() {
 
   return (
     <>
-      <script
-        src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossorigin="anonymous"
-      ></script>
       <div id="FilesBox">
         <div id="titolo">
           <h1>Caricamento File</h1>

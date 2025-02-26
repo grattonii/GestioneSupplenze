@@ -10,10 +10,6 @@ function Dashboard() {
 
   return (
     <>
-      <script
-        src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossorigin="anonymous"
-      ></script>
       <div className="dashboard">
         <Navbar />
         <h1 className="dashboard-title">DASHBOARD</h1>
