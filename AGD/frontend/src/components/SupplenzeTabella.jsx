@@ -39,7 +39,7 @@ function SupplenzeTabella({ rows, setRows }) {
   return (
     <>
       {/* Tabella */}
-      <TableContainer component={Paper} sx={{ maxWidth: "1000px", margin: "auto", borderRadius: 2, boxShadow: 3 }}>
+      <TableContainer component={Paper} sx={{ maxWidth: "1000px", margin: "auto", borderRadius: 2, boxShadow: 3}}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#2c3e50" }}>
@@ -51,11 +51,11 @@ function SupplenzeTabella({ rows, setRows }) {
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{ cursor: "pointer" }}>
-                <TableCell sx={{ textAlign: "center" }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.classe}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.data}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
+                <TableCell sx={{ textAlign: "center",fontFamily:"Poppins", fontWeight:200 }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center",fontFamily:"Poppins", fontWeight:300 }}>{row.classe}</TableCell>
+                <TableCell sx={{ textAlign: "center",fontFamily:"Poppins", fontWeight:300 }}>{row.data}</TableCell>
+                <TableCell sx={{ textAlign: "center",fontFamily:"Poppins", fontWeight:300 }}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center",fontFamily:"Poppins", fontWeight:300 }}>
                   {row.stato === "Accettata" ? (
                     <FaCheckCircle color="green" />
                   ) : row.stato === "In attesa" ? (
@@ -109,14 +109,6 @@ function SupplenzeTabella({ rows, setRows }) {
                 label="Ora"
                 name="ora"
                 value={selectedRow.ora || ""}
-                onChange={handleChange}
-                fullWidth
-                margin="dense"
-              />
-              <TextField
-                label="Stato"
-                name="stato"
-                value={selectedRow.stato || ""}
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
