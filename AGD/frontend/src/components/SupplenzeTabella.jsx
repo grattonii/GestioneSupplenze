@@ -49,28 +49,36 @@ function SupplenzeTabella({ rows, setRows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{ cursor: "pointer" }}>
-                <TableCell sx={{ textAlign: "center" }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.classe}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.data}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  {row.stato === "Accettata" ? (
-                    <FaCheckCircle color="green" />
-                  ) : row.stato === "In attesa" ? (
-                    <FaHourglassHalf color="orange" />
-                  ) : (
-                    <FaTimesCircle color="red" />
-                  )}
-                </TableCell>
-                <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                  <IconButton onClick={() => handleDelete(row.id)}>
-                    <FaTrash color="red" />
-                  </IconButton>
+            {rows.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} sx={{ textAlign: "center" }}>
+                  Nessuna supplenza da gestire al momento.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              rows.map((row) => (
+                <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{ cursor: "pointer" }}>
+                  <TableCell sx={{ textAlign: "center" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>{row.classe}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>{row.data}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>{row.ora}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {row.stato === "Accettata" ? (
+                      <FaCheckCircle color="green" />
+                    ) : row.stato === "In attesa" ? (
+                      <FaHourglassHalf color="orange" />
+                    ) : (
+                      <FaTimesCircle color="red" />
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                    <IconButton onClick={() => handleDelete(row.id)}>
+                      <FaTrash color="red" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -117,8 +125,12 @@ function SupplenzeTabella({ rows, setRows }) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">Annulla</Button>
-          <Button onClick={handleUpdate} color="primary">Modifica</Button>
+          <Button onClick={handleClose} color="primary">
+            Annulla
+          </Button>
+          <Button onClick={handleUpdate} color="primary">
+            Modifica
+          </Button>
         </DialogActions>
       </Dialog>
     </>
