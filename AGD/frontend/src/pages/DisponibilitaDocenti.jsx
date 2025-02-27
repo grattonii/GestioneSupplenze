@@ -48,7 +48,6 @@ function DisponibilitaDocenti() {
 
       <DisponibilitaTabella rows={disponibilita} setRows={setDisponibilita} />
 
-      {/* Bottone "+" rotondo */}
       <Fab
         color="primary"
         aria-label="add"
