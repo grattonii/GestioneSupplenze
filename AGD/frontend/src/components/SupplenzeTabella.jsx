@@ -113,14 +113,6 @@ function SupplenzeTabella({ rows, setRows }) {
                 fullWidth
                 margin="dense"
               />
-              <TextField
-                label="Stato"
-                name="stato"
-                value={selectedRow.stato || ""}
-                onChange={handleChange}
-                fullWidth
-                margin="dense"
-              />
             </>
           )}
         </DialogContent>
