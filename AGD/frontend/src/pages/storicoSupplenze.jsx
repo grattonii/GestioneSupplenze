@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SupplenzeTabella from "../components/SupplenzeTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";

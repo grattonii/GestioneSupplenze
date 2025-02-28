@@ -51,13 +51,13 @@ function SupplenzeTabella({ rows, setRows }) {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id} onClick={() => handleOpen(row)}                 sx={{
+              <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
                 cursor: "pointer",
                 transition: "transform 0.2s",
                 "&:hover": {
                   transform: "translateY(-5px)",
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  color:"black",
+                  color: "black",
                 }
               }}>
                 <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
@@ -91,28 +91,28 @@ function SupplenzeTabella({ rows, setRows }) {
           {selectedRow && (
             <>
               <TextField
-  label="Docente"
-  name="docente"
-  value={selectedRow.docente || ""}
-  onChange={handleChange}
-  fullWidth
-  margin="dense"
-  sx={{
-    "& .MuiInputBase-root": {
-      fontFamily: "Poppins",
-      fontSize: "16px",
-      color: "#333",
-      backgroundColor: "#f9f9f9",
-      borderRadius: "5px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#ccc",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#666",
-    },
-  }}
-/>
+                label="Docente"
+                name="docente"
+                value={selectedRow.docente || ""}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#333",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "5px",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ccc",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#666",
+                  },
+                }}
+              />
 
               <TextField
                 label="Classe"
@@ -185,13 +185,13 @@ function SupplenzeTabella({ rows, setRows }) {
                   },
                 }}
               />
-              
+
             </>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" sx={{fontFamily: "Poppins" }} >Annulla</Button>
-          <Button onClick={handleUpdate} color="primary"  sx={{fontFamily: "Poppins" }}>Modifica</Button>
+          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
+          <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
         </DialogActions>
       </Dialog>
     </>
