@@ -1,11 +1,11 @@
 /* Sidebar */
 .sidebar {
     width: 200px;
-    background-color: rgb(27, 38, 59);
+    background-color: rgb(34, 49, 78);
     padding: 20px;
     position: fixed;
     height: 100%;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
     top: 0;
     left: 0;
     z-index: 1000;
@@ -21,7 +21,7 @@
     padding: 10px;
     margin: 5px 0;
     text-decoration: none;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
     border-radius: 5px;
     transition: background 0.3s;
 }
@@ -45,7 +45,7 @@
 .section {
     padding: 20px;
     margin-bottom: 20px;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
 }
 
 .section h2 {
@@ -57,7 +57,7 @@
 .close-icon {
     font-size: 1.5rem;
     cursor: pointer;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
     position: absolute;
     top: 10px;
     left: 10px;
