@@ -36,7 +36,7 @@
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 600px;
-  min-height: 500px;
+  min-height: 400px;
 }
 
 #titolo {
@@ -120,6 +120,10 @@ h3 {
   outline: none; /* Rimuove il bordo bianco predefinito */
   border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
+}
+
+.fileUpload {
+  margin-top: 50px;
 }
 
 #containerPulsanti {
