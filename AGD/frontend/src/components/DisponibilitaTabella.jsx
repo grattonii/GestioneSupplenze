@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 
 function SupplenzeTabella({ rows, setRows }) {
@@ -63,26 +63,34 @@ function SupplenzeTabella({ rows, setRows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
-                cursor: "pointer",
-                transition: "transform 0.2s",
-                "&:hover": {
-                  transform: "translateY(-5px)",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                  color: "black",
-                }
-              }}>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.giorno}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  <IconButton onClick={() => handleDelete(row.id)}>
-                    <FaTrash color="red" />
-                  </IconButton>
+            {rows.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 2 }}>
+                  <Typography variant="h6">Nessuna supplenza da gestire al momento.</Typography>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              rows.map((row) => (
+                <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
+                  cursor: "pointer",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    color: "black",
+                  }
+                }}>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.giorno}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(row.id); }}>
+                      <FaTrash color="red" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -131,7 +139,7 @@ function SupplenzeTabella({ rows, setRows }) {
                   borderColor: "#666",
                 },
               }}>
-                <InputLabel sx={{backgroundColor: "#fff", padding: "0px 10px 0px 5px"}}>Giorno</InputLabel>
+                <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Giorno</InputLabel>
                 <Select
                   name="giorno"
                   value={selectedRow.giorno || ""}

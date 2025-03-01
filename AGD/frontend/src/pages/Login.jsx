@@ -38,6 +38,7 @@ function Login() {
       const { role, firstLogin, token } = response.data;
 
       localStorage.setItem("token", token); // Salva il token
+      localStorage.setItem("role", role); // Salva il ruolo dell'utente
 
       if (role === "admin") {
         if (firstLogin) 
@@ -45,7 +46,10 @@ function Login() {
         else
           navigate("/dashboard");
       } else if (role === "professore") {
-        navigate("/professori");
+        if (firstLogin) 
+          navigate("/gestione-account");
+        else
+          navigate("/professori");
       } else {
         alert("Ruolo non riconosciuto");
         return;
