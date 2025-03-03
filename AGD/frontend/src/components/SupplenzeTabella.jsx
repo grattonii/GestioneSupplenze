@@ -60,11 +60,11 @@ function SupplenzeTabella({ rows, setRows }) {
                   color:"black",
                 }
               }}>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.classe}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.data}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 500 }}>{row.classe}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 500 }}>{row.data}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 500 }}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 500 }}>
                   {row.stato === "Accettata" ? (
                     <FaCheckCircle color="green" />
                   ) : row.stato === "In attesa" ? (
