@@ -4,8 +4,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 400px;
@@ -17,8 +17,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 400px;
@@ -30,8 +30,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 600px;
@@ -60,9 +60,9 @@ input[type="file"] {
   color: rgb(27, 38, 59);
   font-weight: 700;
   font-family: "Poppins", serif;
-  background-color: rgb(218, 218, 218);
+  background-color: rgb(224, 224, 224);
   color: rgb(27, 38, 59);
-  border: 2px solid rgb(27, 38, 59);
+  border: 2px solid rgb(34, 49, 78);
   border-radius: 10px;
   padding: 10px 15px;
   margin: 5px;
@@ -75,9 +75,9 @@ input[type="file"] {
 .uploadBottoni button:hover {
   font-size: 18px;
   font-weight: bold;
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
-  border: 2px solid rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
+  border: 2px solid rgb(224, 224, 224);
   cursor: pointer;
   transition: 0.17s;
 }
@@ -92,7 +92,7 @@ h3 {
   font-family: "Poppins", serif;
   font-weight: 700;
   font-style: normal;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   font-size: 20px;
   margin-bottom: 5px;
 }
@@ -107,10 +107,10 @@ h3 {
   width: 100%;
   background: transparent;
   border: none;
-  border: 2px solid rgb(218, 218, 218);
+  border: 2px solid rgb(224, 224, 224);
   border-radius: 10px;
   font-size: 15px;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   padding: 20px 0px 20px 20px;
   font-weight: bold;
 }
@@ -137,12 +137,12 @@ h3 {
   height: 70px;
   font-size: 18px;
   font-weight: bold;
-  color: rgb(27, 38, 59);
+  color: rgb(34, 49, 78);
   font-weight: 700;
   font-family: "Poppins", serif;
 
-  background-color: rgb(218, 218, 218);
-  border: 2px solid rgb(27, 38, 59);
+  background-color: rgb(224, 224, 224);
+  border: 2px solid rgb(34, 49, 78);
   border-radius: 10px;
   cursor: pointer;
   transition: 0.17s;
@@ -151,9 +151,9 @@ h3 {
 #containerPulsanti button:hover {
   font-size: 18px;
   font-weight: bold;
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
-  border: 2px solid rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
+  background-color: transparent;
+  border: 2px solid rgb(224, 224, 224);
   border-radius: 10px;
   cursor: pointer;
   transition: 0.17s;
@@ -162,12 +162,12 @@ h3 {
 h1 {
   font-weight: 700;
   font-style: normal;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   font-size: 60px;
 }
 
 body {
-  background-color: rgb(21, 21, 21);
+  background-color: rgb(37, 37, 37);
   font-family: "Poppins", serif;
 }
 .password-container {
@@ -182,7 +182,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
 }
 
 .input {

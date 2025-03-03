@@ -17,7 +17,7 @@ function Navbar2() {
     <nav className="navbar navbar-secondaria">
       <div className="navbar-left">
         <button className="bn-indietro" onClick={() => navigate(-1)}>
-        <FontAwesomeIcon icon={faChevronLeft} /> Indietro
+          <FaChevronLeft className="icon" />Indietro
         </button>
       </div>
       <div className="navbar-right">

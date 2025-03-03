@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import { Button, TextField, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
@@ -62,58 +62,93 @@ function DisponibilitaDocenti() {
       </Fab>
 
       {/* Dialog con il form */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Aggiungi un Docente</DialogTitle>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Aggiungi un Docente</DialogTitle>
         <DialogContent>
-          <Grid2 container spacing={2} marginTop={1} direction="column">
-            <Grid2 item xs={12}>
-              <TextField
-                label="Docente"
-                fullWidth
-                value={newDisponibilita.docente}
-                onChange={(e) =>
-                  setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
-                }
-              />
-            </Grid2>
-            <Grid2 item xs={12}>
-            <FormControl fullWidth margin="dense">
-                <InputLabel>Giorno</InputLabel>
-                <Select
-                  name="giorno"
-                  value={newDisponibilita.giorno}
-                  onChange={(e) =>
-                    setNewDisponibilita({ ...newDisponibilita, giorno: e.target.value })
-                  }
-                >
-                  <MenuItem value="Lunedi">Lunedì</MenuItem>
-                  <MenuItem value="Martedi">Martedì</MenuItem>
-                  <MenuItem value="Mercoledi">Mercoledì</MenuItem>
-                  <MenuItem value="Giovedi">Giovedì</MenuItem>
-                  <MenuItem value="Venerdi">Venerdì</MenuItem>
-                  <MenuItem value="Sabato">Sabato</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid2>
-            <Grid2 item xs={12}>
-              <TextField
-                label="Ora"
-                fullWidth
-                value={newDisponibilita.ora}
-                onChange={(e) =>
-                  setNewDisponibilita({ ...newDisponibilita, ora: e.target.value })
-                }
-              />
-            </Grid2>
-          </Grid2>
+          <TextField
+            label="Docente"
+            fullWidth
+            value={newDisponibilita.docente}
+            onChange={(e) =>
+              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
+            }
+            margin="dense"
+            sx={{
+              "& .MuiInputBase-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ccc",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#666",
+              },
+            }}
+          />
+          <FormControl fullWidth margin="dense"
+            sx={{
+              "& .MuiInputBase-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ccc",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#666",
+              },
+            }}>
+            <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Giorno</InputLabel>
+            <Select
+              name="giorno"
+              value={newDisponibilita.giorno}
+              onChange={(e) =>
+                setNewDisponibilita({ ...newDisponibilita, giorno: e.target.value })
+              }
+            >
+              <MenuItem value="Lunedi">Lunedì</MenuItem>
+              <MenuItem value="Martedi">Martedì</MenuItem>
+              <MenuItem value="Mercoledi">Mercoledì</MenuItem>
+              <MenuItem value="Giovedi">Giovedì</MenuItem>
+              <MenuItem value="Venerdi">Venerdì</MenuItem>
+              <MenuItem value="Sabato">Sabato</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Ora"
+            fullWidth
+            value={newDisponibilita.ora}
+            onChange={(e) =>
+              setNewDisponibilita({ ...newDisponibilita, ora: e.target.value })
+            }
+            margin="dense"
+            sx={{
+              "& .MuiInputBase-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ccc",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#666",
+              },
+            }}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Annulla
-          </Button>
-          <Button onClick={handleAdd} variant="contained" color="primary">
-            Aggiungi
-          </Button>
+          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
+          <Button onClick={handleAdd} color="primary" sx={{ fontFamily: "Poppins" }}>Aggiungi</Button>
         </DialogActions>
       </Dialog>
     </div>

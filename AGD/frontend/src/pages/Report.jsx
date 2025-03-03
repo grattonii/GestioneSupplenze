@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar2.jsx";
+import "../styles/Pagine.css";
 
 function Report() {
   return (
