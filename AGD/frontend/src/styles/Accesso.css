@@ -35,7 +35,7 @@
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 600px;
-  min-height: 500px;
+  min-height: 400px;
 }
 
 #TeacherBox {
@@ -134,6 +134,10 @@ h3 {
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }
 
+.side {
+  margin-top: 30px;  
+}
+
 #containerPulsanti {
   text-align: center;
   margin-top: 30px;
@@ -186,6 +190,7 @@ body {
   background-color: rgb(21, 21, 21);
   font-family: "Poppins", serif;
 }
+
 .password-container {
   position: relative;
 }
