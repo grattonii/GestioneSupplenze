@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCog, FaSignOutAlt, FaEllipsisV, FaChevronLeft } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft,faGear,faRightFromBracket,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Navbar.css";
 
 function Navbar2() {
@@ -17,21 +18,21 @@ function Navbar2() {
     <nav className="navbar navbar-secondaria">
       <div className="navbar-left">
         <button className="bn-indietro" onClick={() => navigate(-1)}>
-          <FaChevronLeft className="icon-back" /> Indietro
+          <FaChevronLeft className="icon" />Indietro
         </button>
       </div>
       <div className="navbar-right">
         <div className="dropdown">
           <button className="nav-button" onClick={() => setShowMenu(!showMenu)}>
-            <FaEllipsisV />
+          <FontAwesomeIcon icon={faEllipsisVertical} />
           </button>
           {showMenu && (
             <div className="dropdown-menu">
               <button onClick={() => navigate("/impostazioni")}>
-                <FaCog className="icon" /> Impostazioni
+              <FontAwesomeIcon icon={faGear} /> Impostazioni
               </button>
               <button className="logout" onClick={handleLogout}>
-                <FaSignOutAlt className="icon" /> Logout
+              <FontAwesomeIcon icon={faRightFromBracket} /> Logout
               </button>
             </div>
           )}

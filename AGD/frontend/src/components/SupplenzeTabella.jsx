@@ -50,44 +50,36 @@ function SupplenzeTabella({ rows, setRows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 2 }}>
-                  <Typography variant="h6">Nessuna supplenza da gestire al momento.</Typography>
+            {rows.map((row) => (
+              <TableRow key={row.id} onClick={() => handleOpen(row)}                 sx={{
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  color:"black",
+                }
+              }}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.classe}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.data}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>
+                  {row.stato === "Accettata" ? (
+                    <FaCheckCircle color="green" />
+                  ) : row.stato === "In attesa" ? (
+                    <FaHourglassHalf color="orange" />
+                  ) : (
+                    <FaTimesCircle color="red" />
+                  )}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                  <IconButton onClick={() => handleDelete(row.id)}>
+                    <FaTrash color="red" />
+                  </IconButton>
                 </TableCell>
               </TableRow>
-            ) : (
-              rows.map((row) => (
-                <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
-                  cursor: "pointer",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    color: "black",
-                  }
-                }}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.classe}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.data}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>
-                    {row.stato === "Accettata" ? (
-                      <FaCheckCircle color="green" />
-                    ) : row.stato === "In attesa" ? (
-                      <FaHourglassHalf color="orange" />
-                    ) : (
-                      <FaTimesCircle color="red" />
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                    <IconButton onClick={() => handleDelete(row.id)}>
-                      <FaTrash color="red" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
