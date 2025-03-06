@@ -35,6 +35,7 @@ function GestioneSupplenze() {
     <div>
       <Navbar />
       <h1 className="title">Gestione Supplenze</h1>
+      <h3 className="spiegazione">Visualizza e modifica le assegnazioni delle supplenze giornaliere.</h3>
 
       <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
     </div>

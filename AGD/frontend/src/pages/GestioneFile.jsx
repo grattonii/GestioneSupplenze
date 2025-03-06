@@ -58,10 +58,12 @@ function GestioneFile() {
             <ReactTooltip id="professoriTip" place="right" effect="solid">
               <strong>Formato del file Excel:</strong>
               <ul>
+                <li>Cognome in ordine alfabetico</li>
                 <li>Nome</li>
-                <li>Cognome</li>
-                <li>Email dei professori</li>
-                <li>Ordinato alfabeticamente</li>
+                <li>Email</li>
+                <li>Telefono</li>
+                <li>Classi</li>
+                <li>Materie</li>
               </ul>
             </ReactTooltip>
 

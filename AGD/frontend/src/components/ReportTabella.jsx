@@ -7,7 +7,7 @@ function ReportTabella({ rows}) {
       <TableContainer
         component={Paper}
         sx={{
-          maxWidth: "1000px",
+          maxWidth: "1200px",
           margin: "auto",
           borderRadius: 2,
           boxShadow: 3,
