@@ -44,9 +44,9 @@ function ReportTabella({ rows}) {
                     color: "black",
                   }
                 }}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.disponibilità}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.pagamento}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.disponibilità}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.pagamento}</TableCell>
                 </TableRow>
               ))
             )}

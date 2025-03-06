@@ -60,11 +60,11 @@ function SupplenzeTabella({ rows, setRows }) {
                   color: "black",
                 }
               }}>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.classe}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.data}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                   {row.stato === "Accettata" ? (
                     <FaCheckCircle color="green" />
                   ) : row.stato === "In attesa" ? (
@@ -86,7 +86,7 @@ function SupplenzeTabella({ rows, setRows }) {
 
       {/* Dialog per modificare i dati */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Modifica Supplenza</DialogTitle>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Modifica Supplenza</DialogTitle>
         <DialogContent>
           {selectedRow && (
             <>

@@ -73,11 +73,11 @@ function DisponibilitaTabella({ rows, setRows }) {
                   color: "black",
                 }
               }}>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.giorno}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.giorno}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  <IconButton onClick={() => handleDelete(row.id)}>
+                  <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(row.id); }}>
                     <FaTrash color="red" />
                   </IconButton>
                 </TableCell>
@@ -89,7 +89,7 @@ function DisponibilitaTabella({ rows, setRows }) {
 
       {/* Dialog per modificare i dati */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Modifica Disponibilita</DialogTitle>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Modifica Disponibilita</DialogTitle>
         <DialogContent>
           {selectedRow && (
             <>

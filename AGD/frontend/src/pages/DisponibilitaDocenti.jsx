@@ -63,7 +63,7 @@ function DisponibilitaDocenti() {
 
       {/* Dialog con il form */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Aggiungi un Docente</DialogTitle>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Aggiungi un Docente</DialogTitle>
         <DialogContent>
           <TextField
             label="Docente"
