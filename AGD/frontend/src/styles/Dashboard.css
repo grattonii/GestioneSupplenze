@@ -8,7 +8,7 @@
 
 .dashboard-container {
   padding: 40px;
-  background-color: rgb(27, 38, 59);
+  background-color: rgb(34, 49, 78);
   min-height: 80vh; /* Altezza minima per evitare sovrapposizioni */
   max-width: 90%;
   width: 1500px; /* Larghezza fissa */
