@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SupplenzeTabella from "../components/SupplenzeTabella.jsx";
+import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 
@@ -36,7 +36,7 @@ function GestioneSupplenze() {
       <Navbar />
       <h1 className="title">Gestione Supplenze</h1>
 
-      <SupplenzeTabella rows={supplenze} setRows={setSupplenze} />
+      <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
     </div>
   );
 }

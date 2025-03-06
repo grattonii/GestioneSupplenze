@@ -86,7 +86,7 @@ function SupplenzeTabella({ rows, setRows }) {
 
       {/* Dialog per modificare i dati */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Modifica Supplenza</DialogTitle>
+        <DialogTitle>Modifica Supplenza</DialogTitle>
         <DialogContent>
           {selectedRow && (
             <>
@@ -97,23 +97,7 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
               />
-
               <TextField
                 label="Classe"
                 name="classe"
@@ -121,22 +105,6 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
               />
               <TextField
                 label="Data"
@@ -145,21 +113,6 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
               />
               <TextField
                 label="Ora"
@@ -168,30 +121,21 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                    borderWidth: "40px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
               />
-
+              <TextField
+                label="Stato"
+                name="stato"
+                value={selectedRow.stato || ""}
+                onChange={handleChange}
+                fullWidth
+                margin="dense"
+              />
             </>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
-          <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
+          <Button onClick={handleClose} color="primary">Annulla</Button>
+          <Button onClick={handleUpdate} color="primary">Modifica</Button>
         </DialogActions>
       </Dialog>
     </>

@@ -56,10 +56,7 @@ function SetAdmin() {
       );
 
       localStorage.setItem("token", response.data.token);
-      if(localStorage.getItem("role") === "admin")
-        navigate("/gestione-file");
-      else
-        navigate("/dashboard");
+      navigate("/gestione-file");
     } catch (error) {
       console.error("Errore durante l'aggiornamento", error);
       alert("Errore durante l'aggiornamento delle credenziali!");
