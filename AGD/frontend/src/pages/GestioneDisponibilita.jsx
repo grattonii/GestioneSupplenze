@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import "../styles/Accesso.css";
 
-const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"];
+const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState(
