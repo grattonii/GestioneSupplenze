@@ -1,60 +1,76 @@
-/* Stili generali */
 .dashboard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.dashboard-container {
-  padding: 40px;
-  background-color: rgb(34, 49, 78);
-  min-height: 80vh; /* Altezza minima per evitare sovrapposizioni */
-  max-width: 90%;
-  width: 1500px; /* Larghezza fissa */
-  border-radius: 15px;
+  padding: 20px;
+  background-color: #1e1e1e;
 }
 
 .dashboard-title {
-  margin-top: 100px;
   text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
-/* Layout con CSS Grid */
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 2fr;
-  gap: 25px;
+  grid-template-columns: repeat(2, 80%); /* Due colonne di uguale larghezza che sommano al 70% */
+  gap: 30px;
+  justify-content: center; /* Centra le colonne all'interno del contenitore */
 }
 
-/* Stili per i widget */
 .widget {
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(224, 224, 224);
-  height: 320px;
+  background-color: #2e2e2e;
+  border-radius: 10px;
   padding: 20px;
-  border-radius: 15px;
+  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
+  max-width: 100%; /* Assicurati che i widget non escano dallo schermo */
 }
 
-/* Dimensioni specifiche per i widget */
-.large {
-  grid-column: span 2; /* Occupa tutta la riga */
+.header {
+  text-align: left;
 }
 
-.medium {
-  grid-column: span 1; /* Occupa una colonna */
+.header h2 {
+  font-size: 1.5rem;
+  color: white;
+  margin: 0;
 }
 
-.widget-icon {
-  margin-right: 10px;
+.header p {
+  color: white;
+  margin: 0;
+}
+
+.header h3 {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin: 10px 0; /* Aggiungi un po' di margine per separare il sottotitolo dagli altri elementi */
 }
 
 .titolo {
-  color: rgb(0, 0, 0);
+  font-size: 2rem !important; /* Imposta una dimensione specifica per aumentare la grandezza */
+  color: #fff;
+  text-align: left; /* Aggiungi questa riga per allineare il titolo a sinistra */
+}
+
+button {
+  font-family: 'Poppins';
+  font-weight: 600;
+  background-color: #0352a6;
+  color: #fff;
+  width: 30%;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
