@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronLeft,faGear,faRightFromBracket,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import {faChevronLeft,faGear,faRightFromBracket,faEllipsisVertical, faC } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Navbar.css";
 
 function Navbar2() {
@@ -17,7 +17,8 @@ function Navbar2() {
     <nav className="navbar navbar-secondaria">
       <div className="navbar-left">
         <button className="bn-indietro" onClick={() => navigate(-1)}>
-          <FaChevronLeft className="icon" />Indietro
+        <FontAwesomeIcon icon={faChevronLeft} classname="icon" /> Indietro
+      
         </button>
       </div>
       <div className="navbar-right">
