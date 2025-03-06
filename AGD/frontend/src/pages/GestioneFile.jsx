@@ -7,9 +7,7 @@ import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare}
 
 function GestioneFile() {
   const [file1, setFile1] = useState(null);
-  const [file2, setFile2] = useState(null);
   const [fileName1, setFileName1] = useState("Carica file");
-  const [fileName2, setFileName2] = useState("Carica file");
 
   const handleFileChange1 = (event) => {
     if (event.target.files.length > 0) {
@@ -18,33 +16,25 @@ function GestioneFile() {
     }
   };
 
-  const handleFileChange2 = (event) => {
-    if (event.target.files.length > 0) {
-      setFile2(event.target.files[0]);
-      setFileName2(event.target.files[0].name);
-    }
-  };
-
   const handleUpload = async (e) => {
     e.preventDefault();
 
-    if (!file1 || !file2) {
-      return alert("Seleziona entrambi i file!");
+    if (!file1) {
+      return alert("Seleziona il file!");
     }
 
     const formData = new FormData();
     formData.append("file1", file1);
-    formData.append("file2", file2);
 
     try {
       await axios.post("http://localhost:5000/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("File caricati con successo!");
+      alert("File caricato con successo!");
     } catch (error) {
       console.error("Errore durante il caricamento", error);
-      alert("Errore durante il caricamento dei file");
+      alert("Errore durante il caricamento del file");
     }
   };
 
