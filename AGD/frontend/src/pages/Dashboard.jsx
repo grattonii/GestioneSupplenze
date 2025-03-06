@@ -22,7 +22,7 @@ function Dashboard() {
               onClick={() => navigate("/gestione-supplenze")}
             >
               <FaChalkboardTeacher className="widget-icon" />
-              <h2>GESTIONE SUPPLENZE</h2>
+              <h2 className="titolo">GESTIONE SUPPLENZE</h2>
             </motion.div>
 
             <motion.div
@@ -32,7 +32,7 @@ function Dashboard() {
               onClick={() => navigate("/disponibilita-docenti")}
             >
               <FaUsers className="widget-icon" />
-              <h2>DISPONIBILITÀ</h2>
+              <h2 className="titolo">DISPONIBILITÀ</h2>
             </motion.div>
 
             <motion.div
@@ -42,7 +42,7 @@ function Dashboard() {
               onClick={() => navigate("/storico-supplenze")}
             >
               <FaClipboardList className="widget-icon" />
-              <h2>STORICO SUPPLENZE</h2>
+              <h2 className="titolo">STORICO SUPPLENZE</h2>
             </motion.div>
 
             <motion.div
@@ -52,7 +52,7 @@ function Dashboard() {
               onClick={() => navigate("/report")}
             >
               <FaChartBar className="widget-icon" />
-              <h2>REPORT</h2>
+              <h2 className="titolo">REPORT</h2>
             </motion.div>
           </div>
         </div>

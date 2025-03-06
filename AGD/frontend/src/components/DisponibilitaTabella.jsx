@@ -72,9 +72,9 @@ function SupplenzeTabella({ rows, setRows }) {
                 <TableCell sx={{ textAlign: "center" }}>
                   {row.docente}
                 </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.giorno}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200}}>{row.giorno}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300}}>{row.ora}</TableCell>
+                <TableCell sx={{ textAlign: "center"}}>
                   <IconButton onClick={() => handleDelete(row.id)}>
                     <FaTrash color="red" />
                   </IconButton>
