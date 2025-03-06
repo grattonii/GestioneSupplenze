@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 
-function SupplenzeTabella({ rows, setRows }) {
+function DisponibilitaTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -66,7 +66,7 @@ function SupplenzeTabella({ rows, setRows }) {
             {rows.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} sx={{ textAlign: "center", padding: 2 }}>
-                  <Typography variant="h6">Nessuna supplenza da gestire al momento.</Typography>
+                  <Typography variant="h6">Nessuna disponibilita da gestire al momento.</Typography>
                 </TableCell>
               </TableRow>
             ) : (
@@ -188,4 +188,4 @@ function SupplenzeTabella({ rows, setRows }) {
   );
 }
 
-export default SupplenzeTabella;
+export default DisponibilitaTabella;
