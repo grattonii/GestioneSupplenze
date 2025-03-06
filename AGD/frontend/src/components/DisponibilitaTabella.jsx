@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 
-function SupplenzeTabella({ rows, setRows }) {
+function DisponibilitaTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -64,17 +64,19 @@ function SupplenzeTabella({ rows, setRows }) {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <TableRow
-                key={row.id}
-                onClick={() => handleOpen(row)}
-                sx={{ cursor: "pointer" }}
-              >
+              <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
+                cursor: "pointer",
+                transition: "transform 0.2s",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  color: "black",
+                }
+              }}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200 }}>{row.docente}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.giorno}</TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300 }}>{row.ora}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  {row.docente}
-                </TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 200}}>{row.giorno}</TableCell>
-                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 300}}>{row.ora}</TableCell>
-                <TableCell sx={{ textAlign: "center"}}>
                   <IconButton onClick={() => handleDelete(row.id)}>
                     <FaTrash color="red" />
                   </IconButton>
@@ -87,7 +89,7 @@ function SupplenzeTabella({ rows, setRows }) {
 
       {/* Dialog per modificare i dati */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Modifica Disponibilita</DialogTitle>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: 300 }}>Modifica Disponibilita</DialogTitle>
         <DialogContent>
           {selectedRow && (
             <>
@@ -98,9 +100,38 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#333",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "5px",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ccc",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#666",
+                  },
+                }}
               />
-              <FormControl fullWidth margin="dense">
-                <InputLabel>Giorno</InputLabel>
+              <FormControl fullWidth margin="dense" sx={{
+                "& .MuiInputBase-root": {
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "5px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ccc",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#666",
+                },
+              }}>
+                <InputLabel sx={{backgroundColor: "#fff", padding: "0px 10px 0px 5px"}}>Giorno</InputLabel>
                 <Select
                   name="giorno"
                   value={selectedRow.giorno || ""}
@@ -121,21 +152,32 @@ function SupplenzeTabella({ rows, setRows }) {
                 onChange={handleChange}
                 fullWidth
                 margin="dense"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#333",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "5px",
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#ccc",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#666",
+                  },
+                }}
               />
             </>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Annulla
-          </Button>
-          <Button onClick={handleUpdate} color="primary">
-            Modifica
-          </Button>
+          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
+          <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
         </DialogActions>
       </Dialog>
     </>
   );
 }
 
-export default SupplenzeTabella;
+export default DisponibilitaTabella;
