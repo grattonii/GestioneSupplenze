@@ -9,6 +9,7 @@ function Navbar2() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     navigate("/");
   };
 
@@ -16,7 +17,7 @@ function Navbar2() {
     <nav className="navbar navbar-secondaria">
       <div className="navbar-left">
         <button className="bn-indietro" onClick={() => navigate(-1)}>
-          <FaChevronLeft className="icon" />Indietro
+          <FaChevronLeft className="icon-back" /> Indietro
         </button>
       </div>
       <div className="navbar-right">

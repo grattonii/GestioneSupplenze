@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import GestioneFile from "./pages/GestioneFile";
-import Dashboard from "./pages/Dashboard";
-import GestioneSupplenze from "./pages/GestioneSupplenze";
-import DisponibilitaDocenti from "./pages/DisponibilitaDocenti";
-import Report from "./pages/Report";
-import SetAdmin from "./pages/SetAdmin";
-import StoricoSupplenze from "./pages/storicoSupplenze";
+import Login from "./pages/Login.jsx";
+import GestioneFile from "./pages/GestioneFile.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import GestioneSupplenze from "./pages/GestioneSupplenze.jsx";
+import DisponibilitaDocenti from "./pages/DisponibilitaDocenti.jsx";
+import Report from "./pages/Report.jsx";
+import SetAdmin from "./pages/SetAdmin.jsx";
+import StoricoSupplenze from "./pages/storicoSupplenze.jsx";
 import PaginaProf from "./pages/Professori.jsx";
+import Impostazioni from "./pages/Impostazioni.jsx";
+import DisponibilitaDocente from "./pages/GestioneDisponibilita.jsx";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/gestione-account" element={<SetAdmin/>} />
         <Route path="/storico-supplenze" element={<StoricoSupplenze/>} />
         <Route path="/professori" element={<PaginaProf/>} />
+        <Route path="/impostazioni" element={<Impostazioni/>} />
+        <Route path="/disponibilita-docente" element={<DisponibilitaDocente/>} />
       </Routes>
     </Router>
   );

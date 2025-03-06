@@ -8,7 +8,7 @@
 
 .dashboard-container {
   padding: 40px;
-  background-color: rgb(27, 38, 59);
+  background-color: rgb(34, 49, 78);
   min-height: 80vh; /* Altezza minima per evitare sovrapposizioni */
   max-width: 90%;
   width: 1500px; /* Larghezza fissa */
@@ -31,11 +31,11 @@
 .widget {
   display: flex;
   flex-direction: column;
-  background-color: rgb(218, 218, 218);
+  background-color: rgb(224, 224, 224);
   height: 320px;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -4,8 +4,8 @@
     height: 60px;
     display: flex;
     align-items: center;
-    background-color: rgb(27, 38, 59);
-    color: rgb(218, 218, 218);
+    background-color: rgb(34, 49, 78);
+    color: rgb(224, 224, 224);
     position: fixed;
     top: 0;
     left: 0;
@@ -33,8 +33,9 @@
 .bn-indietro {
     background: none;
     border: none;
-    color: rgb(218, 218, 218);
-    font-size: 1.2rem;
+    color: rgb(224, 224, 224);
+    font-size: 1.3rem;
+    font-weight: bold;
     cursor: pointer;
     border-radius: 10px;
     padding: 10px;
@@ -49,11 +50,12 @@
 .nav-button {
     background: none;
     border: none;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
     font-size: 1.5rem;
     border-radius: 50px;
     margin-bottom: 5px;
-    padding: 7px 10px;
+    margin-top: -5px;
+    padding: 10px 11px 6px 11px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -71,13 +73,14 @@
 
 .dropdown-menu {
     position: absolute;
-    top: 40px;
+    top: 46px;
     left: auto;  /* Evita che si sposti a sinistra */
-    right: 0;    /* Allinea il menu alla destra del pulsante */
-    background: #2c3e50;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    right: -10px;    /* Allinea il menu alla destra del pulsante */
+    background: rgb(34, 49, 78);
     display: flex;
     flex-direction: column;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     min-width: 150px;
     max-width: 200px; /* Previene che il menu sia troppo largo */
     overflow: hidden; /* Evita che il contenuto esca fuori */
@@ -88,7 +91,7 @@
 .dropdown-menu button {
     background: none;
     border: none;
-    color: rgb(218, 218, 218);
+    color: rgb(224, 224, 224);
     font-size: 1.1rem;
     padding: 10px;
     text-align: left;
@@ -108,4 +111,9 @@
 
 .icon {
     margin-right: 5px;
+}
+
+.icon-back {
+    font-size: 1rem;
+    margin-right: 3px;
 }

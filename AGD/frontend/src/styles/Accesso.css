@@ -5,8 +5,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 400px;
@@ -18,8 +18,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 400px;
@@ -31,12 +31,25 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 600px;
-  min-height: 500px;
+  min-height: 400px;
+}
+
+#TeacherBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
+  padding: 0 40px 40px;
+  border-radius: 20px;
+  min-width: 400px;
+  min-height: 450px;
 }
 
 #titolo {
@@ -61,9 +74,9 @@ input[type="file"] {
   color: rgb(27, 38, 59);
   font-weight: 700;
   font-family: "Poppins", serif;
-  background-color: rgb(218, 218, 218);
+  background-color: rgb(224, 224, 224);
   color: rgb(27, 38, 59);
-  border: 2px solid rgb(27, 38, 59);
+  border: 2px solid rgb(34, 49, 78);
   border-radius: 10px;
   padding: 10px 15px;
   margin: 5px;
@@ -76,9 +89,9 @@ input[type="file"] {
 .uploadBottoni button:hover {
   font-size: 18px;
   font-weight: bold;
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
-  border: 2px solid rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
+  background-color: rgb(34, 49, 78);
+  border: 2px solid rgb(224, 224, 224);
   cursor: pointer;
   transition: 0.17s;
 }
@@ -93,7 +106,7 @@ h3 {
   font-family: "Poppins", serif;
   font-weight: 700;
   font-style: normal;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   font-size: 20px;
   margin-bottom: 5px;
 }
@@ -108,10 +121,10 @@ h3 {
   width: 100%;
   background: transparent;
   border: none;
-  border: 2px solid rgb(218, 218, 218);
+  border: 2px solid rgb(224, 224, 224);
   border-radius: 10px;
   font-size: 15px;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   padding: 20px 0px 20px 20px;
   font-weight: bold;
 }
@@ -120,6 +133,10 @@ h3 {
   outline: none; /* Rimuove il bordo bianco predefinito */
   border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
+}
+
+.fileUpload {
+  margin-top: 50px;
 }
 
 #containerPulsanti {
@@ -134,12 +151,12 @@ h3 {
   height: 70px;
   font-size: 18px;
   font-weight: bold;
-  color: rgb(27, 38, 59);
+  color: rgb(34, 49, 78);
   font-weight: 700;
   font-family: "Poppins", serif;
 
-  background-color: rgb(218, 218, 218);
-  border: 2px solid rgb(27, 38, 59);
+  background-color: rgb(224, 224, 224);
+  border: 2px solid rgb(34, 49, 78);
   border-radius: 10px;
   cursor: pointer;
   transition: 0.17s;
@@ -148,23 +165,32 @@ h3 {
 #containerPulsanti button:hover {
   font-size: 18px;
   font-weight: bold;
-  color: rgb(218, 218, 218);
-  background-color: rgb(27, 38, 59);
-  border: 2px solid rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
+  background-color: transparent;
+  border: 2px solid rgb(224, 224, 224);
   border-radius: 10px;
   cursor: pointer;
   transition: 0.17s;
 }
 
 h1 {
+  text-align: center;
   font-weight: 700;
   font-style: normal;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
   font-size: 60px;
 }
 
+h2 {
+  text-align: center;
+  font-weight: 700;
+  font-style: normal;
+  color: rgb(224, 224, 224);
+  font-size: 40px;
+}
+
 body {
-  background-color: rgb(21, 21, 21);
+  background-color: rgb(37, 37, 37);
   font-family: "Poppins", serif;
 }
 .password-container {
@@ -179,9 +205,62 @@ body {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: rgb(218, 218, 218);
+  color: rgb(224, 224, 224);
 }
 
 .input {
   position: relative;
+}
+
+/* Sezione per ogni giorno */
+.giorno {
+  margin-bottom: 5px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Input time */
+.orario {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+input[type="time"] {
+  padding: 5px;
+  width: 120px;
+}
+
+/* Bottone per aggiungere una fascia */
+.aggiungi-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.aggiungi-btn:hover {
+  background: #0056b3;
+}
+
+/* Bottone per rimuovere una fascia */
+.rimuovi-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 10px 5px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.rimuovi-btn:hover {
+  background: #b52b3a;
 }
