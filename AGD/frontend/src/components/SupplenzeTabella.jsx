@@ -43,7 +43,7 @@ function SupplenzeTabella({ rows, setRows }) {
       <TableContainer component={Paper} sx={{ maxWidth: "1200px", margin: "auto", borderRadius: 2, boxShadow: 3 }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#2c3e50" }}>
+            <TableRow sx={{ backgroundColor: "#335C81" }}>
               {["Docente", "Classe", "Data", "Ora", "Stato", "Azioni"].map((header) => (
                 <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
               ))}

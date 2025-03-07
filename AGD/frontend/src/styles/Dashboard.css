@@ -1,6 +1,6 @@
 .dashboard {
   padding: 20px;
-  background-color: #1e1e1e;
+  background-color: #101829;
 }
 
 .dashboard-title {
@@ -22,7 +22,7 @@
 }
 
 .widget {
-  background-color: #2e2e2e;
+  background-color: #1a294a;
   border-radius: 10px;
   padding: 20px;
   text-align: center;

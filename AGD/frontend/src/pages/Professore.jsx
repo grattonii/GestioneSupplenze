@@ -80,8 +80,10 @@ function Professore() {
       }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#2c3e50" }}>
-              <TableCell></TableCell>
+            <TableRow sx={{ backgroundColor: "#335C81" }}>
+                            {["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi"].map((header) => (
+                              <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
+                            ))}
               {Object.keys(schedule).map((day) => (
                 <TableCell key={day} sx={{ color: "white", textAlign: "center" }}>{day}</TableCell>
               ))}

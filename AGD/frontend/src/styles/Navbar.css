@@ -4,7 +4,7 @@
     height: 60px;
     display: flex;
     align-items: center;
-    background-color: rgb(34, 49, 78);
+    background-color:#335C81;
     color: rgb(224, 224, 224);
     position: fixed;
     top: 0;
@@ -76,7 +76,7 @@
     top: 46px;
     left: auto;  /* Evita che si sposti a sinistra */
     right: -10px;    /* Allinea il menu alla destra del pulsante */
-    background: rgb(34, 49, 78);
+    background: #335C81;
     display: flex;
     flex-direction: column;
     border-bottom-left-radius: 10px;

@@ -15,7 +15,7 @@ function ReportTabella({ rows}) {
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#2c3e50" }}>
+            <TableRow sx={{ backgroundColor: "#335C81" }}>
               {["Docente", "Ore disponibilita", "Ore pagate"].map((header) => (
                 <TableCell
                   key={header}
