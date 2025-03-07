@@ -6,28 +6,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
 
 function GestioneFile() {
-  const [file1, setFile1] = useState(null);
-  const [fileName1, setFileName1] = useState("Carica file");
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("Carica file");
 
-  const handleFileChange1 = (event) => {
+  const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
-      setFile1(event.target.files[0]);
-      setFileName1(event.target.files[0].name);
+      setFile(event.target.files[0]);
+      setFileName(event.target.files[0].name);
     }
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
-    if (!file1) {
-      return alert("Seleziona il file!");
+    if (!file) {
+      return alert("Seleziona il file");
     }
 
     const formData = new FormData();
-    formData.append("file1", file1);
+    formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:5000/upload", formData, {
+      await axios.post("http://localhost:5000/files/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -77,14 +77,14 @@ function GestioneFile() {
                   id="fileInput1"
                   type="file"
                   accept=".xls,.xlsx"
-                  onChange={handleFileChange1}
+                  onChange={handleFileChange}
                   style={{ display: "none" }}
                 />
                 <FontAwesomeIcon
-                  icon={file1 ? faFileExcel : faFileArrowUp}
-                  style={{ color: file1 ? "#217346" : "#007BFF" }}
+                  icon={file ? faFileExcel : faFileArrowUp}
+                  style={{ color: file ? "#217346" : "#007BFF" }}
                 />{" "}
-                <span>{fileName1} </span>
+                <span>{fileName} </span>
               </button>
             </div>
 
