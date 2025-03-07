@@ -60,7 +60,6 @@ function Dashboard() {
                 <h3>Ultime 3 supplenze:</h3>
                 <SupplenzeTabella rows={ultimeSupplenze} />
               </div>
-              <button onClick={() => navigate("/gestione-supplenze")} className="button">Gestione completa</button>
             </motion.div>
 
             <motion.div
@@ -81,7 +80,6 @@ function Dashboard() {
                 <h3>Ultime 3 disponibilità:</h3>
                 <DisponibilitaTabella rows={disponibilitaDocenti} />
               </div>
-              <button onClick={() => navigate("/disponibilita-docenti")}className="button">Aggiungi disponibilità</button>
             </motion.div>
 
             <motion.div
@@ -100,8 +98,6 @@ function Dashboard() {
                 <h3>Ultime 3 supplenze:</h3>
                 <SupplenzeTabella rows={ultimeSupplenze} />
               </div>
-              <button onClick={() => navigate("/storico-supplenze")} className="button">Visualiza storico</button>
-
             </motion.div>
 
             <motion.div
@@ -122,7 +118,6 @@ function Dashboard() {
                 <h3>Ultimi 3 report:</h3>
                 <ReportTabella rows={ultimeSupplenze} />
               </div>
-              <button onClick={() => navigate("/report")} className="button">Visualizza report</button>
             </motion.div>
           </div>
         </div>
