@@ -1,5 +1,10 @@
-import { uploadProf } from "../controllers/fileController.js";
+import { uploadDocenti } from "../controllers/fileController.js";
+import express from "express";
+import multer from "multer";
 
-router.post("/upload", upload.single("file"), uploadProf);
+const router = express.Router();
+const upload = multer({ dest: 'uploads/' });
+
+router.post("/upload", upload.single("file"), uploadDocenti);
 
 export default router;

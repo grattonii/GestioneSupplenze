@@ -16,7 +16,7 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 80%); /* Due colonne di uguale larghezza che sommano al 70% */
+  grid-template-columns: repeat(2, 60%);
   gap: 30px;
   justify-content: center; /* Centra le colonne all'interno del contenitore */
 }
