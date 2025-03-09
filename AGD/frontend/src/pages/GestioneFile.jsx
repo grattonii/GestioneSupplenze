@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/Accesso.css";
+import { useNavigate } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +9,7 @@ import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare}
 function GestioneFile() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("Carica file");
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     if (event.target.files.length > 0) {
@@ -31,7 +33,7 @@ function GestioneFile() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("File caricato con successo!");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Errore durante il caricamento", error);
       alert("Errore durante il caricamento del file");

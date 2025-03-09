@@ -56,7 +56,14 @@ function SetAdmin() {
       );
     
       // Salviamo il nuovo token dopo l'aggiornamento
-      const newToken = response.data.token;
+      const newToken = response.data?.token;
+
+      if (!newToken) {
+        console.error("Errore: Nessun token ricevuto dal server");
+        alert("Errore durante l'aggiornamento delle credenziali!");
+        return;
+      }
+
       localStorage.setItem("token", newToken);
     
       // Decodifichiamo il nuovo token per ottenere il ruolo
@@ -77,7 +84,7 @@ function SetAdmin() {
     <>
       <script
         src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossorigin="anonymous"
+        crossOrigin="anonymous"
       ></script>
       <div id="AdminBox">
         <div id="titolo">
