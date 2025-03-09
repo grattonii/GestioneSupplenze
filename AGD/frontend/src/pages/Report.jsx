@@ -1,7 +1,7 @@
 import React from "react"; 
 import Navbar from "../components/Navbar2.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
-import ReportGrafico from "../components/ReportGrafico.jsx"; // Importa il grafico
+import ReportGrafico from "../components/ReportGrafico.jsx";
 import "../styles/Pagine.css";
 
 const data = [
@@ -23,7 +23,7 @@ const data = [
 ];
 
 function Report() {
-  // Prepara i dati per il grafico (ad esempio, usa la disponibilità come valore)
+  // Prepara i dati per il grafico
   const chartData = data.map(item => ({
     name: item.docente,
     value: item.disponibilità,

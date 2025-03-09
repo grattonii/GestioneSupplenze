@@ -34,7 +34,7 @@ function ReportGrafico({ data }) {
   }
 
   // Angolo minimo per visualizzare il testo
-  const minAngle = 20; // Puoi regolare questo valore come necessario
+  const minAngle = 20;
 
   const colors = ["#7e4cfe", "#895cfc", "#956bff", "#a37fff", "#b291fd", "#b597ff"]; // Colori delle fette
 

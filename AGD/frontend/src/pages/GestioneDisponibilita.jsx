@@ -51,7 +51,9 @@ function GestioneDisponibilita() {
 
   return (
     <form id="TeacherBox" onSubmit={handleSubmit}>
-      <h2>Imposta la tua disponibilità</h2>
+      <h1 className="d1">Disponibilità</h1>
+      <h3>Seleziona i giorni e gli orari in cui sei disponibile per le lezioni</h3>
+      <div className="giorni">
       {giorniSettimana.map((giorno) => (
         <div key={giorno} className="giorno">
           <h3>
@@ -90,8 +92,9 @@ function GestioneDisponibilita() {
           )}
         </div>
       ))}
+      </div>
       <div id="containerPulsanti">
-        <button type="submit">Salva Disponibilità</button>
+        <button type="submit" className="side">Salva Disponibilità</button>
       </div>
     </form>
   );

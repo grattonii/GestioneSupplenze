@@ -10,6 +10,7 @@ import StoricoSupplenze from "./pages/storicoSupplenze";
 import PaginaProf from "./pages/Professore.jsx";
 import DisponibilitaDocente from "./pages/GestioneDisponibilita.jsx";
 import Impostazioni from "./pages/Impostazioni.jsx";
+import GestioneOrari from "./pages/GestioneOrari.jsx";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/professore" element={<PaginaProf/>} />
         <Route path="/disponibilita-docente" element={<DisponibilitaDocente/>} />
         <Route path="/impostazioni" element={<Impostazioni/>} />
+        <Route path="/gestione-orari" element={<GestioneOrari/>} />
       </Routes>
     </Router>
   );
