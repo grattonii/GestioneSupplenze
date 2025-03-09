@@ -1,7 +1,7 @@
-import React from "react";
-import {Tooltip, ResponsiveContainer, PieChart, Pie, Cell  } from "recharts";
+import React from "react"; 
 import Navbar from "../components/Navbar2.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
+import ReportGrafico from "../components/ReportGrafico.jsx"; // Importa il grafico
 import "../styles/Pagine.css";
 
 const data = [
@@ -22,36 +22,22 @@ const data = [
   },
 ];
 
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658"];
-
 function Report() {
+  // Prepara i dati per il grafico (ad esempio, usa la disponibilità come valore)
+  const chartData = data.map(item => ({
+    name: item.docente,
+    value: item.disponibilità,
+  }));
+
   return (
     <div>
       <Navbar />
       <h1 className="title">Report</h1>
-      <ReportTabella rows={data}/>
+      <ReportTabella rows={data} />
       <div className="grafico">
-          <h2>Distribuzione delle ore</h2>
-          <ResponsiveContainer width="90%" height={400}>
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="disponibilità"
-                nameKey="docente"
-                cx="50%"
-                cy="50%"
-                outerRadius={180}
-                fill="#8884d8"
-                label
-              >
-                {data.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        <h2>Distribuzione delle ore</h2>
+        <ReportGrafico data={chartData} />
+      </div>
     </div>
   );
 }
