@@ -40,6 +40,17 @@ function GestioneOrari() {
           />
         </div>
         <div className="campo">
+          <h3 className="etichetta">Ora fine ultima lezione</h3>
+          <input
+            type="time"
+            name="fineUltimaLezione"
+            value={formData.fineUltimaLezione}
+            onChange={handleChange}
+            required
+            className="input-campo"
+          />
+        </div>
+        <div className="campo">
           <h3 className="etichetta">Ora inizio ricreazione</h3>
           <input
             type="time"
@@ -56,17 +67,6 @@ function GestioneOrari() {
             type="time"
             name="fineRicreazione"
             value={formData.fineRicreazione}
-            onChange={handleChange}
-            required
-            className="input-campo"
-          />
-        </div>
-        <div className="campo">
-          <h3 className="etichetta">Ora fine ultima lezione</h3>
-          <input
-            type="time"
-            name="fineUltimaLezione"
-            value={formData.fineUltimaLezione}
             onChange={handleChange}
             required
             className="input-campo"
