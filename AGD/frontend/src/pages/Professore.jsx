@@ -21,28 +21,11 @@ function Professore() {
   const fetchData = async (userToken) => {
     if (!userToken) return;
 
-    // Ottieni la data corrente
-    const currentDate = new Date();
-
-    // Calcola la data di domenica (fine settimana)
-    const sunday = new Date(currentDate);
-    sunday.setDate(currentDate.getDate() + (7 - currentDate.getDay())); // Domenica della settimana corrente
-
-    // Calcola il lunedì della settimana corrente
-    const monday = new Date(currentDate);
-    monday.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Lunedì della settimana corrente
-
-    // Filtra le supplenze per visualizzarle solo se sono nella settimana corrente o futura (da domenica)
     const filteredSubstitutions = [
       { class: "3Ai", date: "Martedì 07/03/2025", time: "10:00", id: 1 }, // supplenza futura
       { class: "4Bi", date: "Lunedì 13/03/2025", time: "11:00", id: 2 }, // supplenza settimana successiva
       { class: "5Ci", date: "Giovedì 06/03/2025", time: "12:00", id: 3 }, // supplenza questa settimana
-    ].filter(sub => {
-      const subDate = new Date(sub.date.split(" ")[1].split("/")[2], sub.date.split(" ")[1].split("/")[1] - 1, sub.date.split(" ")[1].split("/")[0]);
-
-      // Se la supplenza è nella settimana corrente (dall'inizio della settimana fino alla domenica) o successiva
-      return subDate >= monday && subDate <= sunday || subDate >= sunday;
-    });
+    ]
 
     setSchedule({
       "Lunedì": ["8:00 - 9:00", "10:00 - 11:00"],
@@ -142,9 +125,9 @@ function Professore() {
             ) : (
               substitutions.map((sub) => (
                 <TableRow key={sub.id}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.class}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.date}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.time}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.class}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.date}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.time}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                     <IconButton color="success" onClick={() => rejectSubstitution(sub)}>
                       <CheckIcon />

@@ -45,7 +45,10 @@ function Login() {
         else
           navigate("/dashboard");
       } else if (role === "professore") {
-        navigate("/professori");
+        if (firstLogin) 
+          navigate("/gestione-account");
+        else
+          navigate("/professore");
       } else {
         alert("Ruolo non riconosciuto");
         return;

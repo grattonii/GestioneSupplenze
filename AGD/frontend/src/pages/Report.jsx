@@ -1,7 +1,7 @@
-import React from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import React from "react"; 
 import Navbar from "../components/Navbar2.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
+import ReportGrafico from "../components/ReportGrafico.jsx";
 import "../styles/Pagine.css";
 
 const data = [
@@ -23,24 +23,20 @@ const data = [
 ];
 
 function Report() {
+  // Prepara i dati per il grafico
+  const chartData = data.map(item => ({
+    name: item.docente,
+    value: item.disponibilità,
+  }));
+
   return (
     <div>
       <Navbar />
       <h1 className="title">Report</h1>
-      <ReportTabella rows={data}/>
-      {/* Grafico */}
-      <div className="grafico-container">
-        <h2>Ore di supplenza per docente</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data}>
-            <XAxis dataKey="docente" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="disponibilità" fill="#8884d8" />
-            <Bar dataKey="pagamento" fill="#82ca9d" />
-          </BarChart>
-        </ResponsiveContainer>
+      <ReportTabella rows={data} />
+      <div className="grafico">
+        <h2>Distribuzione delle ore</h2>
+        <ReportGrafico data={chartData} />
       </div>
     </div>
   );

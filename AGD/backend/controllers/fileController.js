@@ -1,15 +1,10 @@
-import pkg from 'exceljs';
-import { writeFileSync, readFileSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
 import bcrypt from 'bcrypt';
-
+import pkg from 'exceljs';
 const { Workbook } = pkg;
-const USERS_FILE = './data/users.json';
-const OUTPUT_FILE = './data/docenti.json';
 
-function generateRandomPassword(length = 10) {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@';
-    return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-}
+const USERS_FILE = './data/users.json';
+const DOCENTI_FILE = './data/docenti.json';
 
 function generateUsername(nome, cognome) {
     const firstLetterNome = nome.charAt(0).toUpperCase();
@@ -18,36 +13,36 @@ function generateUsername(nome, cognome) {
     return `${firstLetterNome}${firstLetterCognome}${randomNumbers}D`;
 }
 
-// Funzione per caricare Excel e creare utenti
-export const uploadProf = async (req, res) => {
-    const filePath = req.file.path;
-
+export const generateAccounts = (res) => {
     try {
-        const workbook = new Workbook();
-        await workbook.xlsx.readFile(filePath);
-        const worksheet = workbook.getWorksheet(1);
+        // Controlla se il file docenti.json esiste
+        if (!existsSync(DOCENTI_FILE)) {
+            return res.status(400).json({ message: 'Nessun file docenti trovato! Carica prima i docenti.' });
+        }
 
-        const users = JSON.parse(readFileSync(USERS_FILE));
+        // Legge i dati dei docenti
+        const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
+        const users = existsSync(USERS_FILE) ? JSON.parse(readFileSync(USERS_FILE)) : [];
 
-        worksheet.eachRow((row, rowNumber) => {
-            if (rowNumber > 1) { // Salta l'intestazione
-                const nome = row.getCell(1).text.trim();
-                const cognome = row.getCell(2).text.trim();
-                const email = row.getCell(3).text.trim();
+        docenti.forEach(docente => {
+            const { nome, cognome, email } = docente;
 
-                const username = generateUsername(nome, cognome);
-                const password = generateRandomPassword();
-                const hashedPassword = bcrypt.hashSync(password, 10);
-
-                users.push({ username, password: hashedPassword, email, role: 'professore' });
-
-                console.log(`Creato account: ${username} con password: ${password}`);
+            if (!nome || !cognome || !email) {
+                console.warn(`Dati incompleti per: ${nome} ${cognome}, saltato.`);
+                return;
             }
+
+            const username = generateUsername(nome, cognome);
+            const password = username; // Password uguale allo username
+            const hashedPassword = bcrypt.hashSync(password, 10);
+
+            users.push({ username, password: hashedPassword, email, role: 'professore', firstLogin: true });
         });
 
+        // Salva gli utenti aggiornati
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
-        res.json({ success: true, message: 'Professori caricati con successo!' });
+       return { success: true, message: 'Account professori creati con successo!' };
     } catch (error) {
         console.error('Errore nel caricamento:', error);
         res.status(500).json({ message: 'Errore nel caricamento!' });
@@ -93,7 +88,9 @@ export const uploadDocenti = async (req, res) => {
             }
         });
 
-        writeFileSync(OUTPUT_FILE, JSON.stringify(docenti, null, 2));
+        writeFileSync(DOCENTI_FILE, JSON.stringify(docenti, null, 2));
+
+        generateAccounts(res); // Genera account per i docenti
 
         res.json({ success: true, message: 'Dati docenti caricati con successo!' });
     } catch (error) {

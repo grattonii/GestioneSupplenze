@@ -43,31 +43,48 @@ function SetAdmin() {
 
     try {
       const token = localStorage.getItem("token");
-
+    
       if (!token) {
         alert("Devi essere autenticato per cambiare le credenziali!");
         return;
       }
-
+    
       const response = await axios.put(
         "http://localhost:5000/auth/update",
         { newUsername: user, newPassword: password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+    
+      // Salviamo il nuovo token dopo l'aggiornamento
+      const newToken = response.data?.token;
 
-      localStorage.setItem("token", response.data.token);
-      navigate("/gestione-file");
+      if (!newToken) {
+        console.error("Errore: Nessun token ricevuto dal server");
+        alert("Errore durante l'aggiornamento delle credenziali!");
+        return;
+      }
+
+      localStorage.setItem("token", newToken);
+    
+      // Decodifichiamo il nuovo token per ottenere il ruolo
+      const decodedToken = JSON.parse(atob(newToken.split(".")[1]));
+    
+      if (decodedToken.role !== "admin")
+        navigate("/disponibilita-docente");
+      else
+        navigate("/gestione-file");
+    
     } catch (error) {
       console.error("Errore durante l'aggiornamento", error);
       alert("Errore durante l'aggiornamento delle credenziali!");
-    }
+    }    
   };
 
   return (
     <>
       <script
         src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossorigin="anonymous"
+        crossOrigin="anonymous"
       ></script>
       <div id="AdminBox">
         <div id="titolo">

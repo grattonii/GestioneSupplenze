@@ -47,7 +47,7 @@
   background-color: rgb(34, 49, 78);
   padding: 40px;
   border-radius: 20px;
-  min-width: 500px;
+  min-width: 600px;
   min-height: 400px;
 }
 
@@ -165,8 +165,7 @@ h3 {
   font-size: 18px;
   font-weight: bold;
   color: rgb(224, 224, 224);
-  background-color: rgb(20, 107, 207); /* Mantiene il bordo azzurro */
-
+  background-color: rgb(34, 49, 78); /* Mantiene il bordo azzurro */
   border: 2px solid rgb(224, 224, 224);
   border-radius: 10px;
   cursor: pointer;
@@ -174,15 +173,24 @@ h3 {
 }
 
 h1 {
+  text-align: center;
   font-weight: 700;
   font-style: normal;
   color: rgb(224, 224, 224);
   font-size: 60px;
 }
 
+.d1 {
+  margin-top: -10px;
+}
+
+.go1 {
+  margin: -10px 0;
+}
+
 h2 {
   text-align: center;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(224, 224, 224);
   font-size: 30px;
 }
@@ -209,6 +217,11 @@ body {
 
 .input {
   position: relative;
+}
+
+.giorni {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .giorno {
@@ -260,4 +273,29 @@ input[type="time"] {
 
 .rimuovi-btn:hover {
   background: #b52b3a;
+}
+
+/* Contenitore singolo campo */
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stile generale per input e select */
+.input-campo {
+  width: 200px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: bold;
+  background: transparent;
+  border: 2px solid rgb(224, 224, 224);
+  color: rgb(224, 224, 224);
+  border-radius: 8px;
+  transition: border 0.2s ease-in-out;
+}
+
+.input-campo:focus {
+  outline: none; /* Rimuove il bordo bianco predefinito */
+  border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
+  transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }

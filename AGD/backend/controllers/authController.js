@@ -98,7 +98,18 @@ export const updateUser = async (req, res) => {
 
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
-        res.json({ success: true, message: "Username e password aggiornati!" });
+        const newToken = jwt.sign(
+            { username: newUsername, role: users[userIndex].role },
+            SECRET_KEY,
+            { expiresIn: "1h" }
+        );
+
+        res.json({
+            success: true,
+            message: "Username e password aggiornati!",
+            token: newToken // Restituiamo il nuovo token
+        });
+        
     } catch (error) {
         res.status(500).json({ message: "Errore del server!" });
     }
