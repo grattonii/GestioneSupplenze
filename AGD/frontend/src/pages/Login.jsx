@@ -39,7 +39,9 @@ function Login() {
 
       localStorage.setItem("token", token); // Salva il token
 
-      if (role === "admin") {
+      if(role == "root") {
+        navigate("/root");
+      } else if (role === "admin") {
         if (firstLogin) 
           navigate("/gestione-account");
         else

@@ -1,8 +1,7 @@
 [
   {
-    "username": "isitgo",
-    "password": "$2b$10$xsRlhBSP.S8kx.sVY0NUTelYJdHycKMyqxwpuTp/9Hs87N9gFWfly",
-    "role": "admin",
-    "firstLogin": false
+    "username": "AGDagency",
+    "password": "$2b$10$sNddrY1F6J0WbHTMSvIbqutbF720JwgevMuGxtPu3FgBk/v47AZ3a",
+    "role": "root"
   }
 ]

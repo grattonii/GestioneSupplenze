@@ -7,9 +7,9 @@ const SECRET_KEY = "G7X9B2M4Q5Z1";
 
 // Se il file non esiste, creiamo l'admin di default
 if (!existsSync(USERS_FILE)) {
-    const hashedAdminPassword = bcrypt.hashSync("admin", 10);
+    const hashedAdminPassword = bcrypt.hashSync("AGDagency", 10);
     const defaultUsers = [
-        { username: "admin", password: hashedAdminPassword, role: "admin", firstLogin: true }
+        { username: "AGDagency", password: hashedAdminPassword, role: "root"}
     ];
 
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
