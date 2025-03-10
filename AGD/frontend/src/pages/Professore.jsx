@@ -48,7 +48,9 @@ function Professore() {
     const updatedSubstitutions = substitutions.filter((s) => s.id !== sub.id);
     setSubstitutions(updatedSubstitutions);
   };
-
+  if (!token || role !== "professore") {
+    return null; // Oppure mostra un messaggio di caricamento o accesso negato
+  }
   return (
     <div>
       <Navbar />
