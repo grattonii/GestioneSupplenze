@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import "../styles/Accesso.css";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
@@ -32,12 +34,12 @@ function SetAdmin() {
     event.preventDefault();
 
     if (!user || !password || !confirmPassword) {
-      alert("Compila Tutti i Campi");
+      toast.warn("Compila tutti i campi!", { position: "top-center" });
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Le Password Non Combaciano");
+      toast.warn("Le password non corrispondono", { position: "top-center" });
       return;
     }
 
@@ -45,7 +47,7 @@ function SetAdmin() {
       const token = localStorage.getItem("token");
     
       if (!token) {
-        alert("Devi essere autenticato per cambiare le credenziali!");
+        toast.warn("Devi essere autenticato per cambiare le credenziali!", { position: "top-center" });
         return;
       }
     
@@ -60,7 +62,7 @@ function SetAdmin() {
 
       if (!newToken) {
         console.error("Errore: Nessun token ricevuto dal server");
-        alert("Errore durante l'aggiornamento delle credenziali!");
+        toast.error("Errore durante l'aggiornamento delle credenziali!",{ position: "top-center" });
         return;
       }
 
@@ -76,7 +78,7 @@ function SetAdmin() {
     
     } catch (error) {
       console.error("Errore durante l'aggiornamento", error);
-      alert("Errore durante l'aggiornamento delle credenziali!");
+      toast.error("Errore durante l'aggiornamento delle credenziali!",{ position: "top-center" });
     }    
   };
 
@@ -86,6 +88,7 @@ function SetAdmin() {
         src="https://kit.fontawesome.com/2f5f6d0fd4.js"
         crossOrigin="anonymous"
       ></script>
+      <ToastContainer/>
       <div id="AdminBox">
         <div id="titolo">
           <h1>Crea L'Account</h1>

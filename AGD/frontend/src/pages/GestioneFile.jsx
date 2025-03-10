@@ -3,6 +3,8 @@ import axios from "axios";
 import "../styles/Accesso.css";
 import { useNavigate } from 'react-router-dom';
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFileArrowUp, faCircleQuestion, faArrowUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
 
@@ -22,7 +24,8 @@ function GestioneFile() {
     e.preventDefault();
 
     if (!file) {
-      return alert("Seleziona il file");
+      toast.warn("Seleziona un file prima di procedere!", { position: "top-center" });
+      return;
     }
 
     const formData = new FormData();
@@ -35,13 +38,16 @@ function GestioneFile() {
 
       navigate("/dashboard");
     } catch (error) {
-      console.error("Errore durante il caricamento", error);
-      alert("Errore durante il caricamento del file");
+      if (error.response)
+        toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" }); // Errore specifico dal backend
+      else
+        toast.error("Errore di connessione al server!", { position: "top-center" });
     }
   };
 
   return (
     <>
+      <ToastContainer/>
       <div id="FilesBox">
         <div id="titolo">
           <h1>Caricamento File</h1>

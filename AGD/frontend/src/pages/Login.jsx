@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Accesso.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
@@ -24,7 +26,7 @@ function Login() {
     event.preventDefault(); // Evita il refresh della pagina
 
     if (!user || !password) {
-      alert("Compila tutti i campi!");
+      toast.warn("Compila tutti i campi!", { position: "top-center" });
       return;
     }
 
@@ -41,24 +43,27 @@ function Login() {
 
       if(role == "root") {
         navigate("/root");
-      } else if (role === "admin") {
+      } 
+      else if (role === "admin") {
         if (firstLogin) 
           navigate("/gestione-account");
         else
           navigate("/dashboard");
-      } else if (role === "professore") {
+      } 
+      else if (role === "professore") {
         if (firstLogin) 
           navigate("/gestione-account");
         else
           navigate("/professore");
-      } else {
-        alert("Ruolo non riconosciuto");
+      } 
+      else {
+        toast.error("Ruolo non riconosciuto!", { position: "top-center" });
         return;
       }
 
     } catch (error) {
       console.error("Errore durante il login", error);
-      alert("Credenziali errate!");
+      toast.error("Credenziali errate!", { position: "top-center" });
     }
   };
 
@@ -69,14 +74,11 @@ function Login() {
 
   return (
     <>
+      <ToastContainer />
       <div id="loginBox">
-
         <div id="titolo">
-
           <h1>Login</h1>
-
         </div>
-
         <form onSubmit={handleSubmit}>
           <div id="formLogin">
             <div className="input">
