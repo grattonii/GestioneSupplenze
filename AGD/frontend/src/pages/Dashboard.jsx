@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar, FaRegCalendarAlt } from "react-icons/fa";
 import "../styles/Dashboard.css";
 import Navbar from "../components/Navbar.jsx";
 import SupplenzeTabella from "../components/SupplenzeTabella.jsx";
@@ -43,7 +43,7 @@ function Dashboard() {
         <div className="dashboard-container">
           <div className="grid-container">
             <motion.div
-              className="widget large"
+              className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/gestione-supplenze")}
@@ -63,7 +63,7 @@ function Dashboard() {
             </motion.div>
 
             <motion.div
-              className="widget large"
+              className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/disponibilita-docenti")}
@@ -83,7 +83,7 @@ function Dashboard() {
             </motion.div>
 
             <motion.div
-              className="widget large"
+              className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/storico-supplenze")}
@@ -101,7 +101,20 @@ function Dashboard() {
             </motion.div>
 
             <motion.div
-              className="widget large"
+              className="widget"
+              whileHover={{ translateY: -10 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate("/")}
+            >
+              <div className="header">
+                <h2 className="titolo">
+                  GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
+                </h2>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="widget report-widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/report")}
