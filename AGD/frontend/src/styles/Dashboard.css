@@ -30,6 +30,10 @@
   max-width: 100%; /* Assicurati che i widget non escano dallo schermo */
 }
 
+.widget-large {
+  grid-column: span 2;
+}
+
 .report-widget {
   grid-column: span 2;
 }
@@ -59,4 +63,32 @@
   font-size: 2rem !important; /* Imposta una dimensione specifica per aumentare la grandezza */
   color: #fff;
   text-align: left; /* Aggiungi questa riga per allineare il titolo a sinistra */
+}
+
+.absence-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.absence-table th,
+.absence-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.absence-table th {
+  background-color: #335C81;
+  color: white;
+  font-weight: 600;
+}
+
+.absence-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.absence-table tr:hover {
+  background-color: #ddd;
 }
