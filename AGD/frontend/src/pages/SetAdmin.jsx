@@ -89,28 +89,15 @@ function SetAdmin() {
         crossOrigin="anonymous"
       ></script>
       <ToastContainer/>
-      <div id="AdminBox">
+      <div id="loginBox">
         <div id="titolo">
-          <h1>Crea L'Account</h1>
+          <h1>Cambia Password</h1>
         </div>
         <form onSubmit={handleSubmit}>
           <div id="formLogin">
             <div className="input">
               <h3>
-                <FontAwesomeIcon icon={faUser} /> <span>Username </span>
-              </h3>
-              <input
-                type="text"
-                name="user"
-                placeholder="username"
-                value={user}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="input">
-              <h3>
-                <FontAwesomeIcon icon={faLock} /> <span>Password</span>
+                <FontAwesomeIcon icon={faLock} /> <span>Nuova Password</span>
               </h3>
               <div className="password-container">
                 <input

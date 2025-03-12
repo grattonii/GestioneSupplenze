@@ -12,19 +12,6 @@
   min-height: 500px;
 }
 
-#AdminBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgb(224, 224, 224);
-  background-color: rgb(34, 49, 78);
-  padding: 0 40px 40px;
-  border-radius: 20px;
-  min-width: 400px;
-  min-height: 580px;
-}
-
 #FilesBox {
   position: absolute;
   top: 50%;
