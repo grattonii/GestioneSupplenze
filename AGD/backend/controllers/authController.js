@@ -79,11 +79,7 @@ export const authenticateToken = (req, res, next) => {
 
 // Funzione per aggiornare username e password
 export const updateUser = async (req, res) => {
-    const { newUsername, newPassword } = req.body;
-
-    if (!newUsername || !newPassword) {
-        return res.status(400).json({ message: "Compila tutti i campi!" });
-    }
+    const { newPassword } = req.body;
 
     try {
         let users = JSON.parse(readFileSync(USERS_FILE));
@@ -93,13 +89,12 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ message: "Utente non trovato!" });
         }
 
-        users[userIndex].username = newUsername;
         users[userIndex].password = bcrypt.hashSync(newPassword, 10);
 
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
         const newToken = jwt.sign(
-            { username: newUsername, role: users[userIndex].role },
+            { username: users[userIndex].username, role: users[userIndex].role },
             SECRET_KEY,
             { expiresIn: "1h" }
         );
