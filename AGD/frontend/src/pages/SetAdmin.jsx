@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function SetAdmin() {
-  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +16,6 @@ function SetAdmin() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "user") setUser(value);
     if (name === "password") setPassword(value);
     if (name === "confirmPassword") setConfirmPassword(value);
   };
@@ -33,7 +31,7 @@ function SetAdmin() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!user || !password || !confirmPassword) {
+    if (!password || !confirmPassword) {
       toast.warn("Compila tutti i campi!", { position: "top-center" });
       return;
     }
@@ -48,12 +46,12 @@ function SetAdmin() {
     
       if (!token) {
         toast.warn("Devi essere autenticato per cambiare le credenziali!", { position: "top-center" });
-        return;
+        navigate("/")
       }
     
       const response = await axios.put(
         "http://localhost:5000/auth/update",
-        { newUsername: user, newPassword: password },
+        { newPassword: password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
     
