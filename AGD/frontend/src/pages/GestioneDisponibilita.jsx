@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+const token = localStorage.getItem('token');
+const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState(
@@ -48,14 +50,14 @@ function GestioneDisponibilita() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const docenteId = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')).id : null;
+    const docenteId = decodedToken;
 
-    const payload = {
+    const payload = { //!!
       idDocente: docenteId, 
       disponibilita: disponibilita,
     };
 
-    fetch('http://localhost:5000/disp/disp', {
+    fetch('http://localhost:5000/disp/disponibilita', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
