@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import "../styles/Accesso.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
@@ -45,11 +47,34 @@ function GestioneDisponibilita() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Disponibilità salvata:", disponibilita);
-    // Qui puoi aggiungere una chiamata API per salvare i dati nel backend
+
+    const docenteId = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')).id : null;
+
+    const payload = {
+      idDocente: docenteId, 
+      disponibilita: disponibilita,
+    };
+
+    fetch('http://localhost:5000/disp/disp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Disponibilità salvata:', data);
+      })
+      .catch((error) => {
+        console.error('Errore durante l\'invio:', error);
+        toast.error("Dati errati!", { position: "top-center" });
+      });
   };
 
   return (
+    <>
+    <ToastContainer />
     <form id="TeacherBox" onSubmit={handleSubmit}>
       <h1 className="d1">Disponibilità</h1>
       <h3>Seleziona i giorni e gli orari in cui sei disponibile per le lezioni</h3>
@@ -97,6 +122,7 @@ function GestioneDisponibilita() {
         <button type="submit" className="side">Salva Disponibilità</button>
       </div>
     </form>
+    </>
   );
 }
 

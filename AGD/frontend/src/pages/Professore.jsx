@@ -1,31 +1,26 @@
 import { useState, useEffect } from "react";
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, TextField } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, Card, CardContent, CardActions } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import "../styles/Professore.css";
 import Navbar from "../components/NavbarProf.jsx";
 
 function Professore() {
-  const [token, setToken] = useState(null);
   const [schedule, setSchedule] = useState({});
   const [substitutions, setSubstitutions] = useState([]);
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
 
   useEffect(() => {
-    const userToken = localStorage.getItem("token");
-    setToken(userToken);
-    fetchData(userToken);
+    fetchData();
   }, []);
 
-  const fetchData = async (userToken) => {
-    if (!userToken) return;
-
+  const fetchData = async () => {
     const filteredSubstitutions = [
       { class: "3Ai", date: "Martedì 07/03/2025", time: "10:00", id: 1 }, // supplenza futura
       { class: "4Bi", date: "Lunedì 13/03/2025", time: "11:00", id: 2 }, // supplenza settimana successiva
       { class: "5Ci", date: "Giovedì 06/03/2025", time: "12:00", id: 3 }, // supplenza questa settimana
-    ]
+    ];
 
     setSchedule({
       "Lunedì": ["8:00 - 9:00", "10:00 - 11:00"],
@@ -48,13 +43,13 @@ function Professore() {
     const updatedSubstitutions = substitutions.filter((s) => s.id !== sub.id);
     setSubstitutions(updatedSubstitutions);
   };
-  if (!token || role !== "professore") {
-    return null; // Oppure mostra un messaggio di caricamento o accesso negato
-  }
+
   return (
     <div>
       <Navbar />
-      <h1 className="title">Dashboard Professore</h1>
+      <Typography variant="h3" align="center" gutterBottom className="title">
+        Dashboard Professore
+      </Typography>
 
       <TableContainer component={Paper} sx={{
         maxWidth: "1200px",
@@ -66,11 +61,8 @@ function Professore() {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-                            {["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi"].map((header) => (
-                              <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
-                            ))}
-              {Object.keys(schedule).map((day) => (
-                <TableCell key={day} sx={{ color: "white", textAlign: "center" }}>{day}</TableCell>
+              {["Lunedi", "Martedi", "Mercoledi", "Giovedi", "Venerdi"].map((header) => (
+                <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -88,7 +80,7 @@ function Professore() {
                 <TableCell sx={{ fontFamily: "Poppins", fontWeight: "bold" }}>{hour}</TableCell>
                 {Object.keys(schedule).map((day) => (
                   <TableCell key={day} sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                     {schedule[day] && schedule[day].length >= hour ? schedule[day][hour - 1] : "-"}
+                    {schedule[day] && schedule[day].length >= hour ? schedule[day][hour - 1] : "-"}
                   </TableCell>
                 ))}
               </TableRow>
@@ -125,9 +117,9 @@ function Professore() {
             ) : (
               substitutions.map((sub) => (
                 <TableRow key={sub.id}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.class}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.date}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{substitutions.time}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.class}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.date}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.time}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                     <IconButton color="success" onClick={() => rejectSubstitution(sub)}>
                       <CheckIcon />
@@ -143,26 +135,37 @@ function Professore() {
         </Table>
       </TableContainer>
 
-      <form className="absence-form" onSubmit={handleAbsenceSubmit}>
-        <h2 style={{ color: "black" }}>Richiedi Assenza</h2>
-        <TextField
-          label="Data"
-          type="date"
-          fullWidth
-          value={absenceDate}
-          onChange={(e) => setAbsenceDate(e.target.value)}
-        />
-        <TextField
-          label="Motivo"
-          multiline
-          fullWidth
-          value={absenceReason}
-          onChange={(e) => setAbsenceReason(e.target.value)}
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Invia Richiesta
-        </Button>
-      </form>
+      <Card sx={{ maxWidth: "900px", height:"auto", paddingBottom:"0px", margin: "auto", marginBottom: 15, borderRadius: 2, boxShadow: 3, backgroundColor: "#335C81"}}>
+        <CardContent>
+          <Typography variant="h5" component="div" gutterBottom className="absence-title">
+            Richiedi Assenza
+          </Typography>
+          <form className="absence-form" onSubmit={handleAbsenceSubmit}>
+            <div className="input">
+              <label htmlFor="absenceDate">Data</label>
+              <input
+                id="absenceDate"
+                type="date"
+                value={absenceDate}
+                onChange={(e) => setAbsenceDate(e.target.value)}
+              />
+            </div>
+            <div className="input">
+              <label htmlFor="absenceReason">Motivo</label>
+              <textarea
+                id="absenceReason"
+                value={absenceReason}
+                onChange={(e) => setAbsenceReason(e.target.value)}
+              />
+            </div>
+            <CardActions>
+              <Button type="submit" variant="contained" color="primary" fullWidth className="submit-button">
+                Invia Richiesta
+              </Button>
+            </CardActions>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

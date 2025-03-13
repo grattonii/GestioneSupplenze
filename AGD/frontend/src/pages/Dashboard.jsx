@@ -43,7 +43,7 @@ function Dashboard() {
         <div className="dashboard-container">
           <div className="grid-container">
             <motion.div
-              className="widget"
+              className="widget report-widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/gestione-supplenze")}
@@ -114,7 +114,7 @@ function Dashboard() {
             </motion.div>
 
             <motion.div
-              className="widget report-widget"
+              className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/report")}
