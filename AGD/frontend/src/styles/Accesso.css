@@ -5,7 +5,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: rgb(224, 224, 224);
-  background-color: #1a294a;
+  background-color: rgb(34, 49, 78);
   padding: 0 40px 40px;
   border-radius: 20px;
   min-width: 400px;
@@ -115,9 +115,14 @@ h3 {
   font-weight: bold;
 }
 
+.input:hover {
+  border-color: rgb(74, 144, 226);
+}
+
 .input input:focus {
-  outline: none; /* Rimuove il bordo bianco predefinito */
-  border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
+  outline: none;
+  border-color: rgb(74, 144, 226);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }
 
@@ -225,9 +230,47 @@ body {
   margin-bottom: 5px;
 }
 
+/* Stile generale */
 input[type="time"] {
-  padding: 5px;
-  width: 120px;
+  appearance: none; /* Rimuove lo stile predefinito del browser */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  width: 203px;
+  padding: 11px;
+  font-size: 16px;
+  font-weight: bold;
+  background: transparent;
+  border: 2px solid rgb(224, 224, 224);
+  color: rgb(224, 224, 224);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border 0.2s ease-in-out;
+}
+
+/* Cambia il colore al passaggio del mouse */
+input[type="time"]:hover {
+  border-color: rgb(74, 144, 226);
+}
+
+/* Cambia colore quando il campo è selezionato */
+input[type="time"]:focus {
+  outline: none;
+  border-color: rgb(74, 144, 226);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Rimuove le frecce sui browser che le mostrano */
+input[type="time"]::-webkit-inner-spin-button,
+input[type="time"]::-webkit-clear-button {
+  display: none;
+}
+
+/* Personalizza la freccia a destra su alcuni browser */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Cambia il colore per adattarsi a temi scuri */
+  cursor: pointer;
 }
 
 /* Bottone per aggiungere una fascia */
@@ -271,8 +314,8 @@ input[type="time"] {
 /* Stile generale per input e select */
 .input-campo {
   width: 200px;
-  padding: 15px;
-  font-size: 15px;
+  padding: 14px;
+  font-size: 16px;
   font-weight: bold;
   background: transparent;
   border: 2px solid rgb(224, 224, 224);
@@ -281,9 +324,14 @@ input[type="time"] {
   transition: border 0.2s ease-in-out;
 }
 
+.input-campo:hover {
+  border-color: rgb(74, 144, 226); 
+}
+
 .input-campo:focus {
-  outline: none; /* Rimuove il bordo bianco predefinito */
-  border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
+  outline: none;
+  border-color: rgb(74, 144, 226);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }
 
