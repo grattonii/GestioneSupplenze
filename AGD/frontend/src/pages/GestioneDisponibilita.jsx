@@ -5,8 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-const token = localStorage.getItem('token');
-const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState(
@@ -50,10 +48,25 @@ function GestioneDisponibilita() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const docenteId = decodedToken;
+    const token = localStorage.getItem('token');
 
-    const payload = { //!!
-      idDocente: docenteId, 
+    if (!token) {
+      console.error("Token non trovato nel localStorage!");
+    }
+
+    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    const idDocente = decodedToken ? decodedToken.id : null;
+
+    console.log("Token decodificato:", decodedToken);
+
+    if (!idDocente) {
+      console.error("Errore: idDocente non trovato!");
+      toast.error("Errore: ID docente mancante!", { position: "top-center" });
+      return;
+    }
+
+    const payload = { 
+      idDocente: idDocente, 
       disponibilita: disponibilita,
     };
 
@@ -61,6 +74,7 @@ function GestioneDisponibilita() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(payload),
     })

@@ -21,6 +21,7 @@ export const generateAccounts = (res) => {
         }
 
         // Legge i dati dei docenti
+        let id = 1;
         const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
         const users = existsSync(USERS_FILE) ? JSON.parse(readFileSync(USERS_FILE)) : [];
 
@@ -35,8 +36,10 @@ export const generateAccounts = (res) => {
             const username = generateUsername(nome, cognome);
             const password = username; // Password uguale allo username
             const hashedPassword = bcrypt.hashSync(password, 10);
+            const docenteId = "I" + id;
 
-            users.push({ username, password: hashedPassword, email, role: 'professore', firstLogin: true });
+            users.push({ docenteId, username, password: hashedPassword, email, role: 'professore', firstLogin: true });
+            id++;
         });
 
         // Salva gli utenti aggiornati

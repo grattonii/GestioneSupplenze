@@ -37,7 +37,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
-        const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign({ id: users.docenteId , username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
         // Controlliamo se è il primo login
         const userIndex = users.findIndex(u => u.username === username);
@@ -94,7 +94,7 @@ export const updateUser = async (req, res) => {
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
         const newToken = jwt.sign(
-            { username: users[userIndex].username, role: users[userIndex].role },
+            { id: users[userIndex].docenteId , username: users[userIndex].username, role: users[userIndex].role },
             SECRET_KEY,
             { expiresIn: "1h" }
         );
