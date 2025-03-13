@@ -16,6 +16,7 @@
 
 .absence-form .input {
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .absence-form label {
@@ -26,9 +27,18 @@
   display: block;
 }
 
+
+
+.absence-form input:focus,
+.absence-form textarea:focus {
+  outline: none;
+  border: 2px solid rgb(74, 144, 226);
+  transition: border-color 0.3s ease;
+}
+
 .absence-form input,
 .absence-form textarea {
-  width: 100%;
+  width: calc(100% - 30px); /* Adjusted to match the button width */
   background: transparent;
   border: none;
   border: 2px solid rgb(224, 224, 224);
@@ -36,14 +46,8 @@
   font-size: 15px;
   color: rgb(224, 224, 224);
   padding: 10px;
+  margin-bottom: 0px;
   font-weight: bold;
-}
-
-.absence-form input:focus,
-.absence-form textarea:focus {
-  outline: none;
-  border: 2px solid rgb(74, 144, 226);
-  transition: border-color 0.3s ease;
 }
 
 .submit-button {
@@ -57,6 +61,7 @@
   margin: 5px;
   cursor: pointer;
   transition: 0.17s;
+  width: calc(100% - 30px); /* Added to match the input width */
 }
 
 .submit-button:hover {
