@@ -5,11 +5,11 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 const USERS_FILE = "./data/users.json";
 const SECRET_KEY = "G7X9B2M4Q5Z1";
 
-// Se il file non esiste, creiamo l'admin di default
+// Se il file non esiste, creiamo l'root di default
 if (!existsSync(USERS_FILE)) {
     const hashedAdminPassword = bcrypt.hashSync("AGDagency", 10);
     const defaultUsers = [
-        { username: "AGDagency", password: hashedAdminPassword, role: "root"}
+        { id: "R1", username: "AGDagency", password: hashedAdminPassword, role: "root"}
     ];
 
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
@@ -37,7 +37,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
-        const token = jwt.sign({ id: users.docenteId , username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign({ id: users.id , username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
 
         // Controlliamo se è il primo login
         const userIndex = users.findIndex(u => u.username === username);
@@ -94,7 +94,7 @@ export const updateUser = async (req, res) => {
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
         const newToken = jwt.sign(
-            { id: users[userIndex].docenteId , username: users[userIndex].username, role: users[userIndex].role },
+            { id: users[userIndex].id , username: users[userIndex].username, role: users[userIndex].role },
             SECRET_KEY,
             { expiresIn: "1h" }
         );

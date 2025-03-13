@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
-import "../styles/Accesso.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/Accesso.css";
 
 const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
@@ -100,9 +100,12 @@ function GestioneDisponibilita() {
           <h3>
             <input
               type="checkbox"
+              id={`checkbox-${giorno}`}
               checked={disponibilita[giorno].attivo}
               onChange={() => toggleDisponibilita(giorno)}
+              style={{ display: "none" }}
             />
+            <label htmlFor={`checkbox-${giorno}`} className="checkbox"></label>
             {giorno}
           </h3>
 

@@ -286,3 +286,40 @@ input[type="time"] {
   border: 2px solid rgb(74, 144, 226); /* Mantiene il bordo azzurro */
   transition: border-color 0.3s ease; /* Aggiunge una transizione al focus */
 }
+
+.checkbox {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  margin-bottom: -2px;
+  border: 2px solid rgb(224, 224, 224);
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.checkbox:hover {
+  border: 2px solid rgb(74, 144, 226);
+}
+
+.checkbox::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgb(224, 224, 224);
+  border-radius: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+.checkbox:hover::after {
+  background: rgb(74, 144, 226);
+}
+
+input[type="checkbox"]:checked + .checkbox::after {
+  transform: translate(-50%, -50%) scale(1);
+}
