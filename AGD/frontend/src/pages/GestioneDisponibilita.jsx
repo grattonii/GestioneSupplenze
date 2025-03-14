@@ -19,11 +19,21 @@ function GestioneDisponibilita() {
   };
 
   const aggiungiOrario = (giorno) => {
+    const orariGiorno = disponibilita[giorno].orari;
+  
+    // Controlla se esiste una fascia oraria non compilata
+    const esisteOrarioNonCompilato = orariGiorno.some(orario => orario.inizio === "" || orario.fine === "");
+  
+    if (esisteOrarioNonCompilato) {
+      toast.warning("Completa la fascia oraria esistente prima di aggiungerne un'altra.", { position: "top-center" });
+      return;
+    }
+  
     setDisponibilita({
       ...disponibilita,
       [giorno]: {
         ...disponibilita[giorno],
-        orari: [...disponibilita[giorno].orari, { inizio: "", fine: "" }],
+        orari: [...orariGiorno, { inizio: "", fine: "" }],
       },
     });
   };
@@ -116,12 +126,16 @@ function GestioneDisponibilita() {
                   <input
                     type="time"
                     value={orario.inizio}
+                    required
                     onChange={(e) => modificaOrario(giorno, index, "inizio", e.target.value)}
+                    className="input-orario"
                   />
                   <input
                     type="time"
                     value={orario.fine}
+                    required
                     onChange={(e) => modificaOrario(giorno, index, "fine", e.target.value)}
+                    className="input-orario"
                   />
                   <button type="button" className="rimuovi-btn" onClick={() => rimuoviOrario(giorno, index)}>
                     <FaTrash />

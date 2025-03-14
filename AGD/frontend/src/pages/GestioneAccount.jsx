@@ -42,7 +42,7 @@ function GestioneAccount() {
         <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Crea Account</DialogTitle>
         <DialogContent>
           <TextField
-            label="Scuola"
+            label="Nome Scuola"
             fullWidth
             value={newDisponibilita.docente}
             onChange={(e) =>
@@ -94,6 +94,54 @@ function GestioneAccount() {
               <MenuItem value="Professionale">Professionale</MenuItem>
             </Select>
           </FormControl>
+          <TextField
+            label="Codice Meccanografico"
+            fullWidth
+            value={newDisponibilita.docente}
+            onChange={(e) =>
+              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
+            }
+            margin="dense"
+            sx={{
+              "& .MuiInputBase-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ccc",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#666",
+              },
+            }}
+          />
+          <TextField
+            label="Nome Referente"
+            fullWidth
+            value={newDisponibilita.docente}
+            onChange={(e) =>
+              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
+            }
+            margin="dense"
+            sx={{
+              "& .MuiInputBase-root": {
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#ccc",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#666",
+              },
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>

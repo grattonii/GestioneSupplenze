@@ -115,7 +115,7 @@ h3 {
   font-weight: bold;
 }
 
-.input:hover {
+.input input:hover {
   border-color: rgb(74, 144, 226);
 }
 
@@ -231,7 +231,50 @@ body {
 }
 
 /* Stile generale */
-input[type="time"] {
+.input-orario {
+  appearance: none; /* Rimuove lo stile predefinito del browser */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  width: 100px !important;
+  padding: 7px !important;
+  font-size: 10px !important;
+  font-weight: bold;
+  background: transparent;
+  border: 2px solid rgb(224, 224, 224);
+  color: rgb(224, 224, 224);
+  border-radius: 5px !important;
+  text-align: center;
+  cursor: pointer;
+  transition: border 0.2s ease-in-out;
+}
+
+/* Cambia il colore al passaggio del mouse */
+.input-orario:hover {
+  border-color: rgb(74, 144, 226);
+}
+
+/* Cambia colore quando il campo è selezionato */
+.input-orario:focus {
+  outline: none;
+  border-color: rgb(74, 144, 226);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Rimuove le frecce sui browser che le mostrano */
+.input-orario::-webkit-inner-spin-button,
+.input-orario::-webkit-clear-button {
+  display: none;
+}
+
+/* Personalizza la freccia a destra su alcuni browser */
+.input-orario::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Cambia il colore per adattarsi a temi scuri */
+  cursor: pointer;
+}
+
+/* Stile generale */
+.input-campo input[type="time"] {
   appearance: none; /* Rimuove lo stile predefinito del browser */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -250,25 +293,25 @@ input[type="time"] {
 }
 
 /* Cambia il colore al passaggio del mouse */
-input[type="time"]:hover {
+.input-campo input[type="time"]:hover {
   border-color: rgb(74, 144, 226);
 }
 
 /* Cambia colore quando il campo è selezionato */
-input[type="time"]:focus {
+.input-campo input[type="time"]:focus {
   outline: none;
   border-color: rgb(74, 144, 226);
   box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
 }
 
 /* Rimuove le frecce sui browser che le mostrano */
-input[type="time"]::-webkit-inner-spin-button,
-input[type="time"]::-webkit-clear-button {
+.input-campo input[type="time"]::-webkit-inner-spin-button,
+.input-campo input[type="time"]::-webkit-clear-button {
   display: none;
 }
 
 /* Personalizza la freccia a destra su alcuni browser */
-input[type="time"]::-webkit-calendar-picker-indicator {
+.input-campo input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1); /* Cambia il colore per adattarsi a temi scuri */
   cursor: pointer;
 }
@@ -279,11 +322,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   align-items: center;
   gap: 5px;
   margin-top: 5px;
-  padding: 8px 12px;
+  padding: 10px 12px;
   background: #007bff;
   color: rgb(224, 224, 224);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
