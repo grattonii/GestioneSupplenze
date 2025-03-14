@@ -6,7 +6,10 @@ import dispRoutes from "./routes/dispRoutes.js";
 import rootRoutes from "./routes/rootRoutes.js";
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",  // Specifica il frontend
+    credentials: true                  // Permette l'invio dei cookie
+  })); 
 app.use(express.json());
 
 // Importiamo le route

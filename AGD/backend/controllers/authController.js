@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
 const USERS_FILE = "./data/users.json";
-const SECRET_KEY = "G7X9B2M4Q5Z1";
+const SECRET_ACCESS = "G7X9B2M4Q5Z1";
+const SECRET_REFRESH = "G9X7B2M5Q4Z1";
 
 // Se il file non esiste, creiamo l'root di default
 if (!existsSync(USERS_FILE)) {
@@ -37,7 +38,14 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
-        const token = jwt.sign({ id: users.id , username: user.username, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
+        const accessToken = jwt.sign({ id: user.id, username: user.username, role: user.role }, SECRET_ACCESS, { expiresIn: "15m" });
+        const refreshToken = jwt.sign({ id: user.id, username: user.username }, SECRET_REFRESH, { expiresIn: "7d" });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict"
+        });
 
         // Controlliamo se è il primo login
         const userIndex = users.findIndex(u => u.username === username);
@@ -50,7 +58,7 @@ export const login = async (req, res) => {
         res.json({
             success: true,
             message: "Login riuscito!",
-            token,
+            accessToken,
             role: user.role,
             firstLogin
         });
@@ -68,12 +76,24 @@ export const authenticateToken = (req, res, next) => {
         return res.status(403).json({ message: "Token mancante, accesso negato!" });
     }
 
-    jwt.verify(token, SECRET_KEY, (err, user) => {
+    jwt.verify(token, SECRET_ACCESS, (err, user) => {
         if (err) {
             return res.status(403).json({ message: "Token non valido!" });
         }
         req.user = user;
         next();
+    });
+};
+
+export const refreshToken = (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(403).json({ message: "Non autorizzato" });
+
+    jwt.verify(refreshToken, SECRET_REFRESH, (err, user) => {
+        if (err) return res.status(403).json({ message: "Token non valido" });
+
+        const newAccessToken = jwt.sign({ id: user.id, username: user.username, role: user.role }, SECRET_ACCESS, { expiresIn: "15m" });
+        res.json({ accessToken: newAccessToken });
     });
 };
 
@@ -95,7 +115,7 @@ export const updateUser = async (req, res) => {
 
         const newToken = jwt.sign(
             { id: users[userIndex].id , username: users[userIndex].username, role: users[userIndex].role },
-            SECRET_KEY,
+            SECRET_ACCESS,
             { expiresIn: "1h" }
         );
 

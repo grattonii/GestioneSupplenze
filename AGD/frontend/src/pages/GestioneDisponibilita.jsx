@@ -41,6 +41,12 @@ function GestioneDisponibilita() {
   const modificaOrario = (giorno, index, campo, valore) => {
     const nuoviOrari = [...disponibilita[giorno].orari];
     nuoviOrari[index][campo] = valore;
+
+    if (campo === "fine" && nuoviOrari[index].inizio && valore <= nuoviOrari[index].inizio) {
+      toast.error("L'orario di fine deve essere successivo a quello di inizio.", { position: "top-center" });
+      return;
+    }
+
     setDisponibilita({
       ...disponibilita,
       [giorno]: { ...disponibilita[giorno], orari: nuoviOrari },
@@ -55,13 +61,17 @@ function GestioneDisponibilita() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('accessToken');
 
     if (!token) {
-      console.error("Token non trovato nel localStorage!");
+      const token = await refreshAccessToken();
+      if (!token) {
+        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+        return;
+      }
     }
 
     const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;

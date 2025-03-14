@@ -7,9 +7,21 @@ function NavbarProf() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      // Effettua una richiesta al backend per fare il logout
+      await fetch("http://localhost:5000/auth/logout", {
+        method: "POST",
+        credentials: "include", // Assicurati di includere i cookie nella richiesta
+      });
+
+      sessionStorage.removeItem("token");
+
+      // Reindirizza l'utente alla pagina di login
+      navigate("/");
+    } catch (error) {
+      console.error("Errore nel logout", error);
+    }
   };
 
     return (

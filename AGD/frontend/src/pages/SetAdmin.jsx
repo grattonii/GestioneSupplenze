@@ -42,11 +42,16 @@ function SetAdmin() {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("accessToken");
     
+      // Se il token non esiste o è scaduto, prova a rinnovarlo
       if (!token) {
-        toast.warn("Devi essere autenticato per cambiare le credenziali!", { position: "top-center" });
-        navigate("/")
+        const token = await refreshAccessToken();
+        if (!token) {
+          toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+          navigate("/");
+          return;
+        }
       }
     
       const response = await axios.put(
@@ -64,7 +69,7 @@ function SetAdmin() {
         return;
       }
 
-      localStorage.setItem("token", newToken);
+      sessionStorage.setItem("accessToken", newToken);
     
       // Decodifichiamo il nuovo token per ottenere il ruolo
       const decodedToken = JSON.parse(atob(newToken.split(".")[1]));
