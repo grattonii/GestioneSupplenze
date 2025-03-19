@@ -5,6 +5,15 @@ const { Workbook } = pkg;
 
 const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
+const MATERIE_FILE = './data/materie.txt';
+
+function loadMaterie() {
+    if (!existsSync(MATERIE_FILE)) {
+        throw new Error('File delle materie non trovato!');
+    }
+    return readFileSync(MATERIE_FILE, 'utf-8').split(',').map(m => m.trim().toLowerCase());
+}
+
 
 function generateUsername(nome, cognome) {
     const firstLetterNome = nome.charAt(0).toUpperCase();
@@ -57,12 +66,16 @@ export const uploadDocenti = async (req, res) => {
     const filePath = req.file.path;
     
     try {
+        const materieList = loadMaterie();
         const workbook = new Workbook();
         await workbook.xlsx.readFile(filePath);
         const worksheet = workbook.getWorksheet(1);
         
         const docenti = [];
         
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) { // Salta l'intestazione
                 const nome = row.getCell(1).text.trim();
@@ -75,16 +88,23 @@ export const uploadDocenti = async (req, res) => {
                 // Controllo sui tipi di dati
                 //!! Da gestire in caso di non rispetto dei tipi di dati un messaggio di errore apprropriato con reinserimento
                 if (!nome || typeof nome !== 'string') { //! Controllo nome
+                    return res.status(400).json({ message: `Errore nel nome del docente alla riga ${rowNumber}.` });
                 }
                 if (!cognome || typeof cognome !== 'string') { //! Controllo cognome
+                    return res.status(400).json({ message: `Errore nel cognome del docente alla riga ${rowNumber}.` });
                 }
-                if (!email || !email.includes('@')) { //! Controllo email
+                if (!email || !emailRegex.test(email)) { //! Controllo email
+                    return res.status(400).json({ message: `Email non valida per il docente alla riga ${rowNumber}.` });
                 }
                 if (isNaN(numero) || numero.length < 7) { //! Controllo numero di telefono
+                    return res.status(400).json({ message: `Numero di telefono non valido alla riga ${rowNumber}.` });
                 }
-                if (!materie || typeof materie !== 'string') { //! Controllo materie
+                if (!materie || !materie.split(',').map(m => m.trim().toLowerCase()).every(m => materieList.includes(m))) { //! Controllo materie
+                    return res.status(400).json({ message: `Errore nelle materie assegnate al docente alla riga ${rowNumber}.` });
                 }
+                
                 if (!Array.isArray(classi) || classi.length === 0) { //! Controllo classi
+                     return res.status(400).json({ message: `Errore nelle classi assegnate al docente alla riga ${rowNumber}.` });
                 }
                 
                 docenti.push({ nome, cognome, email, numero, materie, classi });
