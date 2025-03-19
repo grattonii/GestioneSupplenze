@@ -19,7 +19,7 @@ function DashboardRoot() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/gestione-supplenze")}
+              onClick={() => navigate("/gestione-admin")}
             >
               <div className="header">
                 <h2 className="titolo">

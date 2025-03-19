@@ -17,35 +17,26 @@ function Login() {
   useEffect(() => {
     // Funzione per il login automatico
     const attemptAutoLogin = async () => {
-      const storedToken = sessionStorage.getItem("accessToken");
-
-      if (storedToken) {
         try {
           // Se esiste un token, verifica se è ancora valido
           const response = await axios.post(
-            "http://localhost:5000/auth/refresh-token", 
+            "http://localhost:5000/auth/refresh", 
             {}, 
             { withCredentials: true }
           );
+          const accessToken = response.data.accessToken;
 
-          const { accessToken } = response.data;
-          sessionStorage.setItem("accessToken", accessToken);
-
-          // Qui puoi fare il redirect a una delle pagine in base al ruolo
-          const decodedToken = jwt.decode(accessToken);
-          if (decodedToken.role === "root") {
-            navigate("/root");
-          } else if (decodedToken.role === "admin") {
-            navigate("/dashboard");
-          } else if (decodedToken.role === "professore") {
-            navigate("/professore");
+          if (accessToken) {
+            sessionStorage.setItem("accessToken", accessToken);
+            const decodedToken = JSON.parse(atob(accessToken.split(".")[1]));
+            
+            if (decodedToken.role === "root") navigate("/root");
+            else if (decodedToken.role === "admin") navigate("/dashboard");
+            else if (decodedToken.role === "professore") navigate("/professore");
           }
-
         } catch (error) {
-          console.error("Login automatico fallito", error);
-          // Puoi decidere di rimanere nella pagina di login se il refresh non ha avuto successo
+          console.log("Nessun token di refresh presente, accesso manuale richiesto.");
         }
-      }
     };
 
     attemptAutoLogin(); // Prova a fare login automatico

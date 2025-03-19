@@ -13,6 +13,7 @@ import DisponibilitaDocente from "./pages/GestioneDisponibilita.jsx";
 import Impostazioni from "./pages/Impostazioni.jsx";
 import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
+import GestioneAccount from "./pages/GestioneAccount.jsx";
 
 function App() {
   return (
@@ -22,6 +23,11 @@ function App() {
         <Route path="/root" element={
           <AuthRoute allowedRoles={["root"]}>
             <DashboardRoot />
+          </AuthRoute>
+        } />
+        <Route path="/gestione-admin" element={
+          <AuthRoute allowedRoles={["root"]}>
+            <GestioneAccount />
           </AuthRoute>
         } />
         <Route path="/gestione-file" element={
