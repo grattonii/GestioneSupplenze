@@ -24,6 +24,7 @@ function Login() {
             {}, 
             { withCredentials: true }
           );
+          console.log(response.data);  // Log della risposta
           const accessToken = response.data.accessToken;
 
           if (accessToken) {

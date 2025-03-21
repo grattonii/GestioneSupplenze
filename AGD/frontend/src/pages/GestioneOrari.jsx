@@ -92,8 +92,8 @@ function GestioneOrari() {
             required
             className="input-campo"
           >
-            <option value="lun-ven">Lunedì - Venerdì</option>
-            <option value="lun-sab">Lunedì - Sabato</option>
+            <option value="lun-ven" style={{color: "black"}}>Lunedì - Venerdì</option>
+            <option value="lun-sab" style={{color: "black"}}>Lunedì - Sabato</option>
           </select>
         </div>
       </div>

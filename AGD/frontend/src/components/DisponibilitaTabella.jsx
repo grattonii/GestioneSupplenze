@@ -52,7 +52,7 @@ function DisponibilitaTabella({ rows, setRows }) {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              {["Docente", "Giorno", "Ora", "Azioni"].map((header) => (
+              {["Docente", "Giorno", "Ora", ""].map((header) => (
                 <TableCell
                   key={header}
                   sx={{ color: "white", textAlign: "center" }}

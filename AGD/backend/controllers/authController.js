@@ -45,12 +45,12 @@ export const login = async (req, res) => {
         }
 
         const accessToken = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.SECRET_ACCESS, { expiresIn: "15m" });
-        const refreshToken = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_REFRESH, { expiresIn: "7d" });
+        const refreshToken = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.SECRET_REFRESH, { expiresIn: "7d" });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict"
+            secure: false,  // Disabilitato durante lo sviluppo se non stai usando HTTPS
+            sameSite: "Lax"  // Usa "Lax" durante lo sviluppo per testare i cookie cross-origin
         });
 
         // Controlliamo se è il primo login
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
 
 // Middleware per verificare il token
 export const authenticateToken = (req, res, next) => {
-    const token = req.headers["authorization"]?.split(" ")[1];
+    const token = req.cookies?.refreshToken;
 
     if (!token) {
         return res.status(403).json({ message: "Token mancante, accesso negato!" });
@@ -98,6 +98,8 @@ export const refreshToken = (req, res) => {
     if (!refreshToken) {
         return res.status(200).json({ accessToken: null, message: "Nessun token di refresh presente. Effettua il login." });
     }
+
+    console.log("Token di refresh trovato:", refreshToken);  // Log per debug
 
     jwt.verify(refreshToken, process.env.SECRET_REFRESH, (err, user) => {
         if (err) {

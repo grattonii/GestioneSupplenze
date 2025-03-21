@@ -4,6 +4,12 @@ import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import { FaPlusCircle } from "react-icons/fa";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import dayjs from 'dayjs';
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([]);
@@ -26,17 +32,44 @@ function GestioneSupplenze() {
     setNuovaSupplenza({ ...nuovaSupplenza, [e.target.name]: e.target.value });
   };
 
+  const validateDate = (date) => {
+    // Controlla se la data è nel formato corretto usando dayjs con il formato 'DD-MM-YYYY'
+    const parsedDate = dayjs(date, "DD-MM-YYYY", true); // 'true' forza la validazione esatta del formato
+    return parsedDate.isValid(); // Se la data è valida, ritorna true
+  };
+
+  const validateTime = (time) => {
+    if (!time.trim())
+      return false;
+  
+    return /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/.test(time);
+  };  
+
   const handleAddSupplenza = () => {
-    if (nuovaSupplenza.docente && nuovaSupplenza.classe && nuovaSupplenza.data && nuovaSupplenza.ora) {
+    const { data, ora } = nuovaSupplenza;
+
+    if (nuovaSupplenza.docente && nuovaSupplenza.classe && validateDate(data) && validateTime(ora)) {
       setSupplenze((prev) => [...prev, { ...nuovaSupplenza, id: Date.now() }]);
       handleCloseSupplenza();
     } else {
-      alert("Tutti i campi sono obbligatori!");
+      if (!nuovaSupplenza.docente || !nuovaSupplenza.classe || !data || !ora) {
+        toast.error("Compila tutti i campi!", { position: "top-center" });
+        return;
+      }
+      else if (!validateDate(data)) {
+        toast.error("Formato data non valido. Usa il formato DD-MM-YYYY", { position: "top-center" });
+        return;
+      }
+      else if (!validateTime(ora)) {
+        toast.error("Formato ora non valido. Usa il formato HH:mm", { position: "top-center" });
+        return;
+      }
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <Navbar />
       <h1 className="title">Gestione Supplenze</h1>
       <h3 className="spiegazione">Visualizza e modifica le assegnazioni delle supplenze giornaliere.</h3>
@@ -51,10 +84,56 @@ function GestioneSupplenze() {
       <Dialog open={openSupplenza} onClose={handleCloseSupplenza}>
         <DialogTitle>Aggiungi Supplenza</DialogTitle>
         <DialogContent>
-          <TextField label="Docente" name="docente" fullWidth value={nuovaSupplenza.docente} onChange={handleChangeSupplenza} margin="dense" />
-          <TextField label="Classe" name="classe" fullWidth value={nuovaSupplenza.classe} onChange={handleChangeSupplenza} margin="dense" />
-          <TextField type="date" name="data" fullWidth value={nuovaSupplenza.data} onChange={handleChangeSupplenza} margin="dense" />
-          <TextField label="Ora" name="ora" fullWidth value={nuovaSupplenza.ora} onChange={handleChangeSupplenza} margin="dense" />
+          <TextField label="Docente" name="docente" fullWidth value={nuovaSupplenza.docente} onChange={handleChangeSupplenza} margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }} />
+          <TextField label="Classe" name="classe" fullWidth value={nuovaSupplenza.classe} onChange={handleChangeSupplenza} margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }} />
+          <TextField
+            label="Data"
+            name="data"
+            type="text"
+            fullWidth
+            value={nuovaSupplenza.data}
+            onChange={handleChangeSupplenza}
+            margin="dense"
+            placeholder="DD-MM-YYYY"
+          />
+          <TextField
+            label="Ora"
+            name="ora"
+            type="text"
+            fullWidth
+            value={nuovaSupplenza.ora}
+            onChange={handleChangeSupplenza}
+            margin="dense"
+            placeholder="HH:mm"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseSupplenza}>Annulla</Button>
