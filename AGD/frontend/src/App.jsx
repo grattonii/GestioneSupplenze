@@ -14,6 +14,7 @@ import Impostazioni from "./pages/Impostazioni.jsx";
 import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import GestioneAccount from "./pages/GestioneAccount.jsx";
+import GestioneAssenze from "./pages/GestioneAssenze.jsx";
 
 function App() {
   return (
@@ -84,6 +85,11 @@ function App() {
         <Route path="/gestione-orari" element={
           <AuthRoute allowedRoles={["admin", "root"]}>
             <GestioneOrari />
+          </AuthRoute>
+        } />
+        <Route path="/assenze" element={
+          <AuthRoute allowedRoles={["admin", "root"]}>
+            <GestioneAssenze />
           </AuthRoute>
         } />
       </Routes>

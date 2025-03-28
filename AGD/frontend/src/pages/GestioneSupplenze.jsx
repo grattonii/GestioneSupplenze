@@ -15,6 +15,7 @@ function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([]);
   const [openSupplenza, setOpenSupplenza] = useState(false);
   const [nuovaSupplenza, setNuovaSupplenza] = useState({
+    id: "",
     docente: "",
     classe: "",
     data: "",

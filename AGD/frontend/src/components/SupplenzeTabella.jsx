@@ -94,8 +94,8 @@ function SupplenzeTabella({ rows, setRows }) {
                 </TableCell>
               </TableRow>
             ) : (
-              rows.map((row) => (
-                <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
+              rows.map((row, index) => (
+                <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
                   cursor: "pointer",
                   transition: "transform 0.2s",
                   "&:hover": {

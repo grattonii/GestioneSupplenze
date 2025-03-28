@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar, FaRegCalendarAlt } from "react-icons/fa";
 import "../styles/Dashboard.css";
 import Navbar from "../components/Navbar.jsx";
-import SupplenzeTabella from "../components/SupplenzeTabella.jsx";
+import SupplenzeTabellaMini from "../components/SupplenzeTabellaMini.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
 import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
 
@@ -21,9 +21,6 @@ function Dashboard() {
   ];
 
   const docentiDisponibiliOggi = ["Mario Rossi", "Luca Bianchi", "Anna Verdi"];
-  const disponibilitaSettimana = 15;
-  const prossimaDisponibilita = { docente: "Mario Rossi", ora: "08:00-09:00" };
-
   const orePagateMese = 120;
   const mediaOreDisponibilita = 30;
 
@@ -58,7 +55,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultime 3 supplenze:</h3>
-                <SupplenzeTabella rows={ultimeSupplenze} />
+                <SupplenzeTabellaMini rows={ultimeSupplenze} />
               </div>
             </motion.div>
 
@@ -96,7 +93,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultime 3 supplenze:</h3>
-                <SupplenzeTabella rows={ultimeSupplenze} />
+                <SupplenzeTabellaMini rows={ultimeSupplenze} />
               </div>
             </motion.div>
 
@@ -104,7 +101,7 @@ function Dashboard() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/assenze")}
             >
               <div className="header">
                 <h2 className="titolo">
