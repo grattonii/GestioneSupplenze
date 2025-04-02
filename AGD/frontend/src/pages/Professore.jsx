@@ -13,6 +13,7 @@ function Professore() {
   const [substitutions, setSubstitutions] = useState([]);
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
+  const [disponibilitaAccettate, setDisponibilitaAccettate] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -47,6 +48,37 @@ function Professore() {
     setSubstitutions(updatedSubstitutions);
   };
 
+  const acceptSubstitution = (sub) => {
+    const dayOfWeek = new Date(
+      sub.date.split(" ")[1] // Ottieni il giorno della settimana
+    ).toLocaleDateString("it-IT", { weekday: "long" });
+  
+    setSchedule((prevSchedule) => {
+      const updatedSchedule = { ...prevSchedule };
+      
+      if (!updatedSchedule[dayOfWeek]) {
+        updatedSchedule[dayOfWeek] = []; // Se il giorno non esiste, inizializzalo
+      }
+      
+      // Aggiungi l'orario solo se non è già presente
+      if (!updatedSchedule[dayOfWeek].includes(sub.time)) {
+        updatedSchedule[dayOfWeek] = [...updatedSchedule[dayOfWeek], sub.time];
+      }
+  
+      return { ...updatedSchedule }; // Restituiamo un nuovo oggetto per forzare il re-render
+    });
+  
+    setSubstitutions((prevSubstitutions) =>
+      prevSubstitutions.filter((s) => s.id !== sub.id)
+    );
+  };
+
+  const handleAcceptAvailability = (day, time, className) => {
+    const nuovaDisponibilita = { day, time, className };
+    setDisponibilitaAccettate((prev) => [...prev, nuovaDisponibilita]);
+    alert("Disponibilità accettata!");
+  };
+  
   return (
     <div>
       <Navbar />
@@ -61,7 +93,7 @@ function Professore() {
       </h2>
 
       {/* Calendario */}
-      <WeeklySchedule />
+      <WeeklySchedule schedule={schedule} disponibilita={disponibilitaAccettate} />
 
       <h2>Accetta Disponibilità <FaCalendarCheck className="widget-icon" /></h2>
 
@@ -97,7 +129,7 @@ function Professore() {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.date}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.time}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                    <IconButton color="success" onClick={() => rejectSubstitution(sub)}>
+                    <IconButton color="success" onClick={() => acceptSubstitution(sub)}>
                       <CheckIcon />
                     </IconButton>
                     <IconButton color="error" onClick={() => rejectSubstitution(sub)}>
@@ -134,6 +166,12 @@ function Professore() {
           Invia Richiesta
         </Button>
       </form>
+
+      <h1>Gestione Disponibilità</h1>
+      {/* Esempio di pulsante per accettare una disponibilità */}
+      <button onClick={() => handleAcceptAvailability("Lunedì", "10:00", "Classe 1A")}>
+        Accetta Disponibilità
+      </button>
     </div>
   );
 }
