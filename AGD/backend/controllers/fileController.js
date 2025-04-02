@@ -14,7 +14,6 @@ function loadMaterie() {
     return readFileSync(MATERIE_FILE, 'utf-8').split(',').map(m => m.trim().toLowerCase());
 }
 
-
 function generateUsername(nome, cognome) {
     const firstLetterNome = nome.charAt(0).toUpperCase();
     const firstLetterCognome = cognome.charAt(0).toUpperCase();
@@ -87,16 +86,16 @@ export const uploadDocenti = async (req, res) => {
                 
                 // Controllo sui tipi di dati
                 //!! Da gestire in caso di non rispetto dei tipi di dati un messaggio di errore apprropriato con reinserimento
-                if (!nome || typeof nome !== 'string') { //! Controllo nome
+                if (!nome || typeof nome !== 'string'|| nome.length < 2 || nome.length > 50) { //! Controllo nome
                     return res.status(400).json({ message: `Errore nel nome del docente alla riga ${rowNumber}.` });
                 }
-                if (!cognome || typeof cognome !== 'string') { //! Controllo cognome
+                if (!cognome || typeof cognome !== 'string' || cognome.length < 2 || cognome.length > 50) { //! Controllo cognome
                     return res.status(400).json({ message: `Errore nel cognome del docente alla riga ${rowNumber}.` });
                 }
                 if (!email || !emailRegex.test(email)) { //! Controllo email
                     return res.status(400).json({ message: `Email non valida per il docente alla riga ${rowNumber}.` });
                 }
-                if (isNaN(numero) || numero.length < 7) { //! Controllo numero di telefono
+                if (isNaN(numero) || numero.length < 7 || numero.length > 10) { //! Controllo numero di telefono
                     return res.status(400).json({ message: `Numero di telefono non valido alla riga ${rowNumber}.` });
                 }
                 if (!materie || !materie.split(',').map(m => m.trim().toLowerCase()).every(m => materieList.includes(m))) { //! Controllo materie
