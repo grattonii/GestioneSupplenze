@@ -77,7 +77,8 @@ export const login = async (req, res) => {
 
 // Middleware per verificare il token
 export const authenticateToken = (req, res, next) => {
-    const token = req.cookies?.refreshToken;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // Prende solo il token senza "Bearer"
 
     if (!token) {
         return res.status(403).json({ message: "Token mancante, accesso negato!" });
@@ -87,7 +88,7 @@ export const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: "Token non valido!" });
         }
-        req.user = user;
+        req.user = user; // Aggiunge l'utente decodificato alla richiesta
         next();
     });
 };
@@ -135,15 +136,15 @@ export const updateUser = async (req, res) => {
 
         const newToken = jwt.sign(
             { id: users[userIndex].id, username: users[userIndex].username, role: users[userIndex].role },
-            SECRET_ACCESS,
+            process.env.SECRET_ACCESS,
             { expiresIn: "1h" }
         );
 
         res.json({
             success: true,
             message: "Username e password aggiornati!",
-            token: newToken // Restituiamo il nuovo token
-        });
+            token: newToken || req.headers["authorization"].split(" ")[1] // Se non c'è nuovo token, mantieni il vecchio
+        });        
 
     } catch (error) {
         res.status(500).json({ message: "Errore del server!" });

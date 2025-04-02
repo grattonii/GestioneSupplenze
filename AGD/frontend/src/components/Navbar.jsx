@@ -27,7 +27,7 @@ function Navbar() {
         credentials: "include", // Assicurati di includere i cookie nella richiesta
       });
 
-      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("accessToken");
 
       // Reindirizza l'utente alla pagina di login
       navigate("/");

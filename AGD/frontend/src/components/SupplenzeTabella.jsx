@@ -94,14 +94,12 @@ function SupplenzeTabella({ rows, setRows }) {
                 </TableCell>
               </TableRow>
             ) : (
-              rows.map((row) => (
-                <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
+              rows.map((row, index) => (
+                <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
                   cursor: "pointer",
                   transition: "transform 0.2s",
                   "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    color: "black",
+                    backgroundColor: "#f0f0f0",
                   }
                 }}>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>

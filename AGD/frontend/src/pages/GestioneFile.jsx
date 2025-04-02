@@ -36,7 +36,7 @@ function GestioneFile() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      navigate("/dashboard");
+      navigate("/gestione-orari");
     } catch (error) {
       if (error.response)
         toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" }); // Errore specifico dal backend

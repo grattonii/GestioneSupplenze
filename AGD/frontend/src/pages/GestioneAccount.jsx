@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaPlusCircle } from "react-icons/fa";
 import AdminTabella from "../components/AdminTabella.jsx";
-import Navbar from "../components/Navbar2.jsx";
+import Navbar from "../components/NavbarProf.jsx";
 import "../styles/Pagine.css";
 
 function GestioneAccount() {
@@ -25,18 +25,30 @@ function GestioneAccount() {
     setAdminData({ ...adminData, [e.target.name]: e.target.value });
   };
 
-  const handleAdd = () => {
-    // Aggiungi un nuovo admin solo se i campi obbligatori sono valorizzati
-    if (adminData.nomeScuola && adminData.codiceMeccanografico && adminData.emailReferente) {
-      setRows((prevRows) => [
-        ...prevRows,
-        { ...adminData, id: Date.now() }, // Aggiungi nuovo admin con ID univoco
-      ]);
-      handleClose();
-    } else {
+  const handleAdd = async () => {
+    if (!adminData.nomeScuola || !adminData.codiceMeccanografico || !adminData.emailReferente) {
       alert("Tutti i campi sono obbligatori!");
+      return;
     }
-  };
+  
+    try {
+      const response = await fetch("http://localhost:5000/root/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adminData),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        setRows([...rows, { ...adminData, id: Date.now() }]);
+        handleClose();
+      } else {
+        alert("Errore: " + data.message);
+      }
+    } catch (error) {
+      console.error("Errore nella richiesta:", error);
+    }
+  };  
 
   return (
     <div>

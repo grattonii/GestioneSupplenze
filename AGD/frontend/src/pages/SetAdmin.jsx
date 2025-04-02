@@ -20,11 +20,13 @@ function SetAdmin() {
     if (name === "confirmPassword") setConfirmPassword(value);
   };
 
-  const toggleShowPassword = () => {
+  const toggleShowPassword = (event) => {
+    event.preventDefault();
     setShowPassword(!showPassword);
   };
 
-  const toggleShowConfirmPassword = () => {
+  const toggleShowConfirmPassword = (event) => {
+    event.preventDefault();
     setShowConfirmPassword(!showConfirmPassword);
   };
 
@@ -41,57 +43,50 @@ function SetAdmin() {
       return;
     }
 
+    let token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+      sessionStorage.removeItem("accessToken");
+      navigate("/");
+      return;
+    }
+
     try {
-      const token = sessionStorage.getItem("accessToken");
-    
-      // Se il token non esiste o è scaduto, prova a rinnovarlo
-      if (!token) {
-        const token = await refreshAccessToken();
-        if (!token) {
-          toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
-          navigate("/");
-          return;
-        }
-      }
-    
       const response = await axios.put(
         "http://localhost:5000/auth/update",
         { newPassword: password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-    
-      // Salviamo il nuovo token dopo l'aggiornamento
-      const newToken = response.data?.token;
 
-      if (!newToken) {
-        console.error("Errore: Nessun token ricevuto dal server");
-        toast.error("Errore durante l'aggiornamento delle credenziali!",{ position: "top-center" });
+      const newToken = response.data?.token;
+      if (newToken) {
+        sessionStorage.setItem("accessToken", newToken);
+      }
+
+      let decodedToken;
+      try {
+        decodedToken = newToken ? JSON.parse(atob(newToken.split(".")[1])) : null;
+      } catch (error) {
+        console.error("Errore nella decodifica del token:", error);
+        toast.error("Errore nell'autenticazione, riprova!", { position: "top-center" });
         return;
       }
 
-      sessionStorage.setItem("accessToken", newToken);
-    
-      // Decodifichiamo il nuovo token per ottenere il ruolo
-      const decodedToken = JSON.parse(atob(newToken.split(".")[1]));
-    
-      if (decodedToken.role !== "admin")
+      if (decodedToken?.role !== "admin") {
         navigate("/disponibilita-docente");
-      else
+      } else {
         navigate("/gestione-file");
-    
+      }
+
     } catch (error) {
       console.error("Errore durante l'aggiornamento", error);
-      toast.error("Errore durante l'aggiornamento delle credenziali!",{ position: "top-center" });
-    }    
+      toast.error("Errore durante l'aggiornamento delle credenziali!", { position: "top-center" });
+    }
   };
 
   return (
     <>
-      <script
-        src="https://kit.fontawesome.com/2f5f6d0fd4.js"
-        crossOrigin="anonymous"
-      ></script>
-      <ToastContainer/>
+      <ToastContainer />
       <div id="loginBox">
         <div id="titolo">
           <h1>Cambia Password</h1>
@@ -137,9 +132,7 @@ function SetAdmin() {
                   onClick={toggleShowConfirmPassword}
                   className="show-password-button"
                 >
-                  <FontAwesomeIcon
-                    icon={showConfirmPassword ? faEyeSlash : faEye}
-                  />
+                  <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
                 </button>
               </div>
             </div>

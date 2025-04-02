@@ -17,6 +17,7 @@ import GestioneAccount from "./pages/GestioneAccount.jsx";
 // Importa WeeklySchedule e Professore per passare le props
 import WeeklySchedule from "./components/WeeklySchedule";
 import Professore from "./pages/Professore";
+import GestioneAssenze from "./pages/GestioneAssenze.jsx";
 
 function App() {
   
@@ -91,6 +92,11 @@ function App() {
         <Route path="/gestione-orari" element={
           <AuthRoute allowedRoles={["admin", "root"]}>
             <GestioneOrari />
+          </AuthRoute>
+        } />
+        <Route path="/assenze" element={
+          <AuthRoute allowedRoles={["admin", "root"]}>
+            <GestioneAssenze />
           </AuthRoute>
         } />
       </Routes>

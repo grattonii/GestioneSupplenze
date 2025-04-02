@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import fileRoutes from "./routes/fileRoutes.js";
 import dispRoutes from "./routes/dispRoutes.js";
 import rootRoutes from "./routes/rootRoutes.js";
+import orariRoutes from "./routes/orariRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,9 +18,10 @@ app.use(cors({
 app.use(express.json());
 
 // Importiamo le route
-app.use("/auth", authRoutes);  // Per login e aggiornamento credenziali
-app.use("/files", fileRoutes); // Per la gestione dei file
+app.use("/auth", authRoutes);
+app.use("/files", fileRoutes);
 app.use("/disp", dispRoutes);
 app.use("/root", rootRoutes);
+app.use("/orari", orariRoutes);
 
 app.listen(5000, () => console.log("Server in ascolto sulla porta 5000"));
