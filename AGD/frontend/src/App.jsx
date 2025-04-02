@@ -13,15 +13,29 @@ import DisponibilitaDocente from "./pages/GestioneDisponibilita.jsx";
 import Impostazioni from "./pages/Impostazioni.jsx";
 import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
+import GestioneAccount from "./pages/GestioneAccount.jsx";
+// Importa WeeklySchedule e Professore per passare le props
+import WeeklySchedule from "./components/WeeklySchedule";
+import Professore from "./pages/Professore";
+import GestioneAssenze from "./pages/GestioneAssenze.jsx";
 
 function App() {
+  
+  
+  
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/root" element={
           <AuthRoute allowedRoles={["root"]}>
             <DashboardRoot />
+          </AuthRoute>
+        } />
+        <Route path="/gestione-admin" element={
+          <AuthRoute allowedRoles={["root"]}>
+            <GestioneAccount />
           </AuthRoute>
         } />
         <Route path="/gestione-file" element={
@@ -78,6 +92,11 @@ function App() {
         <Route path="/gestione-orari" element={
           <AuthRoute allowedRoles={["admin", "root"]}>
             <GestioneOrari />
+          </AuthRoute>
+        } />
+        <Route path="/assenze" element={
+          <AuthRoute allowedRoles={["admin", "root"]}>
+            <GestioneAssenze />
           </AuthRoute>
         } />
       </Routes>

@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton } from "@mui/material";
 import { FaHourglassHalf, FaCheckCircle, FaTimesCircle, FaTrash } from "react-icons/fa";
 import "../styles/Accesso.css"; // Assicurati di importare il file CSS
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import dayjs from 'dayjs';
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 function SupplenzeTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
@@ -24,12 +30,41 @@ function SupplenzeTabella({ rows, setRows }) {
     setSelectedRow({ ...selectedRow, [e.target.name]: e.target.value });
   };
 
+  const validateDate = (date) => {
+    // Controlla se la data è nel formato corretto usando dayjs con il formato 'DD-MM-YYYY'
+    const parsedDate = dayjs(date, "DD-MM-YYYY", true); // 'true' forza la validazione esatta del formato
+    return parsedDate.isValid(); // Se la data è valida, ritorna true
+  };
+
+  const validateTime = (time) => {
+    if (!time.trim())
+      return false;
+
+    return /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/.test(time);
+  };
+
   // Aggiorna la tabella con i nuovi valori
   const handleUpdate = () => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
-    );
-    handleClose();
+    const { data, ora } = selectedRow;
+
+    if (selectedRow.docente && selectedRow.classe && validateDate(data) && validateTime(ora)) {
+      setRows((prevRows) =>
+        prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
+      );
+      handleClose();
+    }
+    else {
+      if (!selectedRow.docente || !selectedRow.classe || !data || !ora) {
+        toast.error("Compila tutti i campi!", { position: "top-center" });
+        return;
+      }
+      else if (!validateDate(data)) {
+        toast.error("Formato data non valido. Usa il formato DD-MM-YYYY", { position: "top-center" });
+      }
+      else if (!validateTime(ora)) {
+        toast.error("Formato ora non valido. Usa il formato HH:mm", { position: "top-center" });
+      }
+    }
   };
 
   // Cancella una riga
@@ -44,7 +79,7 @@ function SupplenzeTabella({ rows, setRows }) {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              {["Docente", "Classe", "Data", "Ora", "Stato", "Azioni"].map((header) => (
+              {["Docente", "Classe", "Data", "Ora", "Stato", ""].map((header) => (
                 <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
               ))}
             </TableRow>
@@ -59,36 +94,34 @@ function SupplenzeTabella({ rows, setRows }) {
                 </TableCell>
               </TableRow>
             ) : (
-              rows.map((row) => (
-                  <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
-                    cursor: "pointer",
-                    transition: "transform 0.2s",
-                    "&:hover": {
-                      transform: "translateY(-5px)",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                      color: "black",
-                    }
-                  }}>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                      {row.stato === "Accettata" ? (
-                        <FaCheckCircle color="green" />
-                      ) : row.stato === "In attesa" ? (
-                        <FaHourglassHalf color="orange" />
-                      ) : (
-                        <FaTimesCircle color="red" />
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                      <IconButton onClick={() => handleDelete(row.id)}>
-                        <FaTrash color="red" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
+              rows.map((row, index) => (
+                <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
+                  cursor: "pointer",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                  }
+                }}>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
+                    {row.stato === "Accettata" ? (
+                      <FaCheckCircle color="green" size={23} />
+                    ) : row.stato === "In attesa" ? (
+                      <FaHourglassHalf color="orange" size={23} />
+                    ) : (
+                      <FaTimesCircle color="red" size={23} />
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                    <IconButton onClick={() => handleDelete(row.id)}>
+                      <FaTrash color="red" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>
@@ -151,51 +184,23 @@ function SupplenzeTabella({ rows, setRows }) {
               <TextField
                 label="Data"
                 name="data"
-                value={selectedRow.data || ""}
-                onChange={handleChange}
+                type="text"
                 fullWidth
+                value={selectedRow.data}
+                onChange={handleChange}
                 margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
+                placeholder="DD-MM-YYYY"
               />
               <TextField
                 label="Ora"
                 name="ora"
-                value={selectedRow.ora || ""}
-                onChange={handleChange}
+                type="text"
                 fullWidth
+                value={selectedRow.ora}
+                onChange={handleChange}
                 margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                    borderWidth: "40px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
+                placeholder="HH:mm"
               />
-
             </>
           )}
         </DialogContent>

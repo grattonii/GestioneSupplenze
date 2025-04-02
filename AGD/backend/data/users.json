@@ -1,7 +1,8 @@
 [
   {
+    "id": "R1",
     "username": "AGDagency",
-    "password": "$2b$10$sNddrY1F6J0WbHTMSvIbqutbF720JwgevMuGxtPu3FgBk/v47AZ3a",
+    "password": "$2b$10$NTTWmFXS1mbXp97qv.y45.5MYGESYkHetSHzrRZtIbOYsn3jaMFvG",
     "role": "root"
   }
 ]

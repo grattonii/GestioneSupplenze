@@ -24,7 +24,7 @@ function AuthRoute({ children, allowedRoles }) {
       }
     } catch (error) {
       console.error("Errore nel decodificare il token:", error);
-      navigate("/"); // Se c'è un errore nella decodifica, reindirizza al login
+      navigate("/");
     }
   }, [navigate, allowedRoles]);
 

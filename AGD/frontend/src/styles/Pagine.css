@@ -55,7 +55,7 @@ body {
 
 /* Stile delle fette */
 .donut-slice {
-    fill:#1a294a;
+    fill: #1a294a;
     stroke-width: 10px;
     stroke-linecap: round;
     transition: all 0.3s ease;
@@ -90,4 +90,28 @@ body {
 .donut-slice:hover {
     stroke-width: 12px;
     stroke: #ffffff80;
+}
+
+.aggiungi-container {
+    display: flex;
+    justify-content: center;
+}
+
+
+.aggiungi {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
+    margin-top: 15px;
+    padding: 10px 12px;
+    background: #335C81;
+    color: rgb(224, 224, 224);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.aggiungi:hover {
+    background: #4479a7;
 }

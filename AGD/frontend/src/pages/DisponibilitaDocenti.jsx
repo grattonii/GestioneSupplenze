@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
 import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
@@ -47,19 +46,6 @@ function DisponibilitaDocenti() {
       <h1 className="title">Disponibilità Docenti</h1>
 
       <DisponibilitaTabella rows={disponibilita} setRows={setDisponibilita} />
-
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={handleOpen}
-        sx={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-        }}
-      >
-        <AddIcon />
-      </Fab>
 
       {/* Dialog con il form */}
       <Dialog open={open} onClose={handleClose}>

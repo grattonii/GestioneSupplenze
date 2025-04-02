@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const router = express.Router();
-const filePath = path.join(__dirname, '../data/disp.json');
+const filePath = path.join(__dirname, './data/disp.json');
 
 export const salvaDisponibilita = (req, res) => {
   // Funzione helper per caricare i dati esistenti

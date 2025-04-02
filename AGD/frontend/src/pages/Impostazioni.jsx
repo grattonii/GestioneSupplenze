@@ -1,18 +1,28 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
 import "../styles/Impostazioni.css";
 import { FaRegCircleXmark } from "react-icons/fa6";
+import { FaPlusCircle } from "react-icons/fa";
 
 const sections = [
-  { id: "Assegnazioni", label: "Configurazione criteri di assegnazione" },
+  { id: "Orario", label: "Configurazione orario" },
   { id: "Notifiche", label: "Notifiche e preferenze del sistema" },
   { id: "Utenti", label: "Gestione ruoli e permessi utenti" },
+  { id: "Assistenza", label: "Segnalazione Problemi" }
 ];
+
+const handleAbsenceSubmit = (event) => {
+  event.preventDefault();
+  console.log("Segnalazione inviata!");
+};
 
 function Impostazioni() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("");
+  const [emailNotifiche, setEmailNotifiche] = useState(true);
+  const [pushNotifiche, setPushNotifiche] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,39 +38,214 @@ function Impostazioni() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <>
-      <div className="settings-container">
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <FaRegCircleXmark className="close-icon" onClick={() => navigate(-1)}/>
-          <h2>Impostazioni</h2>
-          <nav>
-            {sections.map((section) => (
-              <Link
-                key={section.id}
-                to={section.id}
-                smooth={true}
-                duration={500}
-                className={`nav-link ${activeSection === section.id ? "active" : ""}`}
-              >
-                {section.id}
-              </Link>
-            ))}
-          </nav>
-        </aside>
+  const [orario, setOrario] = useState({
+    inizioPrimaLezione: "",
+    fineUltimaLezione: "",
+    inizioRicreazione: "",
+    fineRicreazione: "",
+    durataLezioni: "",
+    giorniLezione: "",
+  });
 
-        {/* Contenuto */}
-        <main className="content">
+  useEffect(() => {
+    axios.get("http://localhost:5000/orari/modifica", {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
+      }
+    })
+      .then((response) => {
+        if (response.data) {
+          setOrario({
+            inizioPrimaLezione: response.data.orari.inizioPrimaLezione || "",
+            fineUltimaLezione: response.data.orari.fineUltimaLezione || "",
+            inizioRicreazione: response.data.orari.inizioRicreazione || "",
+            fineRicreazione: response.data.orari.fineRicreazione || "",
+            durataLezioni: response.data.orari.durataLezioni || "",
+            giorniLezione: response.data.orari.giorniLezione || "",
+          });
+        }
+      })
+      .catch((error) => console.error("Errore nel recupero degli orari:", error));
+  }, []);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setOrario((prevOrario) => ({
+      ...prevOrario,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = sessionStorage.getItem('accessToken');
+
+    if (!token) {
+      const token = await refreshAccessToken();
+      if (!token) {
+        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+        return;
+      }
+    }
+
+    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    const idAdmin = decodedToken ? decodedToken.id : null;
+
+    console.log("Token decodificato:", decodedToken);
+
+    if (!idAdmin) {
+      console.error("Errore: idAdmin non trovato!");
+      toast.error("Errore: ID admin mancante!", { position: "top-center" });
+      return;
+    }
+
+    const payload = {
+      idAdmin: idAdmin,
+      orari: orario,
+    };
+
+    fetch('http://localhost:5000/orari/salva', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Orari salvati:', data);
+      })
+      .catch((error) => {
+        console.error("Errore durante l'invio:", error);
+        toast.error("Errore durante il salvataggio!", { position: "top-center" });
+      });
+  };
+
+  return (
+    <div className="settings-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <FaRegCircleXmark className="close-icon" onClick={() => navigate(-1)} />
+        <h2>Impostazioni</h2>
+        <nav>
           {sections.map((section) => (
-            <section key={section.id} id={section.id} className="section">
-              <h2>{section.label}</h2>
-              <p>Nel cuore di una foresta antica, dove gli alberi si innalzano maestosi verso il cielo e i loro rami intrecciati creano un fitto intreccio di ombre e luci che danzano sul terreno coperto di muschio, un piccolo ruscello scorre placido tra le radici contorte, mormorando dolcemente mentre l'acqua cristallina riflette i raggi dorati del sole che filtrano tra le foglie tremolanti, e proprio lì, accanto a una grande quercia secolare le cui radici emergono dalla terra come antiche mani nodose, si trova un vecchio ponte di legno ormai consumato dal tempo, con assi scricchiolanti che raccontano storie di viandanti solitari e viaggiatori erranti che, nel corso dei secoli, hanno attraversato quel passaggio sospeso sopra il lento fluire del corso d'acqua, fermandosi talvolta a riposare sulla sua balaustra per ascoltare il canto degli uccelli nascosti tra le fronde e il sussurro del vento che porta con sé il profumo del sottobosco, fatto di foglie umide, funghi selvatici e l’aroma pungente della resina che stilla dai tronchi degli alberi più giovani, mentre nel cielo azzurro, qualche nube bianca scivola pigramente, proiettando ombre in continuo mutamento sulla radura poco distante, dove un cervo solitario, con le sue corna imponenti e lo sguardo vigile, osserva con attenzione ogni piccolo movimento nel fitto della vegetazione, percependo forse la presenza di un lupo che, nascosto dietro a un cespuglio di felci, attende il momento opportuno per rivelarsi, mentre un gruppo di scoiattoli saltella agilmente tra i rami più alti, rincorrendosi in un gioco senza fine che li porta a sparire tra il fogliame solo per riapparire poco dopo su un tronco caduto, dove un tappeto di funghi variopinti cresce indisturbato, aggiungendo un tocco di colore al paesaggio verdeggiante che, con il passare delle ore, cambia sfumatura man mano che il sole inizia la sua lenta discesa verso l’orizzonte, tingendo il cielo di tonalità calde che vanno dall’arancione intenso al rosa tenue, mentre l’aria si riempie del suono dei grilli che annunciano l’arrivo della sera, e la foresta, con i suoi innumerevoli abitanti, si prepara a un nuovo ciclo di vita notturna, in cui le lucciole iniziano a danzare come piccole stelle cadute sulla terra, creando un’atmosfera incantata che avvolge ogni cosa in un alone di mistero e meraviglia, mentre il lento scorrere dell’acqua continua, ininterrotto, a raccontare la storia millenaria di quel luogo nascosto, dove nel cuore di una foresta antica, dove gli alberi si innalzano maestosi verso il cielo e i loro nel cuore di una foresta antica, dove gli alberi si innalzano maestosi verso il cielo e i loro </p>
-            </section>
+            <Link
+              key={section.id}
+              to={section.id}
+              smooth={true}
+              duration={500}
+              className={`nav-link ${activeSection === section.id ? "active" : ""}`}
+            >
+              {section.id}
+            </Link>
           ))}
-        </main>
-      </div>
-    </>
+        </nav>
+      </aside>
+
+      {/* Contenuto */}
+      <main className="content">
+        <section id="Orario" className="section">
+          <h1>Configurazione orario</h1>
+          <h3>Modifica l'orario delle lezioni e delle ricreazioni.</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="modifica-orario">
+              <label className="direzione">
+                <h3>Ora inizio prima lezione giornata:</h3>
+                <input type="time" name="inizioPrimaLezione" value={orario.inizioPrimaLezione} className="input-campo" onChange={handleChange} />
+              </label>
+              <label className="direzione">
+                <h3>Ora fine ultima lezione giornata:</h3>
+                <input type="time" name="fineUltimaLezione" value={orario.fineUltimaLezione} className="input-campo" onChange={handleChange} />
+              </label>
+              <label className="direzione">
+                <h3>Ora inizio ricreazione:</h3>
+                <input type="time" name="inizioRicreazione" value={orario.inizioRicreazione} className="input-campo" onChange={handleChange} />
+              </label>
+              <label className="direzione">
+                <h3>Ora fine ricreazione:</h3>
+                <input type="time" name="fineRicreazione" value={orario.fineRicreazione} className="input-campo" onChange={handleChange} />
+              </label>
+              <label className="direzione">
+                <h3>Durata lezioni:</h3>
+                <input type="number" name="durataLezioni" value={orario.durataLezioni} className="input-campo" onChange={handleChange} />
+              </label>
+              <label className="direzione">
+                <h3>Giorni lezione:</h3>
+                <select className="input-campo" name="giorniLezione" value={orario.giorniLezione} onChange={handleChange}>
+                  <option value="" disabled hidden></option>
+                  <option value="lun-ven" style={{ color: "black" }}>Lunedì - Venerdì</option>
+                  <option value="lun-sab" style={{ color: "black" }}>Lunedì - Sabato</option>
+                </select>
+              </label>
+            </div>
+            <div className="button-container">
+              <button type="submit" className="aggiunto">Salva orario</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="Notifiche" className="section">
+          <h1>Notifiche e preferenze</h1>
+          <h3>Gestisci le notifiche e scegli come ricevere aggiornamenti dal sistema.</h3>
+          <div className="direzioni">
+            <h3>
+              <input
+                type="checkbox"
+                id="checkbox-email"
+                style={{ display: "none" }}
+                checked={emailNotifiche}
+                onChange={() => setEmailNotifiche(!emailNotifiche)}
+              />
+              <label htmlFor={"checkbox-email"} className="checkbox"></label>
+              Ricevi notifiche via email
+            </h3>
+            <h3>
+              <input
+                type="checkbox"
+                id="checkbox-push"
+                style={{ display: "none" }}
+                checked={pushNotifiche}
+                onChange={() => setPushNotifiche(!pushNotifiche)}
+              />
+              <label htmlFor={"checkbox-push"} className="checkbox"></label>
+              Ricevi notifiche push
+            </h3>
+          </div>
+          <div className="button-container">
+            <button className="aggiunto">Salva preferenze</button>
+          </div>
+        </section>
+
+        <section id="Utenti" className="section">
+          <h1>Gestione utenti e ruoli</h1>
+          <h3>Modifica i permessi e assegna ruoli agli utenti.</h3>
+          <h3>Utenti:</h3>
+          <ul>
+            <li>Mario Rossi - Admin <button className="aggiungi">Modifica</button></li>
+            <li>Giulia Bianchi - Professore <button className="aggiungi">Modifica</button></li>
+            <li>Luca Verdi - Professore <button className="aggiungi">Modifica</button></li>
+          </ul>
+          <div className="button-container">
+            <button className="aggiunto"><FaPlusCircle />Aggiungi nuovo utente</button>
+          </div>
+        </section>
+
+        <section id="Assistenza" className="section">
+          <h1>Segnalazione Problemi</h1>
+          <h3>Hai riscontrato un problema? Segnalalo al team di sviluppo.</h3>
+          <form className="absence-form" onSubmit={handleAbsenceSubmit}>
+            <label className="direzione">
+              Descrizione del problema:
+              <textarea className="input-campo" style={{ resize: "none", height: 80 }} />
+            </label>
+            <div className="button-container">
+              <button className="aggiunto">Invia segnalazione</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
   );
 }
 

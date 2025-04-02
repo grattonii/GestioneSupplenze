@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 
 function DisponibilitaTabella({ rows, setRows }) {
@@ -52,7 +52,7 @@ function DisponibilitaTabella({ rows, setRows }) {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              {["Docente", "Giorno", "Ora", "Azioni"].map((header) => (
+              {["Docente", "Giorno", "Ora", ""].map((header) => (
                 <TableCell
                   key={header}
                   sx={{ color: "white", textAlign: "center" }}
@@ -77,9 +77,7 @@ function DisponibilitaTabella({ rows, setRows }) {
                   cursor: "pointer",
                   transition: "transform 0.2s",
                   "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    color: "black",
+                    backgroundColor: "#f0f0f0",
                   }
                 }}>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>

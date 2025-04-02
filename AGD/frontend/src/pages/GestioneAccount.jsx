@@ -1,151 +1,142 @@
 import React, { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
-import Navbar from "../components/Navbar2.jsx";
+import { FaPlusCircle } from "react-icons/fa";
+import AdminTabella from "../components/AdminTabella.jsx";
+import Navbar from "../components/NavbarProf.jsx";
 import "../styles/Pagine.css";
 
 function GestioneAccount() {
   const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState([]); // Stato per la tabella
+  const [adminData, setAdminData] = useState({
+    nomeScuola: "",
+    tipologia: "",
+    codiceMeccanografico: "",
+    emailReferente: ""
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    setAdminData({ nomeScuola: "", tipologia: "", codiceMeccanografico: "", emailReferente: "" });
+  }
+
+  const handleChange = (e) => {
+    setAdminData({ ...adminData, [e.target.name]: e.target.value });
   };
 
-  const handleAdd = () => {
-    if (newDisponibilita.docente && newDisponibilita.giorno && newDisponibilita.ora) {
-      setDisponibilita((prev) => [...prev, { ...newDisponibilita, id: Date.now() }]); // Aggiorna la tabella
-      handleClose();
+  const handleAdd = async () => {
+    if (!adminData.nomeScuola || !adminData.codiceMeccanografico || !adminData.emailReferente) {
+      alert("Tutti i campi sono obbligatori!");
+      return;
     }
-  };
+  
+    try {
+      const response = await fetch("http://localhost:5000/root/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(adminData),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        setRows([...rows, { ...adminData, id: Date.now() }]);
+        handleClose();
+      } else {
+        alert("Errore: " + data.message);
+      }
+    } catch (error) {
+      console.error("Errore nella richiesta:", error);
+    }
+  };  
 
   return (
     <div>
       <Navbar />
       <h1 className="title">Gestione Account</h1>
+      <AdminTabella rows={rows} setRows={setRows} />
 
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={handleOpen}
-        sx={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      <div className="aggiungi-container">
+        <button type="button" className="aggiungi" onClick={handleOpen}>
+          <FaPlusCircle /> Aggiungi disponibilità
+        </button>
+      </div>
 
       {/* Dialog con il form */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Crea Account</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Nome Scuola"
-            fullWidth
-            value={newDisponibilita.docente}
-            onChange={(e) =>
-              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
-            }
-            margin="dense"
-            sx={{
-              "& .MuiInputBase-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#333",
-                backgroundColor: "#f9f9f9",
-                borderRadius: "5px",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#ccc",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-            }}
-          />
-          <FormControl fullWidth margin="dense"
-            sx={{
-              "& .MuiInputBase-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#333",
-                backgroundColor: "#f9f9f9",
-                borderRadius: "5px",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#ccc",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-            }}>
+          <TextField label="Nome Scuola" name="nomeScuola" fullWidth value={adminData.nomeScuola} onChange={handleChange} margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }} />
+          <FormControl fullWidth margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }}>
             <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Tipologia</InputLabel>
-            <Select
-              name="giorno"
-              value={newDisponibilita.giorno}
-              onChange={(e) =>
-                setNewDisponibilita({ ...newDisponibilita, giorno: e.target.value })
-              }
-            >
+            <Select name="tipologia" value={adminData.tipologia} onChange={handleChange}>
               <MenuItem value="Liceo">Liceo</MenuItem>
               <MenuItem value="Tecnico">Tecnico</MenuItem>
               <MenuItem value="Professionale">Professionale</MenuItem>
             </Select>
           </FormControl>
-          <TextField
-            label="Codice Meccanografico"
-            fullWidth
-            value={newDisponibilita.docente}
-            onChange={(e) =>
-              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
-            }
-            margin="dense"
-            sx={{
-              "& .MuiInputBase-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#333",
-                backgroundColor: "#f9f9f9",
-                borderRadius: "5px",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#ccc",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-            }}
-          />
-          <TextField
-            label="Nome Referente"
-            fullWidth
-            value={newDisponibilita.docente}
-            onChange={(e) =>
-              setNewDisponibilita({ ...newDisponibilita, docente: e.target.value })
-            }
-            margin="dense"
-            sx={{
-              "& .MuiInputBase-root": {
-                fontFamily: "Poppins",
-                fontSize: "16px",
-                color: "#333",
-                backgroundColor: "#f9f9f9",
-                borderRadius: "5px",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#ccc",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-            }}
-          />
+          <TextField label="Codice Meccanografico" name="codiceMeccanografico" fullWidth value={adminData.codiceMeccanografico} onChange={handleChange} margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }} />
+          <TextField label="Email Referente" name="emailReferente" fullWidth value={adminData.emailReferente} onChange={handleChange} margin="dense" sx={{
+            "& .MuiInputBase-root": {
+              fontFamily: "Poppins",
+              fontSize: "16px",
+              color: "#333",
+              backgroundColor: "#f9f9f9",
+              borderRadius: "5px",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#ccc",
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#666",
+            },
+          }} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
-          <Button onClick={handleAdd} color="primary" sx={{ fontFamily: "Poppins" }}>Crea</Button>
+          <Button onClick={handleClose} color="primary">Annulla</Button>
+          <Button onClick={handleAdd} color="primary">Crea</Button>
         </DialogActions>
       </Dialog>
     </div>

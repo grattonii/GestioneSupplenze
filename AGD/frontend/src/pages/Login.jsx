@@ -14,44 +14,6 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Funzione per il login automatico
-    const attemptAutoLogin = async () => {
-      const storedToken = sessionStorage.getItem("accessToken");
-
-      if (storedToken) {
-        try {
-          // Se esiste un token, verifica se è ancora valido
-          const response = await axios.post(
-            "http://localhost:5000/auth/refresh-token", 
-            {}, 
-            { withCredentials: true }
-          );
-
-          const { accessToken } = response.data;
-          sessionStorage.setItem("accessToken", accessToken);
-
-          // Qui puoi fare il redirect a una delle pagine in base al ruolo
-          const decodedToken = jwt.decode(accessToken);
-          if (decodedToken.role === "root") {
-            navigate("/root");
-          } else if (decodedToken.role === "admin") {
-            navigate("/dashboard");
-          } else if (decodedToken.role === "professore") {
-            navigate("/professore");
-          }
-
-        } catch (error) {
-          console.error("Login automatico fallito", error);
-          // Puoi decidere di rimanere nella pagina di login se il refresh non ha avuto successo
-        }
-      }
-    };
-
-    attemptAutoLogin(); // Prova a fare login automatico
-  }, [navigate]);
-
-  // Funzione per aggiornare gli stati quando l'utente digita
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "user") setUser(value);
