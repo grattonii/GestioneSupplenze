@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Accesso.css";
 
@@ -13,13 +14,15 @@ const etichette = {
 };
 
 function GestioneOrari() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     inizioPrimaLezione: "",
     fineUltimaLezione: "",
     inizioRicreazione: "",
     fineRicreazione: "",
     durataLezioni: "",
-    giorniLezione: "lun-ven",
+    giorniLezione: "",
   });
 
   const handleChange = (e) => {
@@ -78,6 +81,7 @@ function GestioneOrari() {
       .then((response) => response.json())
       .then((data) => {
         console.log('Orari salvati:', data);
+        navigate("/dashboard");
       })
       .catch((error) => {
         console.error("Errore durante l'invio:", error);
@@ -115,8 +119,9 @@ function GestioneOrari() {
                   required
                   className="input-campo"
                 >
-                  <option value="lun-ven">Lunedì - Venerdì</option>
-                  <option value="lun-sab">Lunedì - Sabato</option>
+                  <option value="" disabled hidden></option>
+                  <option value="lun-ven" style={{ color: "black" }}>Lunedì - Venerdì</option>
+                  <option value="lun-sab" style={{ color: "black" }}>Lunedì - Sabato</option>
                 </select>
               </div>
             )

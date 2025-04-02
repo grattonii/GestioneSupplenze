@@ -11,7 +11,7 @@ function SupplenzeTabellaMini({ rows }) {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              {["Docente", "Classe", "Data", "Ora", "Stato", ""].map((header) => (
+              {["Docente", "Classe", "Data", "Ora", "Stato"].map((header) => (
                 <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
               ))}
             </TableRow>
@@ -29,11 +29,8 @@ function SupplenzeTabellaMini({ rows }) {
               rows.map((row) => (
                 <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
                   cursor: "pointer",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    color: "black",
+                 "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   }
                 }}>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>

@@ -6,7 +6,7 @@ import "../styles/Dashboard.css";
 import Navbar from "../components/Navbar.jsx";
 import SupplenzeTabellaMini from "../components/SupplenzeTabellaMini.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
-import DisponibilitaTabella from "../components/DisponibilitaTabella.jsx";
+import DisponibilitaTabellaMini from "../components/DisponibilitaTabellaMini.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -15,9 +15,9 @@ function Dashboard() {
   const supplenzeOggi = 5;
   const supplenzeInAttesa = 2;
   const ultimeSupplenze = [
-    { docente: "Mario Rossi", classe: "3A", ora: "08:00-09:00", stato: "Confermato" },
-    { docente: "Luca Bianchi", classe: "2B", ora: "09:00-10:00", stato: "In attesa" },
-    { docente: "Anna Verdi", classe: "1C", ora: "10:00-11:00", stato: "Confermato" },
+    { docente: "Mario Rossi", classe: "3A", data: "31/03/2025", ora: "08:00-09:00", stato: "Confermato" },
+    { docente: "Luca Bianchi", classe: "2B", data: "31/03/2025", ora: "09:00-10:00", stato: "In attesa" },
+    { docente: "Anna Verdi", classe: "1C", data: "31/03/2025", ora: "10:00-11:00", stato: "Confermato" },
   ];
 
   const docentiDisponibiliOggi = ["Mario Rossi", "Luca Bianchi", "Anna Verdi"];
@@ -25,9 +25,15 @@ function Dashboard() {
   const mediaOreDisponibilita = 30;
 
   const disponibilitaDocenti = [
-    { docente: "Mario Rossi", ora: "08:00-09:00" },
-    { docente: "Luca Bianchi", ora: "09:00-10:00" },
-    { docente: "Anna Verdi", ora: "10:00-11:00" },
+    { docente: "Mario Rossi", giorno:"Martedì", ora: "08:00-09:00" },
+    { docente: "Luca Bianchi", giorno:"Martedì", ora: "09:00-10:00" },
+    { docente: "Anna Verdi", giorno:"Martedì", ora: "10:00-11:00" },
+  ];
+
+  const reportSupplenze = [
+    { docente: "Mario Rossi", disponibilità: "8", pagamento: "100" },
+    { docente: "Luca Bianchi", disponibilità: "6", pagamento: "80" },
+    { docente: "Anna Verdi", disponibilità: "10", pagamento: "120" },
   ];
 
   const totaleDocentiDisponibili = docentiDisponibiliOggi.length;
@@ -75,7 +81,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultime 3 disponibilità:</h3>
-                <DisponibilitaTabella rows={disponibilitaDocenti} />
+                <DisponibilitaTabellaMini rows={disponibilitaDocenti} />
               </div>
             </motion.div>
 
@@ -126,7 +132,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultimi 3 report:</h3>
-                <ReportTabella rows={ultimeSupplenze} />
+                <ReportTabella rows={reportSupplenze} />
               </div>
             </motion.div>
           </div>
