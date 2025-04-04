@@ -11,12 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 
-const WeeklySchedule = () => {
+const WeeklySchedule = ({ schedule }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [availability, setAvailability] = useState({});
   const schoolHours = ["08:00 - 09:00", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00"];
 
-  // Funzione per ottenere l'inizio della settimana (lunedì)
+// Funzione per ottenere l'inizio della settimana (lunedì)
   const getStartOfWeek = (date) => {
     const day = date.getDay();
     const diff = date.getDate() - day + (day === 0 ? -6 : 1);
@@ -30,12 +29,6 @@ const WeeklySchedule = () => {
       day.setDate(startOfWeek.getDate() + i);
       return day;
     });
-  };
-
-  // Funzione per alternare la disponibilità
-  const toggleAvailability = (day, hour) => {
-    const key = `${day}-${hour}`;
-    setAvailability((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const startOfWeek = getStartOfWeek(new Date(currentDate));
@@ -120,21 +113,20 @@ const WeeklySchedule = () => {
                   {hour}
                 </TableCell>
                 {weekDays.map((day, dayIndex) => {
-                  const key = `${dayIndex}-${hourIndex}`;
+                  const dayName = day.toLocaleDateString("it-IT", { weekday: "long" });
                   return (
                     <TableCell
-                      key={key}
-                      onClick={() => toggleAvailability(dayIndex, hourIndex)}
+                      key={dayIndex}
                       sx={{
                         textAlign: "center",
                         fontFamily: "Poppins",
                         cursor: "pointer",
-                        backgroundColor: availability[key] ? "#d4edda" : "#f8d7da",
-                        color: availability[key] ? "#155724" : "#721c24",
+                        backgroundColor: schedule[dayName]?.includes(hour) ? "#d4edda" : "#f8d7da",
+                        color: schedule[dayName]?.includes(hour) ? "#155724" : "#721c24",
                         fontWeight: "bold",
                       }}
                     >
-                      {availability[key] ? "Disponibile" : "Non disponibile"}
+                      {schedule[dayName]?.includes(hour) ? "Disponibile" : "Non disponibile"}
                     </TableCell>
                   );
                 })}

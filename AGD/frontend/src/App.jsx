@@ -14,10 +14,17 @@ import Impostazioni from "./pages/Impostazioni.jsx";
 import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import GestioneAccount from "./pages/GestioneAccount.jsx";
+// Importa WeeklySchedule e Professore per passare le props
+import WeeklySchedule from "./components/WeeklySchedule";
+import Professore from "./pages/Professore";
 import GestioneAssenze from "./pages/GestioneAssenze.jsx";
 
 function App() {
+  
+  
+  
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />

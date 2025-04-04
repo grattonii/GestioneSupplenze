@@ -10,24 +10,6 @@ const { Workbook } = pkg;
 const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
 
-function generateUniqueID() {
-    if (!existsSync(USERS_FILE)) return "AAA"; // ID di default
-
-    const users = JSON.parse(readFileSync(USERS_FILE));
-    let existingIDs = new Set(users.map(user => user.id));
-
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let newID;
-    do {
-        newID = "";
-        for (let i = 0; i < 3; i++) {
-            newID += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-    } while (existingIDs.has(newID));
-
-    return newID;
-}
-
 function generateUsername(nome, cognome) {
     const firstLetterNome = nome.charAt(0).toUpperCase();
     const firstLetterCognome = cognome.charAt(0).toUpperCase();
@@ -83,12 +65,13 @@ export const uploadDocenti = async (req, res) => {
     const filePath = req.file.path;
 
     try {
+        const materieList = loadMaterie();
         const workbook = new Workbook();
         await workbook.xlsx.readFile(filePath);
         const worksheet = workbook.getWorksheet(1);
 
         const docenti = [];
-
+        
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
                 const id = generateUniqueID();
@@ -97,14 +80,24 @@ export const uploadDocenti = async (req, res) => {
                 const email = row.getCell(3).text.trim();
                 const numero = row.getCell(4).text.trim();
                 const materie = row.getCell(5).text.trim();
-                const classi = row.getCell(6).text.trim().split(',').map(c => c.trim());
-
-                if (!nome || !cognome || !email) {
-                    console.warn(`Dati incompleti per: ${nome} ${cognome}, saltato.`);
-                    return;
+                const classi = row.getCell(6).text.trim().split(',').map(c => c.trim()); // Converte in array
+                
+                // Controllo sui tipi di dati
+                //!! Da gestire in caso di non rispetto dei tipi di dati un messaggio di errore apprropriato con reinserimento
+                if (!nome || typeof nome !== 'string') { //! Controllo nome
                 }
-
-                docenti.push({ id, nome, cognome, email, numero, materie, classi });
+                if (!cognome || typeof cognome !== 'string') { //! Controllo cognome
+                }
+                if (!email || !email.includes('@')) { //! Controllo email
+                }
+                if (isNaN(numero) || numero.length < 7) { //! Controllo numero di telefono
+                }
+                if (!materie || typeof materie !== 'string') { //! Controllo materie
+                }
+                if (!Array.isArray(classi) || classi.length === 0) { //! Controllo classi
+                }
+                
+                docenti.push({ nome, cognome, email, numero, materie, classi });
             }
         });
 
