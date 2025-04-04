@@ -22,6 +22,15 @@ function GestioneFile() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+    const token = sessionStorage.getItem('accessToken');
+
+    if (!token) {
+      const token = await refreshAccessToken();
+      if (!token) {
+        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+        return;
+      }
+    }
 
     if (!file) {
       toast.warn("Seleziona un file prima di procedere!", { position: "top-center" });
@@ -33,7 +42,8 @@ function GestioneFile() {
 
     try {
       await axios.post("http://localhost:5000/files/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" ,
+                  'Authorization': `Bearer ${token}`},
       });
 
       navigate("/gestione-orari");

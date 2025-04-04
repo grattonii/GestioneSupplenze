@@ -7,6 +7,6 @@ const router = express.Router();
 // Route per salvare gli orari delle lezioni
 router.post("/salva", authenticateToken, salvaOrari);
 router.get("/modifica", authenticateToken, getOrari);
-router.get("/fasce-orarie", authenticateToken, fasceOrarie);
+router.get("/fasce-orarie", fasceOrarie); 
 
 export default router;

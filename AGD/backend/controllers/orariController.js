@@ -1,10 +1,15 @@
 import fs from "fs";
 import path from "path";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, "../data/orario.json");
+const filePath2 = path.join(__dirname, "../data/users.json");
 
 // Funzione per caricare i dati esistenti
 const loadData = () => {
@@ -21,24 +26,15 @@ const loadData = () => {
 // Funzione per salvare i dati
 const saveData = (data) => {
   try {
-    // Crea la cartella 'data' se non esiste
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
-
-    // Crea il file se non esiste
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, "[]", "utf8");
-    }
-
-    // Salva i dati nel file JSON
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf8");
   } catch (error) {
     throw new Error("Errore durante il salvataggio dei dati: " + error.message);
   }
 };
-
 
 export const salvaOrari = (req, res) => {
   const { idAdmin, orari } = req.body;
@@ -69,48 +65,77 @@ export const salvaOrari = (req, res) => {
   }
 };
 
+// Funzione per ottenere gli orari
 export const getOrari = (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Estrai il token dalla header 'Authorization'
-  
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ error: "Token mancante" });
   }
 
   try {
-    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
     const idAdmin = decodedToken?.id;
 
     if (!idAdmin) {
-      return res.status(400).json({ error: "ID amministratore non trovato nel token" });
+      return res.status(400).json({ error: "ID amministratore non trovato" });
     }
 
     const data = loadData();
     const adminData = data.find((item) => item.idAdmin === idAdmin);
 
-    if (!adminData) {
-      return res.status(404).json({ error: "Orari non trovati per questo amministratore" });
+    if (!adminData || !adminData.orari) {
+      return res.status(404).json({ error: "Orari non trovati" });
     }
 
     res.status(200).json(adminData.orari);
   } catch (error) {
-    console.error("Errore nel decodificare il token", error);
-    return res.status(500).json({ error: "Errore interno" });
+    console.error("Errore nel decodificare il token:", error);
+    return res.status(401).json({ error: "Token non valido o scaduto" });
   }
 };
 
+// Funzione per ottenere le fasce orarie
 export const fasceOrarie = (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Estrai il token dalla header 'Authorization'
-  
+  console.log("Richiesta ricevuta per /orari/fasce-orarie");
+  console.log("Token ricevuto:", req.headers.authorization);
+  const token = req.headers.authorization?.split(" ")[1];
+
   if (!token) {
     return res.status(401).json({ error: "Token mancante" });
   }
 
   try {
-    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    const idAdmin = decodedToken?.id;
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+    const id = decodedToken?.id;
+    const role = decodedToken?.role;
+    let idAdmin;
 
-    if (!idAdmin) {
-      return res.status(400).json({ error: "ID amministratore non trovato nel token" });
+    if (!id) {
+      return res.status(400).json({ error: "ID non trovato nel token" });
+    }
+
+    if (role === "admin") {
+      idAdmin = id;
+    } else {
+      if (!fs.existsSync(filePath2)) {
+        return res.status(500).json({ error: "File utenti non trovato" });
+      }
+
+      try {
+        const dati = fs.readFileSync(filePath2, "utf8");
+        const utenti = JSON.parse(dati);
+        const user = utenti.find((u) => u.id === id);
+
+        if (!user) {
+          return res.status(404).json({ error: "Utente non trovato" });
+        }
+
+        // Prendiamo l'idAdmin associato al professore
+        idAdmin = user.idAdmin;
+      } catch (error) {
+        console.error("Errore nella lettura del file users.json:", error);
+        return res.status(500).json({ error: "Errore interno nel recupero utenti" });
+      }
     }
 
     const data = loadData();
@@ -120,48 +145,48 @@ export const fasceOrarie = (req, res) => {
       return res.status(404).json({ error: "Orari non trovati per questo amministratore" });
     }
 
-    const { inizioPrimaLezione, fineUltimaLezione, inizioRicreazione, fineRicreazione, durataLezioni } = adminData.orari;
+    const { inizioPrimaLezione, fineUltimaLezione, inizioRicreazione, fineRicreazione, durataLezioni, giorniLezione } = adminData.orari;
 
-    // Funzione per sommare minuti a un orario (formato "HH:MM")
     const aggiungiMinuti = (orario, minuti) => {
+      if (typeof orario !== "string" || !orario.includes(":")) {
+        console.error("Formato orario non valido:", orario);
+        return "00:00";
+      }
+
       let [ore, min] = orario.split(":").map(Number);
+      if (isNaN(ore) || isNaN(min)) {
+        console.error("Errore nel parsing dell'orario:", orario);
+        return "00:00";
+      }
+
       let totaleMinuti = ore * 60 + min + minuti;
       let nuoveOre = Math.floor(totaleMinuti / 60);
       let nuoviMin = totaleMinuti % 60;
+
       return `${String(nuoveOre).padStart(2, "0")}:${String(nuoviMin).padStart(2, "0")}`;
     };
 
     let fasce = [];
     let orarioCorrente = inizioPrimaLezione;
-    let lezione = 1;
 
     while (orarioCorrente < fineUltimaLezione) {
       let fineLezione = aggiungiMinuti(orarioCorrente, durataLezioni);
-
-      // Se la fine della lezione supera l'orario scolastico, interrompe il ciclo
       if (fineLezione > fineUltimaLezione) break;
 
-      // Aggiungi solo l'orario di inizio e fine delle lezioni
-      fasce.push(orarioCorrente);
-      fasce.push(fineLezione);
-
-      // Se la prossima lezione inizia durante la ricreazione, inserisce la pausa
-      let prossimoInizio = aggiungiMinuti(fineLezione, durataLezioni);
-      if (fineLezione <= inizioRicreazione && prossimoInizio > inizioRicreazione) {
-        fasce.push(inizioRicreazione);
-        fasce.push(fineRicreazione);
-
-        // Salta la durata della ricreazione
-        fineLezione = fineRicreazione;
+      if (fineLezione > inizioRicreazione && orarioCorrente < inizioRicreazione) {
+        fasce.push({ giorniLezione, inizio: orarioCorrente, fine: inizioRicreazione });
+        fasce.push({ giorniLezione, inizio: inizioRicreazione, fine: fineRicreazione });
+        orarioCorrente = fineRicreazione;
+        continue;
       }
 
+      fasce.push({ giorniLezione, inizio: orarioCorrente, fine: fineLezione });
       orarioCorrente = fineLezione;
-      lezione++;
     }
 
     res.status(200).json(fasce);
   } catch (error) {
     console.error("Errore nel decodificare il token", error);
-    return res.status(500).json({ error: "Errore interno" });
+    return res.status(401).json({ error: "Token non valido o scaduto" });
   }
 };

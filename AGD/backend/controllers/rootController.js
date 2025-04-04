@@ -3,6 +3,24 @@ import bcrypt from 'bcrypt';
 
 const USERS_FILE = "./data/users.json";
 
+function generateUniqueID() {
+    if (!existsSync(USERS_FILE)) return new Set();
+
+    const users = JSON.parse(readFileSync(USERS_FILE));
+    let existingIDs = new Set(users.map(user => user.id));
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let newID;
+    do {
+        newID = "";
+        for (let i = 0; i < 3; i++) {
+            newID += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+    } while (existingIDs.has(newID));
+
+    return newID;
+}
+
 function generateUsername(nome1, nome2, tipologia) {
     const firstLetterNome = nome1.charAt(0).toUpperCase();
     const firstLetterCognome = nome2 ? nome2.charAt(0).toUpperCase() : "X"; // Default "X" se manca
@@ -26,7 +44,7 @@ export const GeneraAdmin = async (req, res) => {
     const username = generateUsername(nome1, nome2, tipologia);
     const password = username; // Password uguale allo username
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const id = nome1.charAt(0).toUpperCase() + "1";
+    const id = generateUniqueID(); // Genera un ID unico
 
     users.push({
         attivo: true,

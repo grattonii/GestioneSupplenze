@@ -54,15 +54,18 @@ function Impostazioni() {
       }
     })
       .then((response) => {
+        console.log("Dati ricevuti dal backend:", response.data);
         if (response.data) {
           setOrario({
-            inizioPrimaLezione: response.data.orari.inizioPrimaLezione || "",
-            fineUltimaLezione: response.data.orari.fineUltimaLezione || "",
-            inizioRicreazione: response.data.orari.inizioRicreazione || "",
-            fineRicreazione: response.data.orari.fineRicreazione || "",
-            durataLezioni: response.data.orari.durataLezioni || "",
-            giorniLezione: response.data.orari.giorniLezione || "",
+            inizioPrimaLezione: response.data.inizioPrimaLezione || "",
+            fineUltimaLezione: response.data.fineUltimaLezione || "",
+            inizioRicreazione: response.data.inizioRicreazione || "",
+            fineRicreazione: response.data.fineRicreazione || "",
+            durataLezioni: response.data.durataLezioni || "",
+            giorniLezione: response.data.giorniLezione || "",
           });
+        } else {
+          console.warn("Dati orari non disponibili");
         }
       })
       .catch((error) => console.error("Errore nel recupero degli orari:", error));
