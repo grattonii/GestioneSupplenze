@@ -98,12 +98,6 @@ export const uploadDocenti = async (req, res) => {
 
         const docenti = [];
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-<<<<<<< HEAD
-=======
-        
-
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
->>>>>>> 2586531644e846819ff66a7e53dbd4111acb2df0
 
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
@@ -113,7 +107,7 @@ export const uploadDocenti = async (req, res) => {
                 const email = row.getCell(3).text.trim();
                 const numero = row.getCell(4).text.trim();
                 const materie = row.getCell(5).text.trim();
-<<<<<<< HEAD
+
                 const classi = row.getCell(6).text.trim().split(',').map(c => c.trim());
 
                 if (!nome || !cognome || !email) {
@@ -121,13 +115,9 @@ export const uploadDocenti = async (req, res) => {
                     return;
                 }
 
-                docenti.push({ id, nome, cognome, email, numero, materie, classi });
-=======
-                const classi = row.getCell(6).text.trim().split(',').map(c => c.trim()); // Converte in array
-                
                 // Controllo sui tipi di dati
                 //!! Da gestire in caso di non rispetto dei tipi di dati un messaggio di errore apprropriato con reinserimento
-                if (!nome || typeof nome !== 'string'|| nome.length < 2 || nome.length > 50) { //! Controllo nome
+                if (!nome || typeof nome !== 'string' || nome.length < 2 || nome.length > 50) { //! Controllo nome
                     return res.status(400).json({ message: `Errore nel nome del docente alla riga ${rowNumber}.` });
                 }
                 if (!cognome || typeof cognome !== 'string' || cognome.length < 2 || cognome.length > 50) { //! Controllo cognome
@@ -142,13 +132,12 @@ export const uploadDocenti = async (req, res) => {
                 if (!materie || !materie.split(',').map(m => m.trim().toLowerCase()).every(m => materieList.includes(m))) { //! Controllo materie
                     return res.status(400).json({ message: `Errore nelle materie assegnate al docente alla riga ${rowNumber}.` });
                 }
-                
+
                 if (!Array.isArray(classi) || classi.length === 0) { //! Controllo classi
-                     return res.status(400).json({ message: `Errore nelle classi assegnate al docente alla riga ${rowNumber}.` });
+                    return res.status(400).json({ message: `Errore nelle classi assegnate al docente alla riga ${rowNumber}.` });
                 }
-                
+
                 docenti.push({ nome, cognome, email, numero, materie, classi });
->>>>>>> 2586531644e846819ff66a7e53dbd4111acb2df0
             }
         });
 
