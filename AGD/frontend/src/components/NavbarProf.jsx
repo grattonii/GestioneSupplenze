@@ -5,7 +5,6 @@ import "../styles/Navbar.css";
 
 function NavbarProf() {
   const navigate = useNavigate();
-  const [showMenu, setShowMenu] = useState(false);
 
   const handleLogout = async () => {
     try {

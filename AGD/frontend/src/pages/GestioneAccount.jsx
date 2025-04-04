@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaPlusCircle } from "react-icons/fa";
 import AdminTabella from "../components/AdminTabella.jsx";
-import Navbar from "../components/NavbarProf.jsx";
+import Navbar from "../components/NavbarProf2.jsx";
 import "../styles/Pagine.css";
 
 function GestioneAccount() {

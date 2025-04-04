@@ -1,12 +1,15 @@
-import React from 'react';
+import {useState} from 'react';
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton} from "@mui/material";
+import Navbar from "../components/Navbar2.jsx";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-const Configurazione = () => {
+function Configurazione () {
+    const [substitutions, setSubstitutions] = useState([]);
     return (
-        <div>
-            <h1>Gestione Assenze</h1>
+        <>
+            <Navbar />
+            <h1 className="title">Gestione Assenze</h1>
             <TableContainer component={Paper} sx={{
                 maxWidth: "1200px",
                 margin: "auto",
@@ -52,7 +55,7 @@ const Configurazione = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </>
     );
 };
 
