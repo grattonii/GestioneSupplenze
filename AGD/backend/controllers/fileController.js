@@ -9,6 +9,32 @@ const { Workbook } = pkg;
 
 const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
+const MATERIE_FILE = './data/materie.txt';
+
+function loadMaterie() {
+    if (!existsSync(MATERIE_FILE)) {
+        throw new Error('File delle materie non trovato!');
+    }
+    return readFileSync(MATERIE_FILE, 'utf-8').split(',').map(m => m.trim().toLowerCase());
+}
+
+function generateUniqueID() {
+    if (!existsSync(USERS_FILE)) return "AAA"; // ID di default
+
+    const users = JSON.parse(readFileSync(USERS_FILE));
+    let existingIDs = new Set(users.map(user => user.id));
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let newID;
+    do {
+        newID = "";
+        for (let i = 0; i < 3; i++) {
+            newID += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+    } while (existingIDs.has(newID));
+
+    return newID;
+}
 
 function generateUsername(nome, cognome) {
     const firstLetterNome = nome.charAt(0).toUpperCase();
@@ -71,7 +97,14 @@ export const uploadDocenti = async (req, res) => {
         const worksheet = workbook.getWorksheet(1);
 
         const docenti = [];
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+<<<<<<< HEAD
+=======
         
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+>>>>>>> 2586531644e846819ff66a7e53dbd4111acb2df0
+
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
                 const id = generateUniqueID();
@@ -80,24 +113,42 @@ export const uploadDocenti = async (req, res) => {
                 const email = row.getCell(3).text.trim();
                 const numero = row.getCell(4).text.trim();
                 const materie = row.getCell(5).text.trim();
+<<<<<<< HEAD
+                const classi = row.getCell(6).text.trim().split(',').map(c => c.trim());
+
+                if (!nome || !cognome || !email) {
+                    console.warn(`Dati incompleti per: ${nome} ${cognome}, saltato.`);
+                    return;
+                }
+
+                docenti.push({ id, nome, cognome, email, numero, materie, classi });
+=======
                 const classi = row.getCell(6).text.trim().split(',').map(c => c.trim()); // Converte in array
                 
                 // Controllo sui tipi di dati
                 //!! Da gestire in caso di non rispetto dei tipi di dati un messaggio di errore apprropriato con reinserimento
-                if (!nome || typeof nome !== 'string') { //! Controllo nome
+                if (!nome || typeof nome !== 'string'|| nome.length < 2 || nome.length > 50) { //! Controllo nome
+                    return res.status(400).json({ message: `Errore nel nome del docente alla riga ${rowNumber}.` });
                 }
-                if (!cognome || typeof cognome !== 'string') { //! Controllo cognome
+                if (!cognome || typeof cognome !== 'string' || cognome.length < 2 || cognome.length > 50) { //! Controllo cognome
+                    return res.status(400).json({ message: `Errore nel cognome del docente alla riga ${rowNumber}.` });
                 }
-                if (!email || !email.includes('@')) { //! Controllo email
+                if (!email || !emailRegex.test(email)) { //! Controllo email
+                    return res.status(400).json({ message: `Email non valida per il docente alla riga ${rowNumber}.` });
                 }
-                if (isNaN(numero) || numero.length < 7) { //! Controllo numero di telefono
+                if (isNaN(numero) || numero.length < 7 || numero.length > 10) { //! Controllo numero di telefono
+                    return res.status(400).json({ message: `Numero di telefono non valido alla riga ${rowNumber}.` });
                 }
-                if (!materie || typeof materie !== 'string') { //! Controllo materie
+                if (!materie || !materie.split(',').map(m => m.trim().toLowerCase()).every(m => materieList.includes(m))) { //! Controllo materie
+                    return res.status(400).json({ message: `Errore nelle materie assegnate al docente alla riga ${rowNumber}.` });
                 }
+                
                 if (!Array.isArray(classi) || classi.length === 0) { //! Controllo classi
+                     return res.status(400).json({ message: `Errore nelle classi assegnate al docente alla riga ${rowNumber}.` });
                 }
                 
                 docenti.push({ nome, cognome, email, numero, materie, classi });
+>>>>>>> 2586531644e846819ff66a7e53dbd4111acb2df0
             }
         });
 
