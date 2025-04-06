@@ -84,47 +84,51 @@ function SupplenzeTabella({ rows, setRows }) {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
-                  <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                    Nessuna supplenza da gestire al momento.
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              rows.map((row, index) => (
-                <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
-                  cursor: "pointer",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    backgroundColor: "#f0f0f0",
-                  }
-                }}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                    {row.stato === "Accettata" ? (
-                      <FaCheckCircle color="green" size={23} />
-                    ) : row.stato === "In attesa" ? (
-                      <FaHourglassHalf color="orange" size={23} />
-                    ) : (
-                      <FaTimesCircle color="red" size={23} />
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                    <IconButton onClick={() => handleDelete(row.id)}>
-                      <FaTrash color="red" />
-                    </IconButton>
+        </Table>
+        <div style={{ maxHeight: "500px", overflowY: "auto" }}>
+          <Table sx={{ tableLayout: "fixed" }}>
+            <TableBody>
+              {rows.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
+                    <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
+                      Nessuna supplenza da gestire al momento.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                rows.map((row, index) => (
+                  <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
+                    cursor: "pointer",
+                    transition: "transform 0.2s",
+                    "&:hover": {
+                      backgroundColor: "#f0f0f0",
+                    }
+                  }}>
+                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
+                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
+                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
+                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
+                      {row.stato === "Accettata" ? (
+                        <FaCheckCircle color="green" size={23} />
+                      ) : row.stato === "In attesa" ? (
+                        <FaHourglassHalf color="orange" size={23} />
+                      ) : (
+                        <FaTimesCircle color="red" size={23} />
+                      )}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                      <IconButton onClick={() => handleDelete(row.id)}>
+                        <FaTrash color="red" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </TableContainer>
 
       {/* Dialog per modificare i dati */}

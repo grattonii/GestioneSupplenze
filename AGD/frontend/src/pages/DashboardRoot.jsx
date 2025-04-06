@@ -51,7 +51,6 @@ function DashboardRoot() {
                 <h2 className="titolo">
                   CONFIGURAZIONE DEL SISTEMA <FaClipboardList className="widget-icon" />
                 </h2>
-                <h3>Consulta lo storico delle supplenze</h3>
               </div>
             </motion.div>
 

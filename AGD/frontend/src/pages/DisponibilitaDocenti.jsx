@@ -44,6 +44,7 @@ function DisponibilitaDocenti() {
     <div>
       <Navbar />
       <h1 className="title">Disponibilità Docenti</h1>
+      <h3 className="spiegazione">Gestisci le disponibilità dei docenti</h3>
 
       <DisponibilitaTabella rows={disponibilita} setRows={setDisponibilita} />
 

@@ -33,6 +33,7 @@ function Report() {
     <div>
       <Navbar />
       <h1 className="title">Report</h1>
+      <h3 className="spiegazione">Visualizza i report delle supplenze</h3>
       <ReportTabella rows={data} />
       <div className="grafico">
         <h2>Distribuzione delle ore</h2>

@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar.jsx";
 import SupplenzeTabellaMini from "../components/SupplenzeTabellaMini.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
 import DisponibilitaTabellaMini from "../components/DisponibilitaTabellaMini.jsx";
+import AssenzeTabellaMini from "../components/AssenzeTabellaMini.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -34,6 +35,12 @@ function Dashboard() {
     { docente: "Mario Rossi", disponibilità: "8", pagamento: "100" },
     { docente: "Luca Bianchi", disponibilità: "6", pagamento: "80" },
     { docente: "Anna Verdi", disponibilità: "10", pagamento: "120" },
+  ];
+
+  const assenzeDocenti = [
+    { docente: "Mario Rossi", data:"31-05-2025", motivazione: "salute" },
+    { docente: "Luca Bianchi", data:"31-05-2025", motivazione: "salute" },
+    { docente: "Anna Verdi", data:"31-05-2025", motivazione: "famiglia" },
   ];
 
   const totaleDocentiDisponibili = docentiDisponibiliOggi.length;
@@ -113,6 +120,7 @@ function Dashboard() {
                 <h2 className="titolo">
                   GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
                 </h2>
+                <AssenzeTabellaMini rows={assenzeDocenti} />
               </div>
             </motion.div>
 

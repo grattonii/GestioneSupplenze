@@ -35,6 +35,7 @@ function storicoSupplenze() {
     <div>
       <Navbar />
       <h1 className="title">Storico Supplenze</h1>
+      <h3 className="spiegazione">Visualizza lo storico delle supplenze</h3>
       <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
     </div>
   );

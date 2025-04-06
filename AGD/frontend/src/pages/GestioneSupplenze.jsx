@@ -72,8 +72,8 @@ function GestioneSupplenze() {
     <div>
       <ToastContainer />
       <Navbar />
-      <h1 className="title">Gestione Supplenze</h1>
-      <h3 className="spiegazione">Visualizza e modifica le assegnazioni delle supplenze giornaliere.</h3>
+      <h1 className="title">Supplenze</h1>
+      <h3 className="spiegazione">Gestione supplenze odierne.</h3>
 
       <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
       <div className="aggiungi-container">
