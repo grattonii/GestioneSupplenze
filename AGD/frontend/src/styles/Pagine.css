@@ -102,10 +102,10 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 1rem;
+    font-size: 18px;
     margin-top: 15px;
-    padding: 10px 12px;
-    background: #335C81;
+    padding: 14px 20px;
+    background: #007bff;
     color: rgb(224, 224, 224);
     border: none;
     border-radius: 5px;
@@ -113,5 +113,5 @@ body {
 }
 
 .aggiungi:hover {
-    background: #4479a7;
+    background: #335C81;
 }

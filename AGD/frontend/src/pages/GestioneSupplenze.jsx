@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { color } from "framer-motion";
 
 dayjs.extend(customParseFormat);
 
@@ -83,7 +84,7 @@ function GestioneSupplenze() {
       </div>
 
       <Dialog open={openSupplenza} onClose={handleCloseSupplenza}>
-        <DialogTitle>Aggiungi Supplenza</DialogTitle>
+        <DialogTitle sx={{color: "black"}}>Aggiungi Supplenza</DialogTitle>
         <DialogContent>
           <TextField label="Docente" name="docente" fullWidth value={nuovaSupplenza.docente} onChange={handleChangeSupplenza} margin="dense" sx={{
             "& .MuiInputBase-root": {

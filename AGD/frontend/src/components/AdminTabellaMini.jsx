@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton
-} from "@mui/material";
-import { FaTrash, FaPlayCircle, FaPauseCircle } from "react-icons/fa";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
 import "../styles/Tabelle.css";
 
-function AdminTabella({ rows, setRows }) {
-  const [open, setOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
+function AdminTabellaMini({ rows }) {
   const [visibleRows, setVisibleRows] = useState({});
 
   const observer = useRef(null);
@@ -46,54 +39,6 @@ function AdminTabella({ rows, setRows }) {
     });
   }, [rows]);
 
-  const handleOpen = (row) => {
-    if (row) {
-      setSelectedRow({ ...row });
-      setOpen(true);
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedRow(null);
-  };
-
-  const handleChange = (e) => {
-    setSelectedRow((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleUpdate = () => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
-    );
-    handleClose();
-  };
-
-  const handleDeleteRequest = (id) => {
-    setRowToDelete(id);
-    setConfirmDeleteOpen(true);
-  };
-
-  const confirmDelete = () => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== rowToDelete));
-    setConfirmDeleteOpen(false);
-    setRowToDelete(null);
-  };
-
-  const cancelDelete = () => {
-    setConfirmDeleteOpen(false);
-    setRowToDelete(null);
-  };
-
-  const toggleStatus = (e, id) => {
-    e.stopPropagation();
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, stato: row.stato === "attivo" ? "sospeso" : "attivo" } : row
-      )
-    );
-  };
-
   return (
     <>
       <TableContainer
@@ -120,7 +65,7 @@ function AdminTabella({ rows, setRows }) {
             }}
           >
             <TableRow>
-              {["Scuola", "Email referente", "Stato", ""].map((header) => (
+              {["Scuola", "Email referente", "Stato"].map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -182,31 +127,15 @@ function AdminTabella({ rows, setRows }) {
                         <FaPlayCircle color="green" size={23} />
                       )}
                     </IconButton>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <IconButton onClick={() => handleDeleteRequest(row.id)}>
-                      <FaTrash color="red" />
-                    </IconButton>
-                  </TableCell>
+                  </TableCell> 
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Dialog open={confirmDeleteOpen} onClose={cancelDelete}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Conferma eliminazione</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontFamily: "Poppins" }}>Sei sicuro di voler eliminare questo utente?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
-          <Button onClick={confirmDelete} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }
 
-export default AdminTabella;
+export default AdminTabellaMini;

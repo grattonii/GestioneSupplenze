@@ -1,12 +1,15 @@
 import React from 'react';
+import Navbar from "../components/NavbarProf2.jsx";
+import "../styles/Pagine.css";
 
-const Configurazione = () => {
+const GestioneRichieste = () => {
     return (
-        <div>
-            <h1>Configurazione</h1>
-            <p>Questa è la pagina di configurazione.</p>
-        </div>
+        <>
+            <Navbar />
+            <h1 className="title">Report Usabilita</h1>
+            <h3 className="spiegazione">Qui puoi visualizzare i report di usabilità.</h3>
+        </>
     );
 };
 
-export default Configurazione;
+export default GestioneRichieste;

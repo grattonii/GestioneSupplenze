@@ -1,11 +1,14 @@
 import React from 'react';
+import Navbar from "../components/NavbarProf2.jsx";
+import "../styles/Pagine.css";
 
 const Configurazione = () => {
     return (
-        <div>
-            <h1>Configurazione</h1>
-            <p>Questa è la pagina di configurazione.</p>
-        </div>
+        <>
+            <Navbar />
+            <h1 className="title">Configurazione del sistema</h1>
+            <h3 className="spiegazione">Qui puoi configurare le impostazioni del sistema.</h3>
+        </>
     );
 };
 

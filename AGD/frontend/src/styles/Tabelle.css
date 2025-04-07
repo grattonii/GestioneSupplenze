@@ -8,3 +8,24 @@
     transform: scale(1);
     opacity: 1;
 }
+
+.reset {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    padding: 10px 0px;
+    margin-right: 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 50%;
+    max-width: 250px;
+    transition: background 0.3s ease;
+}
+
+.reset:hover {
+    background: #0056b3;
+}

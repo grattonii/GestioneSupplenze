@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaPlusCircle } from "react-icons/fa";
 import AdminTabella from "../components/AdminTabella.jsx";
@@ -7,7 +7,7 @@ import "../styles/Pagine.css";
 
 function GestioneAccount() {
   const [open, setOpen] = useState(false);
-  const [rows, setRows] = useState([]); // Stato per la tabella
+  const [rows, setRows] = useState([]);
   const [adminData, setAdminData] = useState({
     nomeScuola: "",
     tipologia: "",
@@ -51,9 +51,10 @@ function GestioneAccount() {
   };  
 
   return (
-    <div>
+    <>
       <Navbar />
       <h1 className="title">Gestione Account</h1>
+      <h3 className="spiegazione">Gestisci gli account degli amministratori.</h3>
       <AdminTabella rows={rows} setRows={setRows} />
 
       <div className="aggiungi-container">
@@ -139,7 +140,7 @@ function GestioneAccount() {
           <Button onClick={handleAdd} color="primary">Crea</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
 

@@ -8,6 +8,7 @@ import SupplenzeTabellaMini from "../components/SupplenzeTabellaMini.jsx";
 import ReportTabella from "../components/ReportTabella.jsx";
 import DisponibilitaTabellaMini from "../components/DisponibilitaTabellaMini.jsx";
 import AssenzeTabellaMini from "../components/AssenzeTabellaMini.jsx";
+import StoricoTabellaMini from "../components/StoricoTabella.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -26,9 +27,9 @@ function Dashboard() {
   const mediaOreDisponibilita = 30;
 
   const disponibilitaDocenti = [
-    { docente: "Mario Rossi", giorno:"Martedì", ora: "08:00-09:00" },
-    { docente: "Luca Bianchi", giorno:"Martedì", ora: "09:00-10:00" },
-    { docente: "Anna Verdi", giorno:"Martedì", ora: "10:00-11:00" },
+    { docente: "Mario Rossi", giorno: "Martedì", ora: "08:00-09:00" },
+    { docente: "Luca Bianchi", giorno: "Martedì", ora: "09:00-10:00" },
+    { docente: "Anna Verdi", giorno: "Martedì", ora: "10:00-11:00" },
   ];
 
   const reportSupplenze = [
@@ -38,9 +39,9 @@ function Dashboard() {
   ];
 
   const assenzeDocenti = [
-    { docente: "Mario Rossi", data:"31-05-2025", motivazione: "salute" },
-    { docente: "Luca Bianchi", data:"31-05-2025", motivazione: "salute" },
-    { docente: "Anna Verdi", data:"31-05-2025", motivazione: "famiglia" },
+    { docente: "Mario Rossi", data: "31-05-2025", motivazione: "salute" },
+    { docente: "Luca Bianchi", data: "31-05-2025", motivazione: "salute" },
+    { docente: "Anna Verdi", data: "31-05-2025", motivazione: "famiglia" },
   ];
 
   const totaleDocentiDisponibili = docentiDisponibiliOggi.length;
@@ -80,7 +81,7 @@ function Dashboard() {
             >
               <div className="header">
                 <h2 className="titolo">
-                  DISPONIBILITÀ <FaUsers className="widget-icon" />
+                  DISPONIBILITÀ DOCENTI<FaUsers className="widget-icon" />
                 </h2>
                 <h3>Verifica la disponibilità dei docenti</h3>
                 <p>Totale docenti disponibili: {totaleDocentiDisponibili}</p>
@@ -89,6 +90,23 @@ function Dashboard() {
               <div>
                 <h3>Ultime 3 disponibilità:</h3>
                 <DisponibilitaTabellaMini rows={disponibilitaDocenti} />
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="widget"
+              whileHover={{ translateY: -10 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate("/assenze")}
+            >
+              <div className="header">
+                <h2 className="titolo">
+                  GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
+                </h2>
+              </div>
+              <div>
+                <h3>Ultime 3 richieste:</h3>
+                <AssenzeTabellaMini rows={assenzeDocenti} />
               </div>
             </motion.div>
 
@@ -106,21 +124,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultime 3 supplenze:</h3>
-                <SupplenzeTabellaMini rows={ultimeSupplenze} />
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="widget"
-              whileHover={{ translateY: -10 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/assenze")}
-            >
-              <div className="header">
-                <h2 className="titolo">
-                  GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
-                </h2>
-                <AssenzeTabellaMini rows={assenzeDocenti} />
+                <StoricoTabellaMini rows={ultimeSupplenze} />
               </div>
             </motion.div>
 

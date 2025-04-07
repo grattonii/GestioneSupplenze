@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SupplenzeTable from "../components/SupplenzeTabella.jsx";
+import StoricoTable from "../components/StoricoTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 
@@ -36,7 +36,7 @@ function storicoSupplenze() {
       <Navbar />
       <h1 className="title">Storico Supplenze</h1>
       <h3 className="spiegazione">Visualizza lo storico delle supplenze</h3>
-      <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
+      <StoricoTable rows={supplenze} />
     </div>
   );
 }

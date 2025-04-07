@@ -14,10 +14,10 @@ import Impostazioni from "./pages/Impostazioni.jsx";
 import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import GestioneAccount from "./pages/GestioneAccount.jsx";
-// Importa WeeklySchedule e Professore per passare le props
-import WeeklySchedule from "./components/WeeklySchedule";
-import Professore from "./pages/Professore";
 import GestioneAssenze from "./pages/GestioneAssenze.jsx";
+import GestioneRichieste from "./pages/GestioneRichieste.jsx";
+import Configurazione from "./pages/Configurazione.jsx";
+import ReportRoot from "./pages/ReportRoot.jsx";
 
 function App() {
   
@@ -36,6 +36,21 @@ function App() {
         <Route path="/gestione-admin" element={
           <AuthRoute allowedRoles={["root"]}>
             <GestioneAccount />
+          </AuthRoute>
+        } />
+        <Route path="/gestione-richieste" element={
+          <AuthRoute allowedRoles={["root"]}>
+            <GestioneRichieste />
+          </AuthRoute>
+        } />
+        <Route path="/configurazione" element={
+          <AuthRoute allowedRoles={["root"]}>
+            <Configurazione />
+          </AuthRoute>
+        } />
+        <Route path="/report-root" element={
+          <AuthRoute allowedRoles={["root"]}>
+            <ReportRoot />
           </AuthRoute>
         } />
         <Route path="/gestione-file" element={

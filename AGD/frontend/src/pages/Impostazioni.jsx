@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Impostazioni.css";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { FaPlusCircle } from "react-icons/fa";
+import UtentiTabella from "../components/UtentiTabella";
 
 const sections = [
   { id: "Orario", label: "Configurazione orario" },
@@ -13,13 +14,17 @@ const sections = [
   { id: "Assistenza", label: "Segnalazione Problemi" }
 ];
 
-const handleAbsenceSubmit = (event) => {
-  event.preventDefault();
-  console.log("Segnalazione inviata!");
-};
+const users = [
+  { id: 1, docente: "Mario Rossi", email:"mario.rossi@scuola.it", ruolo: "Docente" },
+  { id: 2, docente: "Mario Rossi", email:"mario.rossi@scuola.it", ruolo: "Docente" },
+  { id: 3, docente: "Mario Rossi", email:"mario.rossi@scuola.it", ruolo: "Docente" },
+  { id: 4, docente: "Mario Rossi", email:"mario.rossi@scuola.it", ruolo: "Docente" },
+  { id: 5, docente: "Mario Rossi", email:"mario.rossi@scuola.it", ruolo: "Docente" },
+];
 
 function Impostazioni() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(users);
   const [activeSection, setActiveSection] = useState("");
   const [emailNotifiche, setEmailNotifiche] = useState(true);
   const [pushNotifiche, setPushNotifiche] = useState(false);
@@ -125,6 +130,11 @@ function Impostazioni() {
       });
   };
 
+  const handleAbsenceSubmit = (event) => {
+    event.preventDefault();
+    console.log("Segnalazione inviata!");
+  };
+
   return (
     <div className="settings-container">
       {/* Sidebar */}
@@ -223,12 +233,7 @@ function Impostazioni() {
         <section id="Utenti" className="section">
           <h1>Gestione utenti e ruoli</h1>
           <h3>Modifica i permessi e assegna ruoli agli utenti.</h3>
-          <h3>Utenti:</h3>
-          <ul>
-            <li>Mario Rossi - Admin <button className="aggiungi">Modifica</button></li>
-            <li>Giulia Bianchi - Professore <button className="aggiungi">Modifica</button></li>
-            <li>Luca Verdi - Professore <button className="aggiungi">Modifica</button></li>
-          </ul>
+          <UtentiTabella rows={users} setRows={setUser}/>
           <div className="button-container">
             <button className="aggiunto"><FaPlusCircle />Aggiungi nuovo utente</button>
           </div>

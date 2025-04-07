@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar } from "react-icons/fa";
+import { FaUserCog, FaClipboardList, FaCog, FaChartBar } from "react-icons/fa";
 import "../styles/Dashboard.css";
 import Navbar from "../components/NavbarProf.jsx";
+import AdminTabellaMini from "../components/AdminTabellaMini.jsx";
 
 function DashboardRoot() {
   const navigate = useNavigate();
@@ -23,8 +24,11 @@ function DashboardRoot() {
             >
               <div className="header">
                 <h2 className="titolo">
-                  GESTIONE ACCOUNT <FaChalkboardTeacher className="widget-icon" />
+                  GESTIONE ACCOUNT <FaUserCog className="widget-icon" />
                 </h2>
+              </div>
+              <div>
+                <AdminTabellaMini rows={[]} />
               </div>
             </motion.div>
 
@@ -32,11 +36,11 @@ function DashboardRoot() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/disponibilita-docenti")}
+              onClick={() => navigate("/gestione-richieste")}
             >
               <div className="header">
                 <h2 className="titolo">
-                  GESTIONE RICHIESTE <FaUsers className="widget-icon" />
+                  GESTIONE RICHIESTE <FaClipboardList className="widget-icon" />
                 </h2>
               </div>
             </motion.div>
@@ -45,11 +49,11 @@ function DashboardRoot() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/storico-supplenze")}
+              onClick={() => navigate("/configurazione")}
             >
               <div className="header">
                 <h2 className="titolo">
-                  CONFIGURAZIONE DEL SISTEMA <FaClipboardList className="widget-icon" />
+                  CONFIGURAZIONE DEL SISTEMA <FaCog className="widget-icon" />
                 </h2>
               </div>
             </motion.div>
@@ -58,7 +62,7 @@ function DashboardRoot() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/report")}
+              onClick={() => navigate("/report-root")}
             >
               <div className="header">
                 <h2 className="titolo">

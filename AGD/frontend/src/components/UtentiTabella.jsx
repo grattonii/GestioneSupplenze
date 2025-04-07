@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import {
   Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton
 } from "@mui/material";
-import { FaTrash, FaPlayCircle, FaPauseCircle } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import "../styles/Tabelle.css";
 
-function AdminTabella({ rows, setRows }) {
+function UtentiTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -85,15 +85,6 @@ function AdminTabella({ rows, setRows }) {
     setRowToDelete(null);
   };
 
-  const toggleStatus = (e, id) => {
-    e.stopPropagation();
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, stato: row.stato === "attivo" ? "sospeso" : "attivo" } : row
-      )
-    );
-  };
-
   return (
     <>
       <TableContainer
@@ -120,7 +111,7 @@ function AdminTabella({ rows, setRows }) {
             }}
           >
             <TableRow>
-              {["Scuola", "Email referente", "Stato", ""].map((header) => (
+              {["Docente", "Email", "Ruolo" , ""].map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -149,7 +140,7 @@ function AdminTabella({ rows, setRows }) {
               <TableRow sx={{ display: "table", width: "100%", tableLayout: "fixed" }}>
                 <TableCell colSpan={4} style={{ textAlign: "center", padding: 3 }}>
                   <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                    Nessun admin disponibile.
+                    Nessun utente disponibile.
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -172,18 +163,11 @@ function AdminTabella({ rows, setRows }) {
                     },
                   }}
                 >
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.nomeScuola}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.emailReferente}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <IconButton onClick={(e) => toggleStatus(e, row.id)}>
-                      {row.stato === "attivo" ? (
-                        <FaPauseCircle color="yellow" size={23} />
-                      ) : (
-                        <FaPlayCircle color="green" size={23} />
-                      )}
-                    </IconButton>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.email}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ruolo}</TableCell>
+                  <TableCell sx={{ textAlign: "center", display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <button className="reset">Reset Default</button>
                     <IconButton onClick={() => handleDeleteRequest(row.id)}>
                       <FaTrash color="red" />
                     </IconButton>
@@ -209,4 +193,4 @@ function AdminTabella({ rows, setRows }) {
   );
 }
 
-export default AdminTabella;
+export default UtentiTabella;
