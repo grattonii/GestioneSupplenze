@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton } from "@mui/material";
 import { FaHourglassHalf, FaCheckCircle, FaTimesCircle, FaTrash } from "react-icons/fa";
-import "../styles/Accesso.css"; // Assicurati di importare il file CSS
+import "../styles/Tabelle.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
@@ -12,6 +12,40 @@ dayjs.extend(customParseFormat);
 function SupplenzeTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [visibleRows, setVisibleRows] = useState({});
+
+  const observer = useRef(null);
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        const updated = {};
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute("data-id");
+          updated[id] = entry.isIntersecting;
+        });
+        setVisibleRows((prev) => ({ ...prev, ...updated }));
+      },
+      {
+        root: document.querySelector("#table-body-scroll"),
+        threshold: 0.7,
+      }
+    );
+
+    return () => {
+      if (observer.current) observer.current.disconnect();
+    };
+  }, []);
+
+  const rowRefs = useRef({});
+
+  useEffect(() => {
+    if (!observer.current) return;
+    rows.forEach((row) => {
+      const el = rowRefs.current[row.id];
+      if (el) observer.current.observe(el);
+    });
+  }, [rows]);
 
   // Apri il dialog con la riga selezionata
   const handleOpen = (row) => {
@@ -75,60 +109,102 @@ function SupplenzeTabella({ rows, setRows }) {
   return (
     <>
       {/* Tabella */}
-      <TableContainer component={Paper} sx={{ maxWidth: "1200px", margin: "auto", borderRadius: 2, boxShadow: 3 }}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "#335C81" }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxWidth: "1200px",
+          margin: "auto",
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
+      >
+        <Table
+          sx={{
+            display: "block",
+            width: "100%",
+          }}
+        >
+          <TableHead
+            sx={{
+              display: "table",
+              width: "100%",
+              tableLayout: "fixed",
+              backgroundColor: "#335C81",
+            }}
+          >
+            <TableRow>
               {["Docente", "Classe", "Data", "Ora", "Stato", ""].map((header) => (
-                <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
+                <TableCell
+                  key={header}
+                  sx={{
+                    color: "white",
+                    textAlign: "center",
+                    fontFamily: "Poppins",
+                    fontWeight: 600,
+                  }}
+                >
+                  {header}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
-        </Table>
-        <div style={{ maxHeight: "500px", overflowY: "auto" }}>
-          <Table sx={{ tableLayout: "fixed" }}>
-            <TableBody>
-              {rows.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
-                    <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                      Nessuna supplenza da gestire al momento.
-                    </Typography>
+
+          <TableBody
+            id="table-body-scroll"
+            sx={{
+              display: "block",
+              maxHeight: "510px",
+              overflowY: "auto",
+              width: "100%",
+            }}
+          >
+            {rows.length === 0 ? (
+              <TableRow sx={{ display: "table", width: "100%", tableLayout: "fixed" }}>
+                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
+                  <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
+                    Nessuna supplenza da gestire al momento.
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              rows.map((row, index) => (
+                <TableRow
+                  key={row.id || index}
+                  ref={(el) => (rowRefs.current[row.id] = el)}
+                  data-id={row.id}
+                  className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
+                  sx={{
+                    display: "table",
+                    tableLayout: "fixed",
+                    width: "100%",
+                    cursor: "pointer",
+                    "&:hover": { backgroundColor: "#f0f0f0" },
+                  }}
+                  onClick={() => handleOpen(row)}
+                >
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
+                    {row.stato === "Accettata" ? (
+                      <FaCheckCircle color="green" size={23} />
+                    ) : row.stato === "In attesa" ? (
+                      <FaHourglassHalf color="orange" size={23} />
+                    ) : (
+                      <FaTimesCircle color="red" size={23} />
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+                    <IconButton onClick={() => handleDelete(row.id)}>
+                      <FaTrash color="red" />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
-              ) : (
-                rows.map((row, index) => (
-                  <TableRow key={row.id || index} onClick={() => handleOpen(row)} sx={{
-                    cursor: "pointer",
-                    transition: "transform 0.2s",
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                    }
-                  }}>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
-                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                      {row.stato === "Accettata" ? (
-                        <FaCheckCircle color="green" size={23} />
-                      ) : row.stato === "In attesa" ? (
-                        <FaHourglassHalf color="orange" size={23} />
-                      ) : (
-                        <FaTimesCircle color="red" size={23} />
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                      <IconButton onClick={() => handleDelete(row.id)}>
-                        <FaTrash color="red" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </TableContainer>
 
       {/* Dialog per modificare i dati */}
