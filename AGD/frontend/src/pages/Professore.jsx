@@ -11,6 +11,7 @@ import { FaCalendarWeek, FaCalendarCheck } from "react-icons/fa";
 function Professore() {
   const [schedule, setSchedule] = useState({});
   const [substitutions, setSubstitutions] = useState([]);
+  const [absenceNote, setabsenceNote] = useState([]);
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
   const [disponibilitaAccettate, setDisponibilitaAccettate] = useState([]);
@@ -37,9 +38,38 @@ function Professore() {
     setSubstitutions(filteredSubstitutions); // Imposta le supplenze filtrate
   };
 
-  const handleAbsenceSubmit = (e) => {
+  const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
-    console.log("Richiesta assenza inviata:", { absenceDate, absenceReason });
+
+    const absenceData = {
+      date: absenceDate,
+      reason: absenceReason,
+      note: absenceNote,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/assenze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(absenceData),
+      });
+
+      if (response.ok) {
+        console.log("Richiesta assenza inviata con successo:", absenceData);
+        alert("Richiesta assenza inviata con successo!");
+        setAbsenceDate("");
+        setAbsenceReason("");
+        setabsenceNote("");
+      } else {
+        console.error("Errore durante l'invio della richiesta di assenza");
+        alert("Errore durante l'invio della richiesta di assenza.");
+      }
+    } catch (error) {
+      console.error("Errore di rete:", error);
+      alert("Errore di rete durante l'invio della richiesta di assenza.");
+    }
   };
 
   const rejectSubstitution = (sub) => {
@@ -80,7 +110,7 @@ function Professore() {
   };
   
   return (
-    <div>
+    <div style={{ fontFamily: "Poppins, sans-serif" }}>
       <Navbar />
       <Typography variant="h3" align="center" gutterBottom className="title">
         Dashboard Professore
@@ -107,16 +137,16 @@ function Professore() {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              <TableCell sx={{ color: "white", textAlign: "center" }}>Classe</TableCell>
-              <TableCell sx={{ color: "white", textAlign: "center" }}>Data</TableCell>
-              <TableCell sx={{ color: "white", textAlign: "center" }}>Orario</TableCell>
-              <TableCell sx={{ color: "white", textAlign: "center" }}>Azione</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontFamily: "Poppins" }}>Classe</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontFamily: "Poppins" }}>Data</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontFamily: "Poppins" }}>Orario</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontFamily: "Poppins" }}>Azione</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {substitutions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
+                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3, fontFamily: "Poppins" }}>
                   <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
                     Nessun richiesta disponibile al momento.
                   </Typography>
@@ -154,24 +184,78 @@ function Professore() {
             onChange={(e) => setAbsenceDate(e.target.value)}
           />
         </div>
+
         <div className="input">
-          <label htmlFor="absenceReason">Motivo</label>
+          <label>Seleziona un motivo</label>
+          <div style={{ display: "flex", gap: "20px", marginBottom: "0px" }}>
+            <div
+              onClick={() => setAbsenceReason("Salute")}
+              style={{
+                padding: "10px 20px",
+                border: "2px solid",
+                color: "black",
+                borderColor: absenceReason === "Salute" ? "#1976d2" : "#ccc",
+                borderRadius: "8px",
+                cursor: "pointer",
+                backgroundColor: absenceReason === "Salute" ? "#e3f2fd" : "white",
+                textAlign: "center",
+                flex: 1,
+                fontFamily: "Poppins",
+              }}
+            >
+              Salute
+            </div>
+            <div
+              onClick={() => setAbsenceReason("Ferie")}
+              style={{
+                padding: "10px 20px",
+                border: "2px solid",
+                color: "black",
+                borderColor: absenceReason === "Ferie" ? "#1976d2" : "#ccc",
+                borderRadius: "8px",
+                cursor: "pointer",
+                backgroundColor: absenceReason === "Ferie" ? "#e3f2fd" : "white",
+                textAlign: "center",
+                flex: 1,
+                fontFamily: "Poppins",
+              }}
+            >
+              Ferie
+            </div>
+            <div
+              onClick={() => setAbsenceReason("Permessi")}
+              style={{
+                padding: "10px 20px",
+                border: "2px solid",
+                color: "black",
+                borderColor: absenceReason === "Permessi" ? "#1976d2" : "#ccc",
+                borderRadius: "8px",
+                cursor: "pointer",
+                backgroundColor: absenceReason === "Permessi" ? "#e3f2fd" : "white",
+                textAlign: "center",
+                flex: 1,
+                fontFamily: "Poppins",
+              }}
+            >
+              Permessi
+            </div>
+          </div>
+        </div>
+
+        <div className="input">
+          <label htmlFor="absenceNote">Note (facoltative)</label>
           <textarea
-            id="absenceReason"
-            value={absenceReason}
-            onChange={(e) => setAbsenceReason(e.target.value)}
+            id="absenceNote"
+            value={absenceReason === "" ? absenceNote : ""}
+            onChange={(e) => setabsenceNote(e.target.value)}
+            placeholder="Inserisci eventuali note..."
+            style={{ fontFamily: "Poppins" }}
           />
         </div>
         <Button type="submit" variant="contained" color="primary" fullWidth className="submit-button">
           Invia Richiesta
         </Button>
       </form>
-
-      <h1>Gestione Disponibilità</h1>
-      {/* Esempio di pulsante per accettare una disponibilità */}
-      <button onClick={() => handleAcceptAvailability("Lunedì", "10:00", "Classe 1A")}>
-        Accetta Disponibilità
-      </button>
     </div>
   );
 }
