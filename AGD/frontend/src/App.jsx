@@ -90,12 +90,12 @@ function App() {
           </AuthRoute>
         } />
         <Route path="/professore" element={
-          <AuthRoute allowedRoles={["admin", "root"]}>
+          <AuthRoute allowedRoles={["professore", "root"]}>
             <PaginaProf />
           </AuthRoute>
         } />
         <Route path="/disponibilita-docente" element={
-          <AuthRoute allowedRoles={["admin", "root"]}>
+          <AuthRoute allowedRoles={["professore", "root"]}>
             <DisponibilitaDocente />
           </AuthRoute>
         } />

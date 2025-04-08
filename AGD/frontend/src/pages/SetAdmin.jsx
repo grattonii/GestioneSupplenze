@@ -61,6 +61,7 @@ function SetAdmin() {
       const newToken = response.data?.token;
       if (newToken) {
         sessionStorage.setItem("accessToken", newToken);
+        console.log("Nuovo token salvato:", newToken);  // Aggiungi un log per il nuovo token
       }
 
       let decodedToken;
@@ -72,10 +73,12 @@ function SetAdmin() {
         return;
       }
 
-      if (decodedToken?.role !== "admin") {
-        navigate("/disponibilita-docente");
-      } else {
+      console.log("Token decodificato:", decodedToken);  // Aggiungi un log per il token decodificato
+
+      if (decodedToken?.role == "admin") {
         navigate("/gestione-file");
+      } else {
+        navigate("/disponibilita-docente");
       }
 
     } catch (error) {
