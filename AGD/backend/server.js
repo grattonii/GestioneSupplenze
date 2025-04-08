@@ -6,6 +6,7 @@ import fileRoutes from "./routes/fileRoutes.js";
 import dispRoutes from "./routes/dispRoutes.js";
 import rootRoutes from "./routes/rootRoutes.js";
 import orariRoutes from "./routes/orariRoutes.js";
+import asseRoutes from "./routes/asseRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/files", fileRoutes);
 app.use("/disp", dispRoutes);
 app.use("/root", rootRoutes);
 app.use("/orari", orariRoutes);
+app.use("/api/assenze", asseRoutes);
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
