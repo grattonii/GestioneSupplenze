@@ -4,6 +4,7 @@ import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Accesso.css";
+import { color } from "d3";
 
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState({});
@@ -185,9 +186,9 @@ function GestioneDisponibilita() {
                           onChange={(e) => modificaOrario(giorno, index, e.target.value)}
                           className="input-orario"
                         >
-                          <option value="" disabled>Seleziona una fascia</option>
+                          <option value="" hidden></option>
                           {fasceOrarie.map((fascia, i) => (
-                            <option key={i} value={fascia}>{fascia}</option>
+                            <option key={i} value={fascia} style={{color: "black"}}>{fascia}</option>
                           ))}
                         </select>
                         <button type="button" className="rimuovi-btn" onClick={() => rimuoviOrario(giorno, index)}>
