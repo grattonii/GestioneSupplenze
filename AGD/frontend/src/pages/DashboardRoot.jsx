@@ -5,6 +5,7 @@ import { FaUserCog, FaClipboardList, FaCog, FaChartBar } from "react-icons/fa";
 import "../styles/Dashboard.css";
 import Navbar from "../components/NavbarProf.jsx";
 import AdminTabellaMini from "../components/AdminTabellaMini.jsx";
+import SegnalazioniTabella from "../components/SegnalazioniTabella.jsx";
 
 function DashboardRoot() {
   const navigate = useNavigate();
@@ -36,12 +37,15 @@ function DashboardRoot() {
               className="widget"
               whileHover={{ translateY: -10 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/gestione-richieste")}
+              onClick={() => navigate("/gestione-segnalazioni")}
             >
               <div className="header">
                 <h2 className="titolo">
-                  GESTIONE RICHIESTE <FaClipboardList className="widget-icon" />
+                  GESTIONE SEGNALAZIONI <FaClipboardList className="widget-icon" />
                 </h2>
+              </div>
+              <div>
+                <SegnalazioniTabella rows={[]} />
               </div>
             </motion.div>
 

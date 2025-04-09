@@ -92,7 +92,7 @@ function StoricoTabella({ rows }) {
           >
             {rows.length === 0 ? (
               <TableRow sx={{ display: "table", width: "100%", tableLayout: "fixed" }}>
-                <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
+                <TableCell colSpan={4} sx={{ textAlign: "center", padding: 3 }}>
                   <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
                     Nessuna supplenza avvenuta.
                   </Typography>

@@ -96,7 +96,6 @@ export const getOrari = (req, res) => {
 
 // Funzione per ottenere le fasce orarie
 export const fasceOrarie = (req, res) => {
-  console.log("Richiesta ricevuta per /orari/fasce-orarie");
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {

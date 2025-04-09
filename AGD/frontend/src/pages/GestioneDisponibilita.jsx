@@ -4,56 +4,81 @@ import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Accesso.css";
-import { color } from "d3";
 
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState({});
   const [fasceOrarie, setFasceOrarie] = useState([]);
   const [giorni, setGiorni] = useState([]); // Aggiungi questa riga per definire 'giorni'
   const [loading, setLoading] = useState(true); // Stato per il caricamento
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
-    if (!token) {
-      toast.error("Token mancante, effettua il login.");
-      return;
-    }
-
-    fetch("http://localhost:5000/orari/fasce-orarie", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!Array.isArray(data) || data.length === 0) {
-          toast.error("Nessuna fascia oraria trovata.", { position: "top-center" });
-          return;
-        }
-
-        // Trasforma le fasce orarie in un array di stringhe formato "inizio - fine"
-        const fasce = data.map(fascia => `${fascia.inizio} - ${fascia.fine}`);
-        setFasceOrarie(fasce);
-
-        // Imposta la variabile giorni
-        const giorni = espandiGiorniLezione(data[0].giorniLezione);
-        setGiorni(giorni); // Aggiungi questa riga per aggiornare lo stato 'giorni'
-
-        const nuovaDisponibilita = {};
-        giorni.forEach((giorno) => {
-          nuovaDisponibilita[giorno] = { attivo: false, orari: [] };
-        });
-        setDisponibilita(nuovaDisponibilita);
-
-        setLoading(false); // Caricamento completato
+    const interval = setInterval(() => {
+      const token = sessionStorage.getItem('accessToken');
+      if (!token) {
+        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+        navigate("/");
+        return;
+      }
+  
+      fetch("http://localhost:5000/orari/fasce-orarie", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((err) => {
-        console.error("Errore nel caricamento delle fasce orarie:", err);
-        toast.error("Errore nel caricamento fasce: " + err.message, { position: "top-center" });
-        setLoading(false); // Caricamento completato, anche se c'è stato un errore
-      });
-  }, []);
+        .then((res) => res.json())
+        .then((data) => {
+          const nuoveFasce = data.map(fascia => `${fascia.inizio} - ${fascia.fine}`);
+          const nuoviGiorni = espandiGiorniLezione(data[0].giorniLezione);
+  
+          setFasceOrarie(prevFasce => {
+            if (JSON.stringify(prevFasce) !== JSON.stringify(nuoveFasce)) {
+              return nuoveFasce;
+            }
+            return prevFasce;
+          });
+  
+          // Filtriamo i giorni non più disponibili in 'disponibilita'
+          setGiorni(prevGiorni => {
+            if (JSON.stringify(prevGiorni) !== JSON.stringify(nuoviGiorni)) {
+              return nuoviGiorni;
+            }
+            return prevGiorni;
+          });
+  
+          setDisponibilita(prevDisponibilita => {
+            const nuovaDisponibilita = { ...prevDisponibilita };
+  
+            // Aggiungiamo nuovi giorni
+            nuoviGiorni.forEach(giorno => {
+              if (!nuovaDisponibilita[giorno]) {
+                nuovaDisponibilita[giorno] = { attivo: false, orari: [] };
+              }
+            });
+  
+            // Rimuoviamo i giorni non più esistenti dalla disponibilità
+            Object.keys(nuovaDisponibilita).forEach(giorno => {
+              if (!nuoviGiorni.includes(giorno)) {
+                delete nuovaDisponibilita[giorno];
+              }
+            });
+  
+            return nuovaDisponibilita;
+          });
+  
+          if (!hasLoadedOnce) {
+            setHasLoadedOnce(true);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.error("Errore nel caricamento delle fasce orarie:", err);
+        });
+    }, 5000);
+  
+    return () => clearInterval(interval);
+  }, []);  
 
   const mappaGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
@@ -94,7 +119,17 @@ function GestioneDisponibilita() {
   };
 
   const modificaOrario = (giorno, index, valore) => {
-    const nuoviOrari = [...disponibilita[giorno].orari];
+    const orariGiorno = disponibilita[giorno].orari;
+
+    // Controlla se la fascia è già presente (escludendo quella attualmente in modifica)
+    const fasciaDuplicata = orariGiorno.some((orario, i) => i !== index && orario.fascia === valore);
+
+    if (fasciaDuplicata) {
+      toast.error("Questa fascia oraria è già stata selezionata per questo giorno.", { position: "top-center" });
+      return;
+    }
+
+    const nuoviOrari = [...orariGiorno];
     nuoviOrari[index].fascia = valore;
 
     setDisponibilita({
@@ -188,7 +223,7 @@ function GestioneDisponibilita() {
                         >
                           <option value="" hidden></option>
                           {fasceOrarie.map((fascia, i) => (
-                            <option key={i} value={fascia} style={{color: "black"}}>{fascia}</option>
+                            <option key={i} value={fascia} style={{ color: "black" }}>{fascia}</option>
                           ))}
                         </select>
                         <button type="button" className="rimuovi-btn" onClick={() => rimuoviOrario(giorno, index)}>

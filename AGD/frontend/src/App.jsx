@@ -15,7 +15,7 @@ import GestioneOrari from "./pages/GestioneOrari.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
 import GestioneAccount from "./pages/GestioneAccount.jsx";
 import GestioneAssenze from "./pages/GestioneAssenze.jsx";
-import GestioneRichieste from "./pages/GestioneRichieste.jsx";
+import GestioneSegnalazioni from "./pages/GestioneSegnalazioni.jsx";
 import Configurazione from "./pages/Configurazione.jsx";
 import ReportRoot from "./pages/ReportRoot.jsx";
 
@@ -38,9 +38,9 @@ function App() {
             <GestioneAccount />
           </AuthRoute>
         } />
-        <Route path="/gestione-richieste" element={
+        <Route path="/gestione-segnalazioni" element={
           <AuthRoute allowedRoles={["root"]}>
-            <GestioneRichieste />
+            <GestioneSegnalazioni />
           </AuthRoute>
         } />
         <Route path="/configurazione" element={
