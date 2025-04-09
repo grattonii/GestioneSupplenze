@@ -1,0 +1,50 @@
+[
+  {
+    "id": "HA7",
+    "nome": "Mario",
+    "cognome": "Rossi",
+    "email": "mario.rossi@example.com",
+    "numero": "1234567890",
+    "materie": "Matematica",
+    "classi": [
+      "1A",
+      "2B"
+    ]
+  },
+  {
+    "id": "817",
+    "nome": "Luigi",
+    "cognome": "Verdi",
+    "email": "luigi.verdi@example.com",
+    "numero": "0987654321",
+    "materie": "Fisica",
+    "classi": [
+      "3C",
+      "4D"
+    ]
+  },
+  {
+    "id": "V58",
+    "nome": "Giulia",
+    "cognome": "Bianchi",
+    "email": "giulia.bianchi@example.com",
+    "numero": "1122334455",
+    "materie": "Italiano",
+    "classi": [
+      "2A",
+      "3B"
+    ]
+  },
+  {
+    "id": "2NC",
+    "nome": "Francesca",
+    "cognome": "Neri",
+    "email": "francesca.neri@example.com",
+    "numero": "5566778899",
+    "materie": "Storia",
+    "classi": [
+      "1C",
+      "4A"
+    ]
+  }
+]
