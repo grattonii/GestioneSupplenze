@@ -147,7 +147,7 @@ function AdminTabella({ rows, setRows }) {
           >
             {rows.length === 0 ? (
               <TableRow sx={{ display: "table", width: "100%", tableLayout: "fixed" }}>
-                <TableCell colSpan={4} style={{ textAlign: "center", padding: 3 }}>
+                <TableCell colSpan={4} sx={{ textAlign: "center", padding: 3 }}>
                   <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
                     Nessun admin disponibile.
                   </Typography>

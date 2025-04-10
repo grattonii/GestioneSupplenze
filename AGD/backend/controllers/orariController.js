@@ -96,8 +96,6 @@ export const getOrari = (req, res) => {
 
 // Funzione per ottenere le fasce orarie
 export const fasceOrarie = (req, res) => {
-  console.log("Richiesta ricevuta per /orari/fasce-orarie");
-  console.log("Token ricevuto:", req.headers.authorization);
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -147,38 +145,56 @@ export const fasceOrarie = (req, res) => {
 
     const { inizioPrimaLezione, fineUltimaLezione, inizioRicreazione, fineRicreazione, durataLezioni, giorniLezione } = adminData.orari;
 
+    // Converti la durata delle lezioni in un numero
+    const durataLezioniNum = Number(durataLezioni);
+    if (isNaN(durataLezioniNum)) {
+      return res.status(400).json({ error: "Durata lezioni non valida" });
+    }
+
+    // Funzione per convertire un orario in minuti dalla mezzanotte
+    const convertiInMinuti = (orario) => {
+      const [ore, minuti] = orario.split(":").map(Number);
+      return ore * 60 + minuti;
+    };
+
+    // Converto gli orari in minuti
+    const inizioPrimaLezioneInMinuti = convertiInMinuti(inizioPrimaLezione);
+    const fineUltimaLezioneInMinuti = convertiInMinuti(fineUltimaLezione);
+    const inizioRicreazioneInMinuti = convertiInMinuti(inizioRicreazione);
+    const fineRicreazioneInMinuti = convertiInMinuti(fineRicreazione);
+
+    // Funzione per aggiungere i minuti all'orario
     const aggiungiMinuti = (orario, minuti) => {
-      if (typeof orario !== "string" || !orario.includes(":")) {
-        console.error("Formato orario non valido:", orario);
-        return "00:00";
-      }
-
-      let [ore, min] = orario.split(":").map(Number);
-      if (isNaN(ore) || isNaN(min)) {
-        console.error("Errore nel parsing dell'orario:", orario);
-        return "00:00";
-      }
-
-      let totaleMinuti = ore * 60 + min + minuti;
-      let nuoveOre = Math.floor(totaleMinuti / 60);
-      let nuoviMin = totaleMinuti % 60;
-
-      return `${String(nuoveOre).padStart(2, "0")}:${String(nuoviMin).padStart(2, "0")}`;
+      const totaleMinuti = convertiInMinuti(orario) + minuti;
+      const ore = Math.floor(totaleMinuti / 60);
+      const min = totaleMinuti % 60;
+      return `${String(ore).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
     };
 
     let fasce = [];
     let orarioCorrente = inizioPrimaLezione;
 
-    while (orarioCorrente < fineUltimaLezione) {
-      let fineLezione = aggiungiMinuti(orarioCorrente, durataLezioni);
-      if (fineLezione > fineUltimaLezione) break;
+    // Genera fasce orarie prima della ricreazione
+    let lezioneCount = 0;
+    while (convertiInMinuti(orarioCorrente) < inizioRicreazioneInMinuti && lezioneCount < 3) {
+      let fineLezione = aggiungiMinuti(orarioCorrente, durataLezioniNum);
+      if (convertiInMinuti(fineLezione) > inizioRicreazioneInMinuti) break;
 
-      if (fineLezione > inizioRicreazione && orarioCorrente < inizioRicreazione) {
-        fasce.push({ giorniLezione, inizio: orarioCorrente, fine: inizioRicreazione });
-        fasce.push({ giorniLezione, inizio: inizioRicreazione, fine: fineRicreazione });
-        orarioCorrente = fineRicreazione;
-        continue;
-      }
+      fasce.push({ giorniLezione, inizio: orarioCorrente, fine: fineLezione });
+      orarioCorrente = fineLezione;
+      lezioneCount++;
+    }
+
+    // Dopo la ricreazione, la lezione successiva inizia subito dopo la fine della ricreazione
+    if (convertiInMinuti(orarioCorrente) < fineUltimaLezioneInMinuti) {
+      // La quarta ora inizia alle 11:16
+      orarioCorrente = fineRicreazione;
+    }
+
+    // Genera fasce orarie dopo la ricreazione
+    while (convertiInMinuti(orarioCorrente) < fineUltimaLezioneInMinuti) {
+      let fineLezione = aggiungiMinuti(orarioCorrente, durataLezioniNum);
+      if (convertiInMinuti(fineLezione) > fineUltimaLezioneInMinuti) break;
 
       fasce.push({ giorniLezione, inizio: orarioCorrente, fine: fineLezione });
       orarioCorrente = fineLezione;

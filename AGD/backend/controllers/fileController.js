@@ -137,7 +137,7 @@ export const uploadDocenti = async (req, res) => {
                     return res.status(400).json({ message: `Errore nelle classi assegnate al docente alla riga ${rowNumber}.` });
                 }
 
-                docenti.push({ nome, cognome, email, numero, materie, classi });
+                docenti.push({ id, nome, cognome, email, numero, materie, classi });
             }
         });
 

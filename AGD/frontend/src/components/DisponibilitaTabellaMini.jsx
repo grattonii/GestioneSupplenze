@@ -28,7 +28,7 @@ function DisponibilitaTabellaMini({ rows, setRows }) {
                 <TableBody>
                     {rows.length === 0 ? (
                         <TableRow>
-                            <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3 }}>
+                            <TableCell colSpan={3} sx={{ textAlign: "center", padding: 3 }}>
                                 <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
                                     Nessun docente disponibile al momento.
                                 </Typography>

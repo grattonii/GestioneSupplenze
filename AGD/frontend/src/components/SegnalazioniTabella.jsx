@@ -1,9 +1,18 @@
 import React from "react";
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { FaHourglassHalf, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 import "../styles/Accesso.css";
 
-function SupplenzeTabellaMini({ rows }) {
+function SegnalazioniTabella({ rows }) {
+  const toggleStatus = (e, id) => {
+    e.stopPropagation();
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === id ? { ...row, stato: row.stato === "Completata" ? "In Corso" : "Completata" } : row
+      )
+    );
+  };
+
   return (
     <>
       {/* Tabella */}
@@ -11,7 +20,7 @@ function SupplenzeTabellaMini({ rows }) {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#335C81" }}>
-              {["Docente", "Classe", "Data", "Ora", "Stato"].map((header) => (
+              {["Data", "Utente", "Problema", "Stato"].map((header) => (
                 <TableCell key={header} sx={{ color: "white", textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>{header}</TableCell>
               ))}
             </TableRow>
@@ -19,9 +28,9 @@ function SupplenzeTabellaMini({ rows }) {
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} sx={{ textAlign: "center", padding: 3 }}>
+                <TableCell colSpan={4} sx={{ textAlign: "center", padding: 3 }}>
                   <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                    Nessuna supplenza da gestire al momento.
+                    Nessun problema segnalato.
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -29,22 +38,21 @@ function SupplenzeTabellaMini({ rows }) {
               rows.map((row) => (
                 <TableRow key={row.id} onClick={() => handleOpen(row)} sx={{
                   cursor: "pointer",
-                 "&:hover": {
+                  "&:hover": {
                     backgroundColor: "#f0f0f0",
                   }
                 }}>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.classe}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.utente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.motivo}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                    {row.stato === "Accettata" ? (
-                      <FaCheckCircle color="green" size={23} />
-                    ) : row.stato === "In attesa" ? (
-                      <FaHourglassHalf color="orange" size={23} />
-                    ) : (
-                      <FaTimesCircle color="red" size={23} />
-                    )}
+                    <IconButton onClick={(e) => toggleStatus(e, row.id)}>
+                      {row.stato === "Completata" ? (
+                        <FaCheckCircle color="green" size={23} />
+                      ) : (
+                        <FaHourglassHalf color="orange" size={23} />
+                      )}
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
@@ -56,4 +64,4 @@ function SupplenzeTabellaMini({ rows }) {
   );
 }
 
-export default SupplenzeTabellaMini;
+export default SegnalazioniTabella;
