@@ -85,13 +85,45 @@ function AdminTabella({ rows, setRows }) {
     setRowToDelete(null);
   };
 
-  const toggleStatus = (e, id) => {
+  const toggleStatus = async (e, id) => {
     e.stopPropagation();
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, stato: row.stato === "attivo" ? "sospeso" : "attivo" } : row
-      )
-    );
+
+    // Trova la riga da aggiornare
+    const updatedRows = rows.map((row) => {
+      if (row.id === id) {
+        // Cambia lo stato in base al valore booleano
+        return { ...row, attivo: row.attivo === true ? false : true }; // Cambia stato da attivo a sospeso e viceversa
+      }
+      return row;
+    });
+
+    // Aggiorna lo stato a livello di UI
+    setRows(updatedRows);
+
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      const targetRow = updatedRows.find(r => r.id === id);
+
+      // Invia la richiesta PATCH al backend per aggiornare lo stato
+      const response = await fetch(`http://localhost:5000/root/admin/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ attivo: targetRow.attivo }) // inviamo il valore booleano
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento dello stato:", error);
+      // Ripristina lo stato precedente in caso di errore
+      setRows(rows);
+    }
   };
 
   return (
@@ -176,13 +208,14 @@ function AdminTabella({ rows, setRows }) {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.emailReferente}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <IconButton onClick={(e) => toggleStatus(e, row.id)}>
-                      {row.stato === "attivo" ? (
-                        <FaPauseCircle color="yellow" size={23} />
+                      {row.attivo ? (
+                        <FaPlayCircle color="green" size={23} />  // attivo, icona verde
                       ) : (
-                        <FaPlayCircle color="green" size={23} />
+                        <FaPauseCircle color="yellow" size={23} />  // sospeso, icona gialla
                       )}
                     </IconButton>
                   </TableCell>
+
                   <TableCell sx={{ textAlign: "center" }}>
                     <IconButton onClick={() => handleDeleteRequest(row.id)}>
                       <FaTrash color="red" />

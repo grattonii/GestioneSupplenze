@@ -10,7 +10,9 @@
     "id": "8BL",
     "username": "GG5120254T",
     "password": "$2b$10$xrav911HHP/OPGerE94f0ezVwjGpAlYLVmtRQYU80I4bWu5sePHRS",
-    "email": "michele.tarntino@isitgo.it",
+    "nomeScuola": "Galileo Galilei",
+    "tipologia": "Tecnico",
+    "emailReferente": "michele.tarntino@isitgo.it",
     "codiceMeccanografico": "goiss10",
     "role": "admin",
     "firstLogin": false

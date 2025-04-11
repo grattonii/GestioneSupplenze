@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef  } from "react";
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton } from "@mui/material";
+import { useState, useEffect, useRef } from "react";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { FaHourglassHalf, FaCheckCircle, FaTimesCircle, FaTrash } from "react-icons/fa";
 import "../styles/Tabelle.css";
 import { toast } from "react-toastify";
@@ -9,8 +9,10 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
-function SupplenzeTabella({ rows, setRows }) {
+function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
   const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [visibleRows, setVisibleRows] = useState({});
 
@@ -70,18 +72,11 @@ function SupplenzeTabella({ rows, setRows }) {
     return parsedDate.isValid(); // Se la data è valida, ritorna true
   };
 
-  const validateTime = (time) => {
-    if (!time.trim())
-      return false;
-
-    return /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/.test(time);
-  };
-
   // Aggiorna la tabella con i nuovi valori
   const handleUpdate = () => {
     const { data, ora } = selectedRow;
 
-    if (selectedRow.docente && selectedRow.classe && validateDate(data) && validateTime(ora)) {
+    if (selectedRow.docente && selectedRow.classe && validateDate(data)) {
       setRows((prevRows) =>
         prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
       );
@@ -95,15 +90,24 @@ function SupplenzeTabella({ rows, setRows }) {
       else if (!validateDate(data)) {
         toast.error("Formato data non valido. Usa il formato DD-MM-YYYY", { position: "top-center" });
       }
-      else if (!validateTime(ora)) {
-        toast.error("Formato ora non valido. Usa il formato HH:mm", { position: "top-center" });
-      }
     }
   };
 
   // Cancella una riga
-  const handleDelete = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  const handleDeleteRequest = (id) => {
+    setRowToDelete(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = () => {
+    setRows((prevRows) => prevRows.filter((row) => row.id !== rowToDelete));
+    setConfirmDeleteOpen(false);
+    setRowToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setConfirmDeleteOpen(false);
+    setRowToDelete(null);
   };
 
   return (
@@ -196,7 +200,7 @@ function SupplenzeTabella({ rows, setRows }) {
                     )}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
-                    <IconButton onClick={() => handleDelete(row.id)}>
+                    <IconButton onClick={() => handleDeleteRequest(row.id)}>
                       <FaTrash color="red" />
                     </IconButton>
                   </TableCell>
@@ -271,22 +275,45 @@ function SupplenzeTabella({ rows, setRows }) {
                 margin="dense"
                 placeholder="DD-MM-YYYY"
               />
-              <TextField
-                label="Ora"
-                name="ora"
-                type="text"
-                fullWidth
-                value={selectedRow.ora}
-                onChange={handleChange}
-                margin="dense"
-                placeholder="HH:mm"
-              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="ora-label" sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Fascia Oraria</InputLabel>
+                <Select
+                  labelId="ora-label"
+                  name="ora"
+                  value={selectedRow.ora || ""}
+                  onChange={handleChange}
+                  sx={{
+                    fontFamily: "Poppins",
+                    fontSize: "16px",
+                    color: "#333",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {fasceOrarie.map((fascia, index) => (
+                    <MenuItem key={index} value={fascia}>
+                      {fascia}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
           <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmDeleteOpen} onClose={cancelDelete}>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Conferma eliminazione</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: "Poppins" }}>Sei sicuro di voler eliminare questa supplenza?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
+          <Button onClick={confirmDelete} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
         </DialogActions>
       </Dialog>
     </>

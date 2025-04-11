@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Fab, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaPlusCircle } from "react-icons/fa";
 import AdminTabella from "../components/AdminTabella.jsx";
 import Navbar from "../components/NavbarProf2.jsx";
 import "../styles/Pagine.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function GestioneAccount() {
   const [open, setOpen] = useState(false);
@@ -15,11 +17,18 @@ function GestioneAccount() {
     emailReferente: ""
   });
 
+  const navigate = useNavigate();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setAdminData({ nomeScuola: "", tipologia: "", codiceMeccanografico: "", emailReferente: "" });
-  }
+    setAdminData({
+      nomeScuola: "",
+      tipologia: "",
+      codiceMeccanografico: "",
+      emailReferente: ""
+    });
+  };
 
   const handleChange = (e) => {
     setAdminData({ ...adminData, [e.target.name]: e.target.value });
@@ -30,17 +39,29 @@ function GestioneAccount() {
       alert("Tutti i campi sono obbligatori!");
       return;
     }
-  
+
     try {
+      const token = sessionStorage.getItem("accessToken");
       const response = await fetch("http://localhost:5000/root/admin", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(adminData),
       });
-  
+
       const data = await response.json();
+
       if (data.success) {
-        setRows([...rows, { ...adminData, id: Date.now() }]);
+        const newAdmin = {
+          ...adminData,
+          username: data.username,
+          id: data.id,
+          role: "admin"
+        };
+        setRows(prev => [...prev, newAdmin]);
+        setAdminData(newAdmin); // aggiornamento con dati reali
         handleClose();
       } else {
         alert("Errore: " + data.message);
@@ -48,7 +69,42 @@ function GestioneAccount() {
     } catch (error) {
       console.error("Errore nella richiesta:", error);
     }
-  };  
+  };
+
+  useEffect(() => {
+    const AccountAdmin = async () => {
+      try {
+        const token = sessionStorage.getItem("accessToken");
+        const res = await fetch("http://localhost:5000/root/admin", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        const data = await res.json();
+
+        if (!data.success || !Array.isArray(data.adminUsers)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore nel caricamento degli account admin");
+          }
+          return;
+        }
+
+        setRows(data.adminUsers);
+      } catch (err) {
+        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        sessionStorage.removeItem("accessToken");
+        navigate("/");
+      }
+    };
+
+    AccountAdmin();
+  }, [navigate]);
 
   return (
     <>
@@ -63,77 +119,20 @@ function GestioneAccount() {
         </button>
       </div>
 
-      {/* Dialog con il form */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Crea Account</DialogTitle>
         <DialogContent>
-          <TextField label="Nome Scuola" name="nomeScuola" fullWidth value={adminData.nomeScuola} onChange={handleChange} margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }} />
-          <FormControl fullWidth margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }}>
-            <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Tipologia</InputLabel>
+          <TextField label="Nome Scuola" name="nomeScuola" fullWidth value={adminData.nomeScuola} onChange={handleChange} margin="dense" />
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Tipologia</InputLabel>
             <Select name="tipologia" value={adminData.tipologia} onChange={handleChange}>
               <MenuItem value="Liceo">Liceo</MenuItem>
               <MenuItem value="Tecnico">Tecnico</MenuItem>
               <MenuItem value="Professionale">Professionale</MenuItem>
             </Select>
           </FormControl>
-          <TextField label="Codice Meccanografico" name="codiceMeccanografico" fullWidth value={adminData.codiceMeccanografico} onChange={handleChange} margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }} />
-          <TextField label="Email Referente" name="emailReferente" fullWidth value={adminData.emailReferente} onChange={handleChange} margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }} />
+          <TextField label="Codice Meccanografico" name="codiceMeccanografico" fullWidth value={adminData.codiceMeccanografico} onChange={handleChange} margin="dense" />
+          <TextField label="Email Referente" name="emailReferente" fullWidth value={adminData.emailReferente} onChange={handleChange} margin="dense" />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">Annulla</Button>

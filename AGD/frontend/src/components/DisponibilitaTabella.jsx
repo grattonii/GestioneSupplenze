@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import "../styles/Tabelle.css";
 
 function DisponibilitaTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [visibleRows, setVisibleRows] = useState({});
 
@@ -69,8 +71,20 @@ function DisponibilitaTabella({ rows, setRows }) {
   };
 
   // Cancella una riga
-  const handleDelete = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  const handleDeleteRequest = (id) => {
+    setRowToDelete(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = () => {
+    setRows((prevRows) => prevRows.filter((row) => row.id !== rowToDelete));
+    setConfirmDeleteOpen(false);
+    setRowToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setConfirmDeleteOpen(false);
+    setRowToDelete(null);
   };
 
   return (
@@ -145,9 +159,10 @@ function DisponibilitaTabella({ rows, setRows }) {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.giorno}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ora}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(row.id); }}>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleDeleteRequest(row.id); }}>
                       <FaTrash color="red" />
                     </IconButton>
+
                   </TableCell>
                 </TableRow>
               ))
@@ -243,6 +258,17 @@ function DisponibilitaTabella({ rows, setRows }) {
         <DialogActions>
           <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
           <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmDeleteOpen} onClose={cancelDelete}>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Conferma eliminazione</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: "Poppins" }}>Sei sicuro di voler eliminare questo utente?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
+          <Button onClick={confirmDelete} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
         </DialogActions>
       </Dialog>
     </>

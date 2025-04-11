@@ -38,21 +38,21 @@ function Login() {
       const { role, firstLogin, accessToken } = response.data;
       sessionStorage.setItem("accessToken", accessToken); // Salva temporaneamente il token
 
-      if(role == "root") {
+      if (role == "root") {
         navigate("/root");
-      } 
+      }
       else if (role === "admin") {
-        if (firstLogin) 
+        if (firstLogin)
           navigate("/gestione-account");
         else
           navigate("/dashboard");
-      } 
+      }
       else if (role === "professore") {
-        if (firstLogin) 
+        if (firstLogin)
           navigate("/gestione-account");
         else
           navigate("/professore");
-      } 
+      }
       else {
         toast.error("Ruolo non riconosciuto!", { position: "top-center" });
         return;
@@ -60,7 +60,12 @@ function Login() {
 
     } catch (error) {
       console.error("Errore durante il login", error);
-      toast.error("Credenziali errate!", { position: "top-center" });
+      // Controlla se l'errore è stato causato dall'account sospeso
+      if (error.response && error.response.status === 403) {
+        toast.warning("Account sospeso, contatta l'assistenza AGD.", { position: "top-center" });
+      } else {
+        toast.error(error.response?.data?.message || "Errore sconosciuto.", { position: "top-center" });
+      }
     }
   };
 

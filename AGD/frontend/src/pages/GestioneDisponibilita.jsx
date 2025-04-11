@@ -14,14 +14,14 @@ function GestioneDisponibilita() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const fetchFasceOrarieEGiorni = () => {
       const token = sessionStorage.getItem('accessToken');
       if (!token) {
         toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
         navigate("/");
         return;
       }
-  
+
       fetch("http://localhost:5000/orari/fasce-orarie", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -29,44 +29,45 @@ function GestioneDisponibilita() {
       })
         .then((res) => res.json())
         .then((data) => {
+          if (!data || data.length === 0) return;
+
           const nuoveFasce = data.map(fascia => `${fascia.inizio} - ${fascia.fine}`);
-          const nuoviGiorni = espandiGiorniLezione(data[0].giorniLezione);
-  
+          const nuoviGiorni = espandiGiorniLezione(data[0].giorniLezione); // Assumendo che ogni entry abbia la stessa lista giorni
+
           setFasceOrarie(prevFasce => {
             if (JSON.stringify(prevFasce) !== JSON.stringify(nuoveFasce)) {
               return nuoveFasce;
             }
             return prevFasce;
           });
-  
-          // Filtriamo i giorni non più disponibili in 'disponibilita'
+
           setGiorni(prevGiorni => {
             if (JSON.stringify(prevGiorni) !== JSON.stringify(nuoviGiorni)) {
               return nuoviGiorni;
             }
             return prevGiorni;
           });
-  
+
           setDisponibilita(prevDisponibilita => {
             const nuovaDisponibilita = { ...prevDisponibilita };
-  
-            // Aggiungiamo nuovi giorni
+
+            // Aggiunge nuovi giorni
             nuoviGiorni.forEach(giorno => {
               if (!nuovaDisponibilita[giorno]) {
                 nuovaDisponibilita[giorno] = { attivo: false, orari: [] };
               }
             });
-  
-            // Rimuoviamo i giorni non più esistenti dalla disponibilità
+
+            // Rimuove giorni non più validi
             Object.keys(nuovaDisponibilita).forEach(giorno => {
               if (!nuoviGiorni.includes(giorno)) {
                 delete nuovaDisponibilita[giorno];
               }
             });
-  
+
             return nuovaDisponibilita;
           });
-  
+
           if (!hasLoadedOnce) {
             setHasLoadedOnce(true);
             setLoading(false);
@@ -75,10 +76,15 @@ function GestioneDisponibilita() {
         .catch((err) => {
           console.error("Errore nel caricamento delle fasce orarie:", err);
         });
-    }, 5000);
-  
+    };
+
+    // Fetch iniziale subito al mount
+    fetchFasceOrarieEGiorni();
+
+    // Fetch periodico ogni 5 secondi
+    const interval = setInterval(fetchFasceOrarieEGiorni, 5000);
     return () => clearInterval(interval);
-  }, []);  
+  }, []);
 
   const mappaGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 

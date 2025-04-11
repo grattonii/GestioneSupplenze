@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import { FaPlusCircle } from "react-icons/fa";
 import Navbar from "../components/Navbar2.jsx";
@@ -8,13 +8,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { color } from "framer-motion";
+import { fetchWithRefresh } from "../utils/api";
 
 dayjs.extend(customParseFormat);
 
 function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([]);
   const [openSupplenza, setOpenSupplenza] = useState(false);
+  const [fasceOrarie, setFasceOrarie] = useState([]);
   const [nuovaSupplenza, setNuovaSupplenza] = useState({
     id: "",
     docente: "",
@@ -36,21 +37,14 @@ function GestioneSupplenze() {
 
   const validateDate = (date) => {
     // Controlla se la data è nel formato corretto usando dayjs con il formato 'DD-MM-YYYY'
-    const parsedDate = dayjs(date, "DD-MM-YYYY", true); // 'true' forza la validazione esatta del formato
+    const parsedDate = dayjs(date, "DD/MM/YYYY", true); // 'true' forza la validazione esatta del formato
     return parsedDate.isValid(); // Se la data è valida, ritorna true
   };
-
-  const validateTime = (time) => {
-    if (!time.trim())
-      return false;
-  
-    return /^([01]?[0-9]|2[0-3]):([0-5][0-9])$/.test(time);
-  };  
 
   const handleAddSupplenza = () => {
     const { data, ora } = nuovaSupplenza;
 
-    if (nuovaSupplenza.docente && nuovaSupplenza.classe && validateDate(data) && validateTime(ora)) {
+    if (nuovaSupplenza.docente && nuovaSupplenza.classe && validateDate(data)) {
       setSupplenze((prev) => [...prev, { ...nuovaSupplenza, id: Date.now() }]);
       handleCloseSupplenza();
     } else {
@@ -59,15 +53,49 @@ function GestioneSupplenze() {
         return;
       }
       else if (!validateDate(data)) {
-        toast.error("Formato data non valido. Usa il formato DD-MM-YYYY", { position: "top-center" });
-        return;
-      }
-      else if (!validateTime(ora)) {
-        toast.error("Formato ora non valido. Usa il formato HH:mm", { position: "top-center" });
+        toast.error("Formato data non valido. Usa il formato DD/MM/YYYY", { position: "top-center" });
         return;
       }
     }
   };
+
+  useEffect(() => {
+    const fetchFasceOrarie = async () => {
+      try {
+        const res = await fetchWithRefresh("http://localhost:5000/orari/fasce-orarie");
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore imprevisto nel caricamento delle fasce orarie");
+          }
+          return;
+        }
+
+        const nuoveFasce = data.map(fascia => `${fascia.inizio} - ${fascia.fine}`);
+        setFasceOrarie(prevFasce => {
+          if (JSON.stringify(prevFasce) !== JSON.stringify(nuoveFasce)) {
+            return nuoveFasce;
+          }
+          return prevFasce;
+        });
+
+      } catch (err) {
+        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        sessionStorage.removeItem("accessToken");
+        navigate("/");
+      }
+    };
+
+    fetchFasceOrarie();
+    const interval = setInterval(fetchFasceOrarie, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>
@@ -76,7 +104,7 @@ function GestioneSupplenze() {
       <h1 className="title">Supplenze</h1>
       <h3 className="spiegazione">Gestione supplenze odierne.</h3>
 
-      <SupplenzeTable rows={supplenze} setRows={setSupplenze} />
+      <SupplenzeTable rows={supplenze} setRows={setSupplenze} fasceOrarie={fasceOrarie} />
       <div className="aggiungi-container">
         <button type="button" className="aggiungi" onClick={handleOpenSupplenza}>
           <FaPlusCircle /> Aggiungi supplenza
@@ -84,7 +112,7 @@ function GestioneSupplenze() {
       </div>
 
       <Dialog open={openSupplenza} onClose={handleCloseSupplenza}>
-        <DialogTitle sx={{color: "black"}}>Aggiungi Supplenza</DialogTitle>
+        <DialogTitle sx={{ color: "black" }}>Aggiungi Supplenza</DialogTitle>
         <DialogContent>
           <TextField label="Docente" name="docente" fullWidth value={nuovaSupplenza.docente} onChange={handleChangeSupplenza} margin="dense" sx={{
             "& .MuiInputBase-root": {
@@ -124,18 +152,30 @@ function GestioneSupplenze() {
             value={nuovaSupplenza.data}
             onChange={handleChangeSupplenza}
             margin="dense"
-            placeholder="DD-MM-YYYY"
+            placeholder="DD/MM/YYYY"
           />
-          <TextField
-            label="Ora"
-            name="ora"
-            type="text"
-            fullWidth
-            value={nuovaSupplenza.ora}
-            onChange={handleChangeSupplenza}
-            margin="dense"
-            placeholder="HH:mm"
-          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="ora-label" sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Fascia Oraria</InputLabel>
+            <Select
+              labelId="ora-label"
+              name="ora"
+              value={nuovaSupplenza.ora}
+              onChange={handleChangeSupplenza}
+              sx={{
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              }}
+            >
+              {fasceOrarie.map((fascia, index) => (
+                <MenuItem key={index} value={fascia}>
+                  {fascia}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseSupplenza}>Annulla</Button>

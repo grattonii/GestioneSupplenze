@@ -38,6 +38,10 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Credenziali errate!" });
         }
 
+        // Verifica se l'account è attivo
+        if (!user.attivo && user.role !== "root") {
+            return res.status(403).json({ message: "Account sospeso, contatta l'amministratore." });
+        }
 
         const isMatch = bcrypt.compareSync(password, user.password);
         if (!isMatch) {
