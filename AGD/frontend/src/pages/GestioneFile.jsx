@@ -106,6 +106,44 @@ function GestioneFile() {
               </button>
             </div>
 
+            <h3>
+              <span> Carica il file contenente gli orari dei docenti </span>
+              <FontAwesomeIcon
+                icon={faCircleQuestion}
+                data-tooltip-id="professoriTip2"
+                style={{ cursor: "pointer", color: "#007BFF" }}
+              />
+            </h3>
+            <ReactTooltip id="professoriTip2" place="right" effect="solid">
+              <strong>Formato del file Excel:</strong>
+              <ul>
+                <li>Cognome e Nome in ordine alfabetico</li>
+                <li>Classi</li>
+                <li>Materie</li>
+              </ul>
+            </ReactTooltip>
+
+            <div className="uploadBottoni">
+              <button
+                className="custom-file-upload"
+                type="button"
+                onClick={() => document.getElementById("fileInput1").click()}
+              >
+                <input
+                  id="fileInput1"
+                  type="file"
+                  accept=".xls,.xlsx"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                <FontAwesomeIcon
+                  icon={file ? faFileExcel : faFileArrowUp}
+                  style={{ color: file ? "#217346" : "#007BFF" }}
+                />{" "}
+                <span>{fileName} </span>
+              </button>
+            </div>
+
             <div id="containerPulsanti" className="side">
               <button type="submit" className="side">Avanti</button>
             </div>

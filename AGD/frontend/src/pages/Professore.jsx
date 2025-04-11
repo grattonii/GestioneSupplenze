@@ -22,9 +22,9 @@ function Professore() {
 
   const fetchData = async () => {
     const filteredSubstitutions = [
-      { class: "3Ai", date: "Lunedì 24/03/2025", time: "10:00", id: 1 }, // supplenza futura
-      { class: "4Bi", date: "Martedì 25/03/2025", time: "11:00", id: 2 }, // supplenza settimana successiva
-      { class: "5Ci", date: "Venerdì 28/03/2025", time: "12:00", id: 3 }, // supplenza questa settimana
+      { class: "3Ai", date: "24/03/2025", time: "10:00", id: 1 }, // supplenza futura
+      { class: "4Bi", date: "25/03/2025", time: "11:00", id: 2 }, // supplenza settimana successiva
+      { class: "5Ci", date: "28/03/2025", time: "12:00", id: 3 }, // supplenza questa settimana
     ];
 
     setSchedule({
@@ -41,6 +41,8 @@ function Professore() {
   const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
 
+    const token = sessionStorage.getItem("accessToken"); // Ottieni il token dal sessionStorage
+
     const absenceData = {
       date: absenceDate,
       reason: absenceReason,
@@ -52,6 +54,7 @@ function Professore() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Invia il token nell'header
         },
         body: JSON.stringify(absenceData),
       });
@@ -103,8 +106,9 @@ function Professore() {
     );
   };
 
-  const handleAcceptAvailability = (day, time, className) => {
-    const nuovaDisponibilita = { day, time, className };
+  const handleAcceptAvailability = (date, time, className) => {
+    const dayName = new Date(date).toLocaleDateString("it-IT", { weekday: "long" }); // Ottieni il giorno della settimana
+    const nuovaDisponibilita = { day: dayName, time, className };
     setDisponibilitaAccettate((prev) => [...prev, nuovaDisponibilita]);
     alert("Disponibilità accettata!");
   };
@@ -122,7 +126,7 @@ function Professore() {
         Calendario Disponibilità <FaCalendarWeek className="widget-icon" />
       </h2>
 
-      {/* Calendario */}
+      {/* Passiamo le disponibilità accettate a WeeklySchedule */}
       <WeeklySchedule schedule={schedule} disponibilita={disponibilitaAccettate} />
 
       <h2>Accetta Disponibilità <FaCalendarCheck className="widget-icon" /></h2>
@@ -159,7 +163,10 @@ function Professore() {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.date}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.time}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
-                    <IconButton color="success" onClick={() => acceptSubstitution(sub)}>
+                    <IconButton
+                      color="success"
+                      onClick={() => handleAcceptAvailability(sub.date, sub.time, sub.class)}
+                    >
                       <CheckIcon />
                     </IconButton>
                     <IconButton color="error" onClick={() => rejectSubstitution(sub)}>
