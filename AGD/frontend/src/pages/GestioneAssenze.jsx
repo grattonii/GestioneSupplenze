@@ -10,8 +10,14 @@ function GestioneAssenze() {
   }, []);
 
   const fetchAssenze = async () => {
+    const token = sessionStorage.getItem("accessToken"); // Ottieni il token dal sessionStorage
+
     try {
-      const response = await fetch("http://localhost:5000/api/assenze");
+      const response = await fetch("http://localhost:5000/api/assenze", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Invia il token nell'header
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setAssenze(data);

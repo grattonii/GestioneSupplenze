@@ -41,6 +41,8 @@ function Professore() {
   const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
 
+    const token = sessionStorage.getItem("accessToken"); // Ottieni il token dal sessionStorage
+
     const absenceData = {
       date: absenceDate,
       reason: absenceReason,
@@ -52,6 +54,7 @@ function Professore() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Invia il token nell'header
         },
         body: JSON.stringify(absenceData),
       });
