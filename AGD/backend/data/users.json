@@ -24,7 +24,7 @@
     "username": "MR5899101D",
     "password": "$2b$10$hPp3NMlQOb2z719muD2mpOTxdXV3Gyq6of3TYtd7AWysJbH73.7Em",
     "email": "mario.rossi@example.com",
-    "role": "professore",
+    "role": "docente",
     "firstLogin": true
   },
   {
@@ -34,7 +34,7 @@
     "username": "LV9800680D",
     "password": "$2b$10$.tPjwzr5QNI9fB9p2kEHBu7h5VOo9jotHha6MfJVVGaM3qe63MZTy",
     "email": "luigi.verdi@example.com",
-    "role": "professore",
+    "role": "docente",
     "firstLogin": false
   },
   {
@@ -44,17 +44,7 @@
     "username": "GB4439216D",
     "password": "$2b$10$F5jNxjaJ0Dg6HOaTr4Mo6.joIB5AvL9w9aaUArvgtkbj/M9KobzLC",
     "email": "giulia.bianchi@example.com",
-    "role": "professore",
-    "firstLogin": true
-  },
-  {
-    "attivo": true,
-    "idAdmin": "8BL",
-    "id": "2NC",
-    "username": "FN9813505D",
-    "password": "$2b$10$rLGc65Ps0FiwNKPHKSdAm.6Po2Q/mhy4riBMppsqB5QpA6RGqVcT2",
-    "email": "francesca.neri@example.com",
-    "role": "professore",
+    "role": "docente",
     "firstLogin": true
   }
 ]

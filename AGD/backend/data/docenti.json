@@ -34,17 +34,5 @@
       "2A",
       "3B"
     ]
-  },
-  {
-    "id": "2NC",
-    "nome": "Francesca",
-    "cognome": "Neri",
-    "email": "francesca.neri@example.com",
-    "numero": "5566778899",
-    "materie": "Storia",
-    "classi": [
-      "1C",
-      "4A"
-    ]
   }
 ]

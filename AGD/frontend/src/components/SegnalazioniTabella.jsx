@@ -4,6 +4,7 @@ import { FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 import "../styles/Accesso.css";
 
 function SegnalazioniTabella({ rows }) {
+  
   const toggleStatus = (e, id) => {
     e.stopPropagation();
     setRows((prevRows) =>

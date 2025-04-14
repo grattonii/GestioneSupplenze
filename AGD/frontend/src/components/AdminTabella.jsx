@@ -14,40 +14,6 @@ function AdminTabella({ rows, setRows }) {
   const [selectedRow, setSelectedRow] = useState(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
-  const [visibleRows, setVisibleRows] = useState({});
-
-  const observer = useRef(null);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        const updated = {};
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          updated[id] = entry.isIntersecting;
-        });
-        setVisibleRows((prev) => ({ ...prev, ...updated }));
-      },
-      {
-        root: document.querySelector("#table-body-scroll"),
-        threshold: 0.7,
-      }
-    );
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-  }, []);
-
-  const rowRefs = useRef({});
-
-  useEffect(() => {
-    if (!observer.current) return;
-    rows.forEach((row) => {
-      const el = rowRefs.current[row.id];
-      if (el) observer.current.observe(el);
-    });
-  }, [rows]);
 
   const handleOpen = (row) => {
     if (row) {
@@ -239,7 +205,6 @@ function AdminTabella({ rows, setRows }) {
           </TableHead>
 
           <TableBody
-            id="table-body-scroll"
             sx={{
               display: "block",
               maxHeight: "510px",
@@ -259,9 +224,6 @@ function AdminTabella({ rows, setRows }) {
               rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  ref={(el) => (rowRefs.current[row.id] = el)}
-                  data-id={row.id}
-                  className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
                   onClick={() => handleOpen(row)}
                   sx={{
                     display: "table",
@@ -286,7 +248,7 @@ function AdminTabella({ rows, setRows }) {
                     </IconButton>
                   </TableCell>
 
-                  <TableCell sx={{ textAlign: "center" }}>
+                  <TableCell sx={{ textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
                     <IconButton onClick={() => handleDeleteRequest(row.id)}>
                       <FaTrash color="red" />
                     </IconButton>

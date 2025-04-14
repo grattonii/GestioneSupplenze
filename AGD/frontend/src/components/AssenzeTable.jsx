@@ -5,40 +5,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import "../styles/Tabelle.css";
 
 function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
-  const [visibleRows, setVisibleRows] = useState({});
-
-  const observer = useRef(null);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        const updated = {};
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          updated[id] = entry.isIntersecting;
-        });
-        setVisibleRows((prev) => ({ ...prev, ...updated }));
-      },
-      {
-        root: document.querySelector("#table-body-scroll"),
-        threshold: 0.7,
-      }
-    );
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-  }, []);
-
-  const rowRefs = useRef({});
-
-  useEffect(() => {
-    if (!observer.current) return;
-    rows.forEach((row) => {
-      const el = rowRefs.current[row.id];
-      if (el) observer.current.observe(el);
-    });
-  }, [rows]);
 
   return (
     <TableContainer
@@ -78,7 +44,6 @@ function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
         </TableHead>
 
         <TableBody
-          id="table-body-scroll"
           sx={{
             display: "block",
             maxHeight: "510px",
@@ -107,9 +72,6 @@ function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
             rows.map((row) => (
               <TableRow
                 key={row.id}
-                ref={(el) => (rowRefs.current[row.id] = el)}
-                data-id={row.id}
-                className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
                 sx={{
                   display: "table",
                   tableLayout: "fixed",

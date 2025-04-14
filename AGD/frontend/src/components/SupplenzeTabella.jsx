@@ -14,41 +14,7 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [visibleRows, setVisibleRows] = useState({});
-
-  const observer = useRef(null);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        const updated = {};
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          updated[id] = entry.isIntersecting;
-        });
-        setVisibleRows((prev) => ({ ...prev, ...updated }));
-      },
-      {
-        root: document.querySelector("#table-body-scroll"),
-        threshold: 0.7,
-      }
-    );
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-  }, []);
-
-  const rowRefs = useRef({});
-
-  useEffect(() => {
-    if (!observer.current) return;
-    rows.forEach((row) => {
-      const el = rowRefs.current[row.id];
-      if (el) observer.current.observe(el);
-    });
-  }, [rows]);
-
+  
   // Apri il dialog con la riga selezionata
   const handleOpen = (row) => {
     setSelectedRow({ ...row }); // Copia i dati per evitare mutazioni dello stato originale
@@ -154,7 +120,6 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
           </TableHead>
 
           <TableBody
-            id="table-body-scroll"
             sx={{
               display: "block",
               maxHeight: "510px",
@@ -174,9 +139,6 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
               rows.map((row, index) => (
                 <TableRow
                   key={row.id || index}
-                  ref={(el) => (rowRefs.current[row.id] = el)}
-                  data-id={row.id}
-                  className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
                   sx={{
                     display: "table",
                     tableLayout: "fixed",

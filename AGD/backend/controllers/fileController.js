@@ -76,7 +76,7 @@ export const generateAccounts = (req, docenti) => {
             const password = username;
             const hashedPassword = bcrypt.hashSync(password, 10);
 
-            users.push({ attivo: true, idAdmin, id, username, password: hashedPassword, email, role: 'professore', firstLogin: true });
+            users.push({ attivo: true, idAdmin, id, username, password: hashedPassword, email, role: 'docente', firstLogin: true });
         });
 
         writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));

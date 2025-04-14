@@ -83,27 +83,41 @@ function Impostazioni() {
   });
 
   useEffect(() => {
-    axios.get("http://localhost:5000/orari/modifica", {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`
-      }
-    })
-      .then((response) => {
-        console.log("Dati ricevuti dal backend:", response.data);
-        if (response.data) {
-          setOrario({
-            inizioPrimaLezione: response.data.inizioPrimaLezione || "",
-            fineUltimaLezione: response.data.fineUltimaLezione || "",
-            inizioRicreazione: response.data.inizioRicreazione || "",
-            fineRicreazione: response.data.fineRicreazione || "",
-            durataLezioni: response.data.durataLezioni || "",
-            giorniLezione: response.data.giorniLezione || "",
-          });
-        } else {
-          console.warn("Dati orari non disponibili");
+    const fetchOrari = async () => {
+      try {
+        const token = sessionStorage.getItem("accessToken");
+        const res = await fetchWithRefresh("http://localhost:5000/orari/modifica", {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        const data = await res.json();
+
+        if (!data || typeof data !== "object") {
+          toast.error("Errore nel caricamento degli orari.");
+          return;
         }
-      })
-      .catch((error) => console.error("Errore nel recupero degli orari:", error));
+
+        setOrario({
+          inizioPrimaLezione: data.inizioPrimaLezione || "",
+          fineUltimaLezione: data.fineUltimaLezione || "",
+          inizioRicreazione: data.inizioRicreazione || "",
+          fineRicreazione: data.fineRicreazione || "",
+          durataLezioni: data.durataLezioni || "",
+          giorniLezione: data.giorniLezione || "",
+        });
+
+      } catch (error) {
+        console.error("Errore nel recupero degli orari:", error);
+        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        sessionStorage.removeItem("accessToken");
+        navigate("/");
+      }
+    };
+
+    fetchOrari();
   }, []);
 
   const handleChange = (event) => {

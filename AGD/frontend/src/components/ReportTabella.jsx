@@ -3,40 +3,6 @@ import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 import "../styles/Tabelle.css";
 
 function ReportTabella({ rows }) {
-  const [visibleRows, setVisibleRows] = useState({});
-
-  const observer = useRef(null);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        const updated = {};
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          updated[id] = entry.isIntersecting;
-        });
-        setVisibleRows((prev) => ({ ...prev, ...updated }));
-      },
-      {
-        root: document.querySelector("#table-body-scroll"),
-        threshold: 0.7,
-      }
-    );
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-  }, []);
-
-  const rowRefs = useRef({});
-
-  useEffect(() => {
-    if (!observer.current) return;
-    rows.forEach((row) => {
-      const el = rowRefs.current[row.id];
-      if (el) observer.current.observe(el);
-    });
-  }, [rows]);
 
   return (
     <>
@@ -76,7 +42,6 @@ function ReportTabella({ rows }) {
           </TableHead>
 
           <TableBody
-            id="table-body-scroll"
             sx={{
               display: "block",
               maxHeight: "510px",
@@ -102,9 +67,6 @@ function ReportTabella({ rows }) {
               rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  ref={(el) => (rowRefs.current[row.id] = el)}
-                  data-id={row.id}
-                  className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
                   sx={{
                     display: "table",
                     width: "100%",
