@@ -3,8 +3,11 @@ import {
   Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton
 } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { FaTrash, FaPlayCircle, FaPauseCircle } from "react-icons/fa";
 import "../styles/Tabelle.css";
+import { fetchWithRefresh } from "../utils/api";
+import { toast } from "react-toastify";
 
 function AdminTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
@@ -62,11 +65,56 @@ function AdminTabella({ rows, setRows }) {
     setSelectedRow((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleUpdate = () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const codiceMeccRegex = /^[A-Z0-9]{10}$/;
+
+  const handleUpdate = async () => {
+
+    if (!selectedRow.nomeScuola || !selectedRow.codiceMeccanografico || !selectedRow.emailReferente) {
+      toast.warn("Tutti i campi sono obbligatori!", { position: "top-center" });
+      return;
+    }
+
+    if (!codiceMeccRegex.test(selectedRow.codiceMeccanografico)) {
+      toast.warn("Il codice meccanografico deve contenere 10 caratteri alfanumerici maiuscoli", { position: "top-center" });
+      return;
+    }
+
+    if (!emailRegex.test(selectedRow.emailReferente)) {
+      toast.warn("Inserisci un indirizzo email valido", { position: "top-center" });
+      return;
+    }
+
     setRows((prevRows) =>
       prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
     );
     handleClose();
+
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      const response = await fetchWithRefresh(`http://localhost:5000/root/modificaAdmin/${selectedRow.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nomeScuola: selectedRow.nomeScuola,
+          tipologia: selectedRow.tipologia,
+          emailReferente: selectedRow.emailReferente,
+          codiceMeccanografico: selectedRow.codiceMeccanografico,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento:", error);
+      setRows(rows); // Ripristina lo stato precedente
+    }
   };
 
   const handleDeleteRequest = (id) => {
@@ -74,10 +122,32 @@ function AdminTabella({ rows, setRows }) {
     setConfirmDeleteOpen(true);
   };
 
-  const confirmDelete = () => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== rowToDelete));
+  const confirmDelete = async (e, id) => {
+    const newRows = rows.filter((row) => row.id !== rowToDelete); // Filtro già fatto
+    setRows(newRows);
     setConfirmDeleteOpen(false);
     setRowToDelete(null);
+
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      // Cerca il row che vogliamo eliminare dai dati originali (non serve se è solo per fetch)
+      const response = await fetchWithRefresh(`http://localhost:5000/root/annullaAdmin/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento:", error);
+      setRows(rows); // Ripristina lo stato precedente
+    }
   };
 
   const cancelDelete = () => {
@@ -105,7 +175,7 @@ function AdminTabella({ rows, setRows }) {
       const targetRow = updatedRows.find(r => r.id === id);
 
       // Invia la richiesta PATCH al backend per aggiornare lo stato
-      const response = await fetch(`http://localhost:5000/root/admin/${id}`, {
+      const response = await fetchWithRefresh(`http://localhost:5000/root/admin/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -235,7 +305,53 @@ function AdminTabella({ rows, setRows }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
-          <Button onClick={confirmDelete} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
+          <Button onClick={(e) => confirmDelete(e, rowToDelete)} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Crea Account</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Nome Scuola"
+            name="nomeScuola"
+            fullWidth
+            value={selectedRow?.nomeScuola || ""}
+            onChange={handleChange}
+            margin="dense"
+          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Tipologia</InputLabel>
+            <Select
+              name="tipologia"
+              value={selectedRow?.tipologia || ""}
+              onChange={handleChange}
+            >
+              <MenuItem value="Liceo">Liceo</MenuItem>
+              <MenuItem value="Tecnico">Tecnico</MenuItem>
+              <MenuItem value="Professionale">Professionale</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Codice Meccanografico"
+            name="codiceMeccanografico"
+            fullWidth
+            value={selectedRow?.codiceMeccanografico || ""}
+            onChange={handleChange}
+            margin="dense"
+          />
+          <TextField
+            label="Email Referente"
+            name="emailReferente"
+            fullWidth
+            value={selectedRow?.emailReferente || ""}
+            onChange={handleChange}
+            margin="dense"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">Annulla</Button>
+          <Button onClick={handleUpdate} color="primary">Modifica</Button>
         </DialogActions>
       </Dialog>
     </>

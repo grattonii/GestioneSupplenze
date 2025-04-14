@@ -104,8 +104,6 @@ export const refreshToken = (req, res) => {
         return res.status(200).json({ accessToken: null, message: "Nessun token di refresh presente. Effettua il login." });
     }
 
-    console.log("Token di refresh trovato:", refreshToken);  // Log per debug
-
     jwt.verify(refreshToken, process.env.SECRET_REFRESH, (err, user) => {
         if (err) {
             return res.status(403).json({ message: "Token non valido" });

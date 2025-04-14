@@ -1,9 +1,12 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { authenticateToken } from "../controllers/authController.js"; // Importa il middleware per autenticare il token
 
 const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const assenzeFilePath = path.join(__dirname, "../data/assenze.json");
 
 // Funzione per leggere il file JSON

@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton
 } from "@mui/material";
 import { FaTrash } from "react-icons/fa";
 import "../styles/Tabelle.css";
+import { fetchWithRefresh } from "../utils/api";
 
 function UtentiTabella({ rows, setRows }) {
   const [open, setOpen] = useState(false);
@@ -74,11 +75,55 @@ function UtentiTabella({ rows, setRows }) {
     setConfirmDeleteOpen(true);
   };
 
-  const confirmDelete = () => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== rowToDelete));
+  const handleReset = async() => {
+    console.log("ID selezionato per il reset:", selectedRow.id);
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      const response = await fetchWithRefresh(`http://localhost:5000/admin/reset/${selectedRow.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento:", error);
+      setRows(rows); // Ripristina lo stato precedente
+    }
+  };
+
+  const confirmDelete = async () => {
+    const newRows = rows.filter((row) => row.id !== rowToDelete); // Filtro già fatto
+    setRows(newRows); // Rimuovi la riga dalla tabella
     setConfirmDeleteOpen(false);
     setRowToDelete(null);
-  };
+  
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      const response = await fetchWithRefresh(`http://localhost:5000/admin/annullaUtente/${rowToDelete}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+  
+      const data = await response.json();
+  
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento:", error);
+      setRows(rows); // Ripristina lo stato precedente
+    }
+  };  
 
   const cancelDelete = () => {
     setConfirmDeleteOpen(false);
@@ -111,7 +156,7 @@ function UtentiTabella({ rows, setRows }) {
             }}
           >
             <TableRow>
-              {["Docente", "Email", "Ruolo" , ""].map((header) => (
+              {["Docente", "Email", "Ruolo", ""].map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -163,11 +208,11 @@ function UtentiTabella({ rows, setRows }) {
                     },
                   }}
                 >
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.docente}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.username}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.email}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.ruolo}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.role}</TableCell>
                   <TableCell sx={{ textAlign: "center", display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <button className="reset">Reset Default</button>
+                    <button className="reset" onClick={() => handleReset()}>Reset Default</button>
                     <IconButton onClick={() => handleDeleteRequest(row.id)}>
                       <FaTrash color="red" />
                     </IconButton>
@@ -186,7 +231,7 @@ function UtentiTabella({ rows, setRows }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
-          <Button onClick={confirmDelete} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
+          <Button onClick={() => confirmDelete()} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
         </DialogActions>
       </Dialog>
     </>

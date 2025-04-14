@@ -4,8 +4,10 @@ import { FaPlusCircle } from "react-icons/fa";
 import AdminTabella from "../components/AdminTabella.jsx";
 import Navbar from "../components/NavbarProf2.jsx";
 import "../styles/Pagine.css";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { fetchWithRefresh } from "../utils/api";
 
 function GestioneAccount() {
   const [open, setOpen] = useState(false);
@@ -34,15 +36,28 @@ function GestioneAccount() {
     setAdminData({ ...adminData, [e.target.name]: e.target.value });
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const codiceMeccRegex = /^[A-Z0-9]{10}$/;
+
   const handleAdd = async () => {
     if (!adminData.nomeScuola || !adminData.codiceMeccanografico || !adminData.emailReferente) {
-      alert("Tutti i campi sono obbligatori!");
+      toast.warn("Tutti i campi sono obbligatori!", { position: "top-center" });
+      return;
+    }
+
+    if (!codiceMeccRegex.test(adminData.codiceMeccanografico)) {
+      toast.warn("Il codice meccanografico deve contenere 10 caratteri alfanumerici maiuscoli", { position: "top-center" });
+      return;
+    }
+  
+    if (!emailRegex.test(adminData.emailReferente)) {
+      toast.warn("Inserisci un indirizzo email valido", { position: "top-center" });
       return;
     }
 
     try {
       const token = sessionStorage.getItem("accessToken");
-      const response = await fetch("http://localhost:5000/root/admin", {
+      const response = await fetchWithRefresh("http://localhost:5000/root/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +73,8 @@ function GestioneAccount() {
           ...adminData,
           username: data.username,
           id: data.id,
-          role: "admin"
+          role: "admin",
+          attivo: true
         };
         setRows(prev => [...prev, newAdmin]);
         setAdminData(newAdmin); // aggiornamento con dati reali
@@ -75,7 +91,7 @@ function GestioneAccount() {
     const AccountAdmin = async () => {
       try {
         const token = sessionStorage.getItem("accessToken");
-        const res = await fetch("http://localhost:5000/root/admin", {
+        const res = await fetchWithRefresh("http://localhost:5000/root/admin", {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
@@ -104,10 +120,11 @@ function GestioneAccount() {
     };
 
     AccountAdmin();
-  }, [navigate]);
+  }, []);
 
   return (
     <>
+      <ToastContainer/>
       <Navbar />
       <h1 className="title">Gestione Account</h1>
       <h3 className="spiegazione">Gestisci gli account degli amministratori.</h3>
@@ -124,7 +141,7 @@ function GestioneAccount() {
         <DialogContent>
           <TextField label="Nome Scuola" name="nomeScuola" fullWidth value={adminData.nomeScuola} onChange={handleChange} margin="dense" />
           <FormControl fullWidth margin="dense">
-            <InputLabel>Tipologia</InputLabel>
+            <InputLabel sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Tipologia</InputLabel>
             <Select name="tipologia" value={adminData.tipologia} onChange={handleChange}>
               <MenuItem value="Liceo">Liceo</MenuItem>
               <MenuItem value="Tecnico">Tecnico</MenuItem>

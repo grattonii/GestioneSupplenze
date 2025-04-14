@@ -120,7 +120,7 @@ function AdminTabellaMini({ rows }) {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.nomeScuola}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.emailReferente}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    <IconButton onClick={(e) => toggleStatus(e, row.id)}>
+                    <IconButton>
                       {row.stato === "attivo" ? (
                         <FaPauseCircle color="yellow" size={23} />
                       ) : (
