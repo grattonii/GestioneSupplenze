@@ -30,6 +30,11 @@ function SetAdmin() {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const isPasswordStrong = (pwd) => {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    return strongPasswordRegex.test(pwd);
+  };  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -40,6 +45,14 @@ function SetAdmin() {
 
     if (password !== confirmPassword) {
       toast.warn("Le password non corrispondono", { position: "top-center" });
+      return;
+    }
+
+    if (!isPasswordStrong(password)) {
+      toast.warn(
+        "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale.",
+        { position: "top-center" }
+      );
       return;
     }
 
