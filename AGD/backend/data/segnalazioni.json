@@ -1,0 +1,30 @@
+[
+  {
+    "id": "AAAA",
+    "nomeScuola": "Galileo Galilei",
+    "data": "15-04-2025",
+    "descrizione": "Software scadente",
+    "stato": false
+  },
+  {
+    "id": "A1AA",
+    "nomeScuola": "Galileo Galilei",
+    "data": "15-03-2025",
+    "descrizione": "Software scadente",
+    "stato": true
+  },
+  {
+    "id": "AA1A",
+    "nomeScuola": "Galileo Galilei",
+    "data": "13-04-2025",
+    "descrizione": "Software scadente",
+    "stato": false
+  },
+  {
+    "id": "AAA1",
+    "nomeScuola": "Galileo Galilei",
+    "data": "14-04-2025",
+    "descrizione": "Software scadente",
+    "stato": false
+  }
+]

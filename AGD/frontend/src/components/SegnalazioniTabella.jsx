@@ -1,17 +1,51 @@
 import React from "react";
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
 import { FaCheckCircle, FaHourglassHalf } from "react-icons/fa";
 import "../styles/Accesso.css";
+import { fetchWithRefresh } from "../utils/api.js";
 
-function SegnalazioniTabella({ rows }) {
-  
-  const toggleStatus = (e, id) => {
+function SegnalazioniTabella({ rows, setRows }) {
+
+  const toggleStatus = async(e, id) => {
     e.stopPropagation();
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, stato: row.stato === "Completata" ? "In Corso" : "Completata" } : row
+    const updatedRows = rows.map((row) => {
+      if (row.id === id) {
+        // Cambia lo stato in base al valore booleano
+        return { ...row, stato: row.stato === false ? true : false }; // Cambia stato da attivo a sospeso e viceversa
+      }
+      return row;
+    });
+
+    setRows(prev =>
+      prev.map((row) =>
+        row.id === id ? { ...row, stato: !row.stato } : row
       )
     );
+
+    try {
+      const token = sessionStorage.getItem("accessToken");
+      const targetRow = updatedRows.find(r => r.id === id);
+
+      // Invia la richiesta PATCH al backend per aggiornare lo stato
+      const response = await fetchWithRefresh(`http://localhost:5000/root/modificaStato/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ stato: targetRow.stato }) // inviamo il valore booleano
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento dello stato:", error);
+      // Ripristina lo stato precedente in caso di errore
+      setRows(rows);
+    }
   };
 
   return (
@@ -44,13 +78,13 @@ function SegnalazioniTabella({ rows }) {
                   }
                 }}>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.data}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.utente}</TableCell>
-                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.motivo}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.nomeScuola}</TableCell>
+                  <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.descrizione}</TableCell>
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                     <IconButton onClick={(e) => toggleStatus(e, row.id)}>
-                      {row.stato === "Completata" ? (
+                      {row.stato === true ? ( // Stato Completato
                         <FaCheckCircle color="green" size={23} />
-                      ) : (
+                      ) : ( // Stato In Corso
                         <FaHourglassHalf color="orange" size={23} />
                       )}
                     </IconButton>

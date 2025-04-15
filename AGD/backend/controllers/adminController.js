@@ -7,7 +7,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROFESSORS_FILE = path.join(__dirname,"../data/docenti.json");
 const USERS_FILE = path.join(__dirname,"../data/users.json");
-const ORARIO_FILE = path.join(__dirname,"../data/orario.json");
 const DISP_FILE = path.join(__dirname,"../data/disp.json");
 
 
@@ -76,16 +75,6 @@ export const EliminaUtente = async (req, res) => {
         if (professorIndex !== -1) {
             professors.splice(professorIndex, 1); // Rimuoviamo il professore dall'array
             writeFileSync(PROFESSORS_FILE, JSON.stringify(professors, null, 2));
-        }
-    }
-
-    if (existsSync(ORARIO_FILE)) {
-        const orario = JSON.parse(readFileSync(ORARIO_FILE));
-        const orarioIndex = orario.findIndex(or => or.id === id);
-
-        if (orarioIndex !== -1) {
-            orario.splice(orarioIndex, 1); // Rimuoviamo l'orario dall'array
-            writeFileSync(ORARIO_FILE, JSON.stringify(orario, null, 2));
         }
     }
 

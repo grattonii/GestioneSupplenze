@@ -1,10 +1,12 @@
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const USERS_FILE = "./data/users.json";
 const PROFESSORS_FILE = "./data/docenti.json";
 const TIME_TABLE_FILE = "./data/orario.json";
 const DISPONIBILITA_FILE = "./data/disp.json";
+const SEGNALE_FILE = './data/segnalazioni.json';
 
 function generateUniqueID() {
   if (!existsSync(USERS_FILE)) return new Set();
@@ -17,6 +19,24 @@ function generateUniqueID() {
   do {
     newID = "";
     for (let i = 0; i < 3; i++) {
+      newID += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+  } while (existingIDs.has(newID));
+
+  return newID;
+}
+
+function UniqueID() {
+  if (!existsSync(SEGNALE_FILE)) return new Set();
+
+  const users = JSON.parse(readFileSync(SEGNALE_FILE));
+  let existingIDs = new Set(prob.map(prob => prob.id));
+
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let newID;
+  do {
+    newID = "";
+    for (let i = 0; i < 4; i++) {
       newID += chars.charAt(Math.floor(Math.random() * chars.length));
     }
   } while (existingIDs.has(newID));
@@ -214,4 +234,134 @@ export const AggiornaAdmin = async (req, res) => {
     message: "Dati dell'amministratore aggiornati con successo.",
     updatedUser: users[userIndex],
   });
-};  
+};
+
+const formatDate = (date) => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // I mesi partono da 0
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+export const SegnalaProblema = async (req, res) => {
+  const { descrizione } = req.body;
+
+  if (!descrizione) {
+    return res.status(400).json({ success: false, message: 'Descrizione del problema obbligatoria.' });
+  }
+
+  const token = req.headers.authorization?.split(' ')[1]; // Estrarre il token dall'header
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Token mancante' });
+  }
+
+  try {
+    // Decodifica il token
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+    const idAdmin = decodedToken?.id;
+
+    if (!idAdmin) {
+      return res.status(400).json({ success: false, message: 'ID amministratore non trovato nel token' });
+    }
+
+    // Carica gli utenti dal file USERS_FILE
+    if (!existsSync(USERS_FILE)) {
+      return res.status(404).json({ success: false, message: 'File utenti non trovato.' });
+    }
+
+    const utenti = JSON.parse(readFileSync(USERS_FILE));
+    const admin = utenti.find(user => user.id === idAdmin && user.role === 'admin');
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Amministratore non trovato.' });
+    }
+
+    // Crea una nuova segnalazione
+    const nuovaSegnalazione = {
+      id: UniqueID(),
+      nomeScuola: admin.nomeScuola,
+      data: formatDate(new Date()), // Data nel formato DD-MM-YYYY
+      descrizione,
+      stato: false,
+    };
+
+    // Carica le segnalazioni esistenti e aggiungi la nuova
+    let segnalazioni = [];
+    if (existsSync(SEGNALE_FILE)) {
+      segnalazioni = JSON.parse(readFileSync(SEGNALE_FILE));
+    }
+
+    segnalazioni.push(nuovaSegnalazione);
+
+    // Salva i dati delle segnalazioni
+    writeFileSync(SEGNALE_FILE, JSON.stringify(segnalazioni, null, 2));
+
+    return res.status(201).json({
+      success: true,
+      message: 'Segnalazione inviata con successo.',
+      segnalazione: nuovaSegnalazione,
+    });
+  } catch (error) {
+    console.error('Errore nel decodificare il token:', error);
+    return res.status(401).json({ success: false, message: 'Token non valido o scaduto' });
+  }
+};
+
+export const Segnalazioni = async (req, res) => {
+  if (!existsSync(SEGNALE_FILE)) {
+    return res.status(404).json({ success: false, message: 'Nessuna segnalazione trovata.' });
+  }
+
+  let segnalazioni = JSON.parse(readFileSync(SEGNALE_FILE));
+
+  const oggi = new Date();
+
+  // Funzione per convertire "DD-MM-YYYY" in oggetto Date
+  const parseData = (dataStr) => {
+    const [giorno, mese, anno] = dataStr.split('-').map(Number);
+    return new Date(anno, mese - 1, giorno);
+  };
+
+  // Filtra ed elimina quelle con stato: true più vecchie di 90 giorni
+  const filtrate = segnalazioni.filter(seg => {
+    const dataSegnalazione = parseData(seg.data);
+    const diffTime = oggi - dataSegnalazione;
+    const diffGiorni = diffTime / (1000 * 60 * 60 * 24);
+    return !(seg.stato === true && diffGiorni > 90);
+  });
+
+  // Aggiorna il file solo se sono state rimosse segnalazioni
+  if (filtrate.length !== segnalazioni.length) {
+    writeFileSync(SEGNALE_FILE, JSON.stringify(filtrate, null, 2));
+  }
+
+  // Ordina le segnalazioni dalla più recente alla più vecchia
+  filtrate.sort((a, b) => parseData(b.data) - parseData(a.data));
+
+  return res.status(200).json({ success: true, segnalazioni: filtrate });
+};
+
+export const ModificaStatoSegnalazione = async (req, res) => {
+  const { id } = req.params;
+  const { stato } = req.body;
+
+  if (!existsSync(SEGNALE_FILE)) {
+    return res.status(404).json({ success: false, message: 'Nessuna segnalazione trovata.' });
+  }
+
+  let segnalazioni = JSON.parse(readFileSync(SEGNALE_FILE));
+  const segnalazioneIndex = segnalazioni.findIndex(seg => seg.id === id);
+
+  if (segnalazioneIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Segnalazione non trovata.' });
+  }
+
+  segnalazioni[segnalazioneIndex].stato = stato;
+  writeFileSync(SEGNALE_FILE, JSON.stringify(segnalazioni, null, 2));
+
+  return res.status(200).json({
+    success: true,
+    message: 'Stato della segnalazione aggiornato con successo.',
+    segnalazione: segnalazioni[segnalazioneIndex],
+  });
+};

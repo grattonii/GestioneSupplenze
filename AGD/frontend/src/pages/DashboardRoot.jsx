@@ -13,6 +13,7 @@ import { fetchWithRefresh } from "../utils/api";
 function DashboardRoot() {
   const navigate = useNavigate();
   const [adminData, setAdminData] = useState([]);
+  const [segnalazioniData, setSegnalazioniData] = useState([]);
 
   useEffect(() => {
     const AccountAdmin = async () => {
@@ -32,7 +33,7 @@ function DashboardRoot() {
             toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
             sessionStorage.removeItem("accessToken");
             navigate("/");
-          } 
+          }
           else {
             toast.error("Errore nel caricamento degli account admin");
           }
@@ -49,6 +50,40 @@ function DashboardRoot() {
 
     AccountAdmin();
     const interval = setInterval(AccountAdmin, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const fetchSegnalazioni = async () => {
+      try {
+        const response = await fetchWithRefresh("http://localhost:5000/root/segnalazioni");
+        if (!response.ok) {
+          throw new Error("Errore durante il recupero delle segnalazioni");
+        }
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.segnalazioni)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore nel caricamento delle segnalazioni");
+          }
+          return;
+        }
+
+        setSegnalazioniData(data.segnalazioni); // Aggiorna lo stato con i dati delle segnalazioni
+      } catch (error) {
+        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        sessionStorage.removeItem("accessToken");
+        navigate("/");
+      }
+    };
+
+    fetchSegnalazioni();
+
+    const interval = setInterval(fetchSegnalazioni, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -92,7 +127,7 @@ function DashboardRoot() {
               </div>
               <div>
                 <h3>Ultime 3 segnalazioni:</h3>
-                <SegnalazioniTabella rows={[]} />
+                <SegnalazioniTabella rows={segnalazioniData.slice(0, 3)} />
               </div>
             </motion.div>
 

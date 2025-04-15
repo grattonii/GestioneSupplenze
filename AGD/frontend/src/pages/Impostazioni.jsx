@@ -23,6 +23,19 @@ function Impostazioni() {
   const [activeSection, setActiveSection] = useState("");
   const [emailNotifiche, setEmailNotifiche] = useState(true);
   const [pushNotifiche, setPushNotifiche] = useState(false);
+  const [inputText, setInputText] = useState("");
+  const maxWords = 200;
+
+  const handleInputChange = (e) => {
+    const text = e.target.value;
+    const wordCount = text.trim().split(/\s+/).length;
+
+    if (wordCount <= maxWords || text.trim() === "") {
+      setInputText(text);
+    }
+  };
+
+  const wordsUsed = inputText.trim() === "" ? 0 : inputText.trim().split(/\s+/).length;
 
   useEffect(() => {
     const AccountUtenti = async () => {
@@ -130,53 +143,60 @@ function Impostazioni() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = sessionStorage.getItem('accessToken');
+    try {
+      const token = sessionStorage.getItem('accessToken');
 
-    if (!token) {
-      const token = await refreshAccessToken();
-      if (!token) {
-        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
-        return;
-      }
-    }
-
-    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    const idAdmin = decodedToken ? decodedToken.id : null;
-
-    console.log("Token decodificato:", decodedToken);
-
-    if (!idAdmin) {
-      console.error("Errore: idAdmin non trovato!");
-      toast.error("Errore: ID admin mancante!", { position: "top-center" });
-      return;
-    }
-
-    const payload = {
-      idAdmin: idAdmin,
-      orari: orario,
-    };
-
-    fetch('http://localhost:5000/orari/salva', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Orari salvati:', data);
-      })
-      .catch((error) => {
-        console.error("Errore durante l'invio:", error);
-        toast.error("Errore durante il salvataggio!", { position: "top-center" });
+      const saveRes = await fetchWithRefresh('http://localhost:5000/orari/salva', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orari: orario
+        }),
       });
+
+      const saveData = await saveRes.json();
+
+      if (!saveData.success) {
+        toast.error("Errore nel salvataggio degli orari.");
+      }
+
+    } catch (error) {
+      console.error("Errore durante l'invio:", error);
+      toast.error("Errore durante il salvataggio!", { position: "top-center" });
+    }
   };
 
-  const handleAbsenceSubmit = (event) => {
+  const handleAbsenceSubmit = async (event) => {
     event.preventDefault();
-    console.log("Segnalazione inviata!");
+
+    try {
+      const token = sessionStorage.getItem("accessToken");
+
+      const response = await fetchWithRefresh("http://localhost:5000/root/segnalaProblema", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          descrizione: inputText
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setInputText("");
+      } else {
+        toast.error(result.message || "Errore nell'invio segnalazione");
+      }
+    } catch (error) {
+      console.error("Errore durante l'invio:", error);
+      toast.error("Errore durante il salvataggio!", { position: "top-center" });
+    }
   };
 
   return (
@@ -289,10 +309,25 @@ function Impostazioni() {
             <h1>Segnalazione Problemi</h1>
             <h3>Hai riscontrato un problema? Segnalalo al team di sviluppo.</h3>
             <form className="absence-form" onSubmit={handleAbsenceSubmit}>
-              <label className="direzione">
-                Descrizione del problema:
-                <textarea className="input-campo" style={{ resize: "none", height: 80 }} />
-              </label>
+              <div className="direzione">
+                <label style={{ fontSize: "20px"}}>
+                  Descrizione del problema:
+                </label>
+                <textarea
+                  id="problema"
+                  name="problema"
+                  className="input-campo"
+                  placeholder="Descrivi brevemente il problema riscontrato..."
+                  value={inputText}
+                  onChange={handleInputChange}
+                  style={{ fontSize: "18px",resize: "none", minHeight: "150px", maxHeight: "200px" }}
+                  required
+                />
+              </div>
+              <small style={{ color: "#aaa", display: "block", textAlign: "right", marginRight: "5px" }}>
+                {wordsUsed}/{maxWords} parole
+              </small>
+
               <div className="button-container">
                 <button className="aggiunto">Invia segnalazione</button>
               </div>

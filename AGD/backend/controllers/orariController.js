@@ -37,31 +37,48 @@ const saveData = (data) => {
 };
 
 export const salvaOrari = (req, res) => {
-  const { idAdmin, orari } = req.body;
+  const { orari } = req.body;
 
-  if (!idAdmin || !orari) {
-    return res.status(400).json({ error: "Dati orari mancanti" });
+  if (!orari) {
+    return res.status(400).json({ success: false, error: "Dati orari mancanti" });
   }
 
-  let data = loadData();
-
-  // Cerca se l'idAdmin esiste già
-  const index = data.findIndex((item) => item.idAdmin === idAdmin);
-
-  if (index !== -1) {
-    // Se esiste, aggiorna solo i suoi orari
-    data[index].orari = orari;
-  } else {
-    // Se non esiste, aggiungilo
-    data.push({ idAdmin, orari });
+  const token = req.headers.authorization?.split(" ")[1]; // Estrai il token
+  if (!token) {
+    return res.status(401).json({ success: false, error: "Token mancante" });
   }
 
   try {
-    saveData(data);
-    res.status(200).json({ message: "Orari salvati correttamente" });
+    const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS); // Verifica il token
+    const idAdmin = decodedToken?.id; 
+
+    if (!idAdmin) {
+      return res.status(400).json({ success: false, error: "ID amministratore non trovato" });
+    }
+
+    let data = loadData();
+
+    // Cerca se l'idAdmin esiste già
+    const index = data.findIndex((item) => item.idAdmin === idAdmin);
+
+    if (index !== -1) {
+      // Se esiste, aggiorna solo i suoi orari
+      data[index].orari = orari;
+    } else {
+      // Se non esiste, aggiungilo
+      data.push({ idAdmin, orari });
+    }
+
+    try {
+      saveData(data);
+      res.status(200).json({ success: true, message: "Orari salvati correttamente" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: "Errore durante il salvataggio dei dati" });
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Errore durante il salvataggio dei dati" });
+    console.error("Errore nel decodificare il token:", error);
+    return res.status(401).json({ success: false, error: "Token non valido o scaduto" });
   }
 };
 
