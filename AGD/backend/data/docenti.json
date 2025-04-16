@@ -22,17 +22,5 @@
       "3C",
       "4D"
     ]
-  },
-  {
-    "id": "V58",
-    "nome": "Giulia",
-    "cognome": "Bianchi",
-    "email": "giulia.bianchi@example.com",
-    "numero": "1122334455",
-    "materie": "Italiano",
-    "classi": [
-      "2A",
-      "3B"
-    ]
   }
 ]

@@ -25,7 +25,7 @@
     "password": "$2b$10$hPp3NMlQOb2z719muD2mpOTxdXV3Gyq6of3TYtd7AWysJbH73.7Em",
     "email": "mario.rossi@example.com",
     "role": "docente",
-    "firstLogin": true
+    "firstLogin": false
   },
   {
     "attivo": true,
@@ -36,15 +36,5 @@
     "email": "luigi.verdi@example.com",
     "role": "docente",
     "firstLogin": false
-  },
-  {
-    "attivo": true,
-    "idAdmin": "8BL",
-    "id": "V58",
-    "username": "GB4439216D",
-    "password": "$2b$10$F5jNxjaJ0Dg6HOaTr4Mo6.joIB5AvL9w9aaUArvgtkbj/M9KobzLC",
-    "email": "giulia.bianchi@example.com",
-    "role": "docente",
-    "firstLogin": true
   }
 ]

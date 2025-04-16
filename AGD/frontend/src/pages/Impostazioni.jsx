@@ -24,7 +24,7 @@ function Impostazioni() {
   const [emailNotifiche, setEmailNotifiche] = useState(true);
   const [pushNotifiche, setPushNotifiche] = useState(false);
   const [inputText, setInputText] = useState("");
-  const maxWords = 200;
+  const maxWords = 50;
 
   const handleInputChange = (e) => {
     const text = e.target.value;

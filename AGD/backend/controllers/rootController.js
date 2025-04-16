@@ -29,7 +29,7 @@ function generateUniqueID() {
 function UniqueID() {
   if (!existsSync(SEGNALE_FILE)) return new Set();
 
-  const users = JSON.parse(readFileSync(SEGNALE_FILE));
+  const prob = JSON.parse(readFileSync(SEGNALE_FILE));
   let existingIDs = new Set(prob.map(prob => prob.id));
 
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

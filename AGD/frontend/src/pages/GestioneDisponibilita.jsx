@@ -171,7 +171,7 @@ function GestioneDisponibilita() {
     }
 
     const payload = {
-      idDocente: idDocente,
+      id: idDocente,
       disponibilita: disponibilita,
     };
 

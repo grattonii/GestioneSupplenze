@@ -106,6 +106,11 @@ function DashboardRoot() {
                   GESTIONE ACCOUNT <FaUserCog className="widget-icon" />
                 </h2>
                 <h3>Gestisci gli account admin</h3>
+                <ul className="widget-list">
+                  <li>Account admin totali: {adminData.length}</li>
+                  <li>Account admin attivi: {adminData.filter(admin => admin.attivo === true).length}</li>
+                  <li>Account admin disattivati: {adminData.filter(admin => admin.attivo === false).length}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultimi 3 account admin:</h3>
@@ -124,6 +129,11 @@ function DashboardRoot() {
                   GESTIONE SEGNALAZIONI <FaClipboardList className="widget-icon" />
                 </h2>
                 <h3>Gestisci tutte le segnalazioni con facilità</h3>
+                <ul className="widget-list">
+                  <li>Segnalazioni totali: {segnalazioniData.length}</li>
+                  <li>Segnalazioni risolte: {segnalazioniData.filter(segnalazione => segnalazione.stato === true).length}</li>
+                  <li>Segnalazioni in attesa: {segnalazioniData.filter(segnalazione => segnalazione.stato === false).length}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultime 3 segnalazioni:</h3>

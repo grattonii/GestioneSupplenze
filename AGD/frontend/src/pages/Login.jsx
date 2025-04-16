@@ -47,7 +47,7 @@ function Login() {
         else
           navigate("/dashboard");
       }
-      else if (role === "professore") {
+      else if (role === "docente") {
         if (firstLogin)
           navigate("/gestione-account");
         else

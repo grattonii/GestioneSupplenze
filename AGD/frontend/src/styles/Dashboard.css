@@ -68,3 +68,9 @@
   color: #fff;
   text-align: left; /* Aggiungi questa riga per allineare il titolo a sinistra */
 }
+
+.widget-list {
+  color: #fff;
+  list-style-type: circle;
+  margin-left: 20px;
+}

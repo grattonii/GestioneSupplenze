@@ -80,7 +80,7 @@ function App() {
           </AuthRoute>
         } />
         <Route path="/gestione-account" element={
-          <AuthRoute allowedRoles={["admin", "professore", "root"]}>
+          <AuthRoute allowedRoles={["admin", "docente", "root"]}>
             <SetAdmin />
           </AuthRoute>
         } />
@@ -90,12 +90,12 @@ function App() {
           </AuthRoute>
         } />
         <Route path="/professore" element={
-          <AuthRoute allowedRoles={["professore", "root"]}>
+          <AuthRoute allowedRoles={["docente", "root"]}>
             <PaginaProf />
           </AuthRoute>
         } />
         <Route path="/disponibilita-docente" element={
-          <AuthRoute allowedRoles={["professore", "root"]}>
+          <AuthRoute allowedRoles={["docente", "root"]}>
             <DisponibilitaDocente />
           </AuthRoute>
         } />

@@ -29,7 +29,7 @@ export const salvaDisponibilita = (req, res) => {
     }
   };
 
-  const { idDocente, disponibilita } = req.body;
+  const { id, disponibilita } = req.body;
 
   if (!idDocente || !disponibilita || typeof disponibilita !== 'object') {
     return res.status(400).json({ error: 'Formato non valido: idDocente e disponibilita richiesti' });
