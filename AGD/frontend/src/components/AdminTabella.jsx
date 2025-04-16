@@ -134,7 +134,7 @@ function AdminTabella({ rows, setRows }) {
     });
 
     // Aggiorna lo stato a livello di UI
-    setRows(updatedRows);
+    setRows(updatedRows); 
 
     try {
       const token = sessionStorage.getItem("accessToken");
@@ -267,7 +267,7 @@ function AdminTabella({ rows, setRows }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
-          <Button onClick={(e) => confirmDelete(e, rowToDelete)} color="error" sx={{ fontFamily: "Poppins" }}>Elimina</Button>
+          <Button onClick={(e) => confirmDelete(e, rowToDelete)} color="error" sx={{ fontFamily: "Poppins" }}>Conferma</Button>
         </DialogActions>
       </Dialog>
 

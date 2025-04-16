@@ -4,40 +4,6 @@ import { FaPlayCircle, FaPauseCircle } from "react-icons/fa";
 import "../styles/Tabelle.css";
 
 function AdminTabellaMini({ rows }) {
-  const [visibleRows, setVisibleRows] = useState({});
-
-  const observer = useRef(null);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        const updated = {};
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute("data-id");
-          updated[id] = entry.isIntersecting;
-        });
-        setVisibleRows((prev) => ({ ...prev, ...updated }));
-      },
-      {
-        root: document.querySelector("#table-body-scroll"),
-        threshold: 0.7,
-      }
-    );
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-  }, []);
-
-  const rowRefs = useRef({});
-
-  useEffect(() => {
-    if (!observer.current) return;
-    rows.forEach((row) => {
-      const el = rowRefs.current[row.id];
-      if (el) observer.current.observe(el);
-    });
-  }, [rows]);
 
   return (
     <>
@@ -82,7 +48,6 @@ function AdminTabellaMini({ rows }) {
           </TableHead>
 
           <TableBody
-            id="table-body-scroll"
             sx={{
               display: "block",
               maxHeight: "510px",
@@ -102,9 +67,6 @@ function AdminTabellaMini({ rows }) {
               rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  ref={(el) => (rowRefs.current[row.id] = el)}
-                  data-id={row.id}
-                  className={`table-row ${visibleRows[row.id] ? "in-view" : ""}`}
                   onClick={() => handleOpen(row)}
                   sx={{
                     display: "table",
@@ -121,10 +83,10 @@ function AdminTabellaMini({ rows }) {
                   <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{row.emailReferente}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
                     <IconButton>
-                      {row.stato === "attivo" ? (
-                        <FaPauseCircle color="yellow" size={23} />
+                      {row.attivo ? (
+                        <FaPlayCircle color="green" size={23} />  // attivo, icona verde
                       ) : (
-                        <FaPlayCircle color="green" size={23} />
+                        <FaPauseCircle color="yellow" size={23} />  // sospeso, icona gialla
                       )}
                     </IconButton>
                   </TableCell>

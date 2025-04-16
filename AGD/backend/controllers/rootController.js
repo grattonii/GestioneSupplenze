@@ -365,3 +365,17 @@ export const ModificaStatoSegnalazione = async (req, res) => {
     segnalazione: segnalazioni[segnalazioneIndex],
   });
 };
+
+export const EliminaSegnalazioni = async (req, res) => {
+  if (!existsSync(SEGNALE_FILE)) {
+    return res.status(404).json({ success: false, message: 'Nessuna segnalazione trovata.' });
+  }
+
+  // Sovrascrivi il file con un array vuoto
+  writeFileSync(SEGNALE_FILE, JSON.stringify([], null, 2));
+
+  return res.status(200).json({
+    success: true,
+    message: 'Tutte le segnalazioni sono state eliminate con successo.',
+  });
+};

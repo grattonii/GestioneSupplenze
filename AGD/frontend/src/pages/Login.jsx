@@ -62,7 +62,20 @@ function Login() {
       console.error("Errore durante il login", error);
       // Controlla se l'errore è stato causato dall'account sospeso
       if (error.response && error.response.status === 403) {
-        toast.warning("Account sospeso, contatta l'assistenza AGD.", { position: "top-center" });
+        toast.warning(
+          <span>
+            Account sospeso, contatta l'assistenza:{" "}
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=agdagencybusiness@gmail.com&su=Account%20sospeso&body=Salve,%20il%20mio%20account%20risulta%20sospeso.%20Potete%20fornirmi%20assistenza?"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#007bff", textDecoration: "underline" }}
+            >
+              agdagencybusiness@gmail.com
+            </a>
+          </span>,
+          { position: "top-center" }
+        );        
       } else {
         toast.error(error.response?.data?.message || "Errore sconosciuto.", { position: "top-center" });
       }

@@ -6,10 +6,46 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { fetchWithRefresh } from "../utils/api";
+import { FaTrash } from "react-icons/fa";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from "@mui/material";
 
 const GestioneSegnalazioni = () => {
     const [rows, setRows] = useState([]);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const navigate = useNavigate();
+
+    const handleDeleteRequest = () => {
+        setConfirmDeleteOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        setRows([]);
+        setConfirmDeleteOpen(false);
+
+        try {
+            const token = sessionStorage.getItem("accessToken");
+            const response = await fetchWithRefresh(`http://localhost:5000/root/annullaSegnalazione`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error("Errore durante l'aggiornamento:", error);
+            setRows(rows); // Ripristina lo stato precedente
+        }
+    };
+
+    const cancelDelete = () => {
+        setConfirmDeleteOpen(false);;
+    };
 
     useEffect(() => {
         const fetchSegnalazioni = async () => {
@@ -52,7 +88,24 @@ const GestioneSegnalazioni = () => {
             <Navbar />
             <h1 className="title">Gestione Segnalazioni</h1>
             <h3 className="spiegazione">Qui puoi gestire le segnalazione di problemi degli utenti.</h3>
-            <SegnalazioniTabella rows={rows} setRows={setRows}/>
+            <SegnalazioniTabella rows={rows} setRows={setRows} />
+
+            <div className="aggiungi-container">
+                <button type="button" className="aggiungi" onClick={() => handleDeleteRequest()}>
+                    <FaTrash /> Reset segnalazioni
+                </button>
+            </div>
+
+            <Dialog open={confirmDeleteOpen} onClose={cancelDelete}>
+                <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Conferma eliminazione</DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ fontFamily: "Poppins" }}>Sei sicuro di voler eliminare tutte le segnalazioni?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={cancelDelete} sx={{ fontFamily: "Poppins" }}>Annulla</Button>
+                    <Button onClick={(e) => confirmDelete()} color="error" sx={{ fontFamily: "Poppins" }}>Conferma</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
