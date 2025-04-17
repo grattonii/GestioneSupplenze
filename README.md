@@ -1,2 +1,2 @@
 # GestioneSupplenze
-Gestione Supplenzeb  
+WebApp per la gestione delle supplenze di una scuola
