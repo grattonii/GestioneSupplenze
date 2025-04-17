@@ -1,4 +1,3 @@
-// api.js
 export const fetchWithRefresh = async (url, options = {}) => {
     const token = sessionStorage.getItem("accessToken");
     const headers = {

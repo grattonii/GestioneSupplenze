@@ -256,7 +256,7 @@ function Professore() {
             value={absenceReason === "" ? absenceNote : ""}
             onChange={(e) => setabsenceNote(e.target.value)}
             placeholder="Inserisci eventuali note..."
-            style={{ fontFamily: "Poppins" }}
+            style={{ fontFamily: "Poppins", resize: "none", minHeight: "100px" }}
           />
         </div>
         <Button type="submit" variant="contained" color="primary" fullWidth className="submit-button">

@@ -2,39 +2,59 @@
   {
     "id": "R1",
     "username": "AGDagency",
-    "password": "$2b$10$NTTWmFXS1mbXp97qv.y45.5MYGESYkHetSHzrRZtIbOYsn3jaMFvG",
+    "password": "$2b$10$rDYbp.vyAmV7Xz82C/iwp.HcezACe98Ha0drBSfSkx2Hb1eHALzSC",
     "role": "root"
   },
   {
     "attivo": true,
-    "id": "8BL",
-    "username": "GG5120254T",
-    "password": "$2b$10$xrav911HHP/OPGerE94f0ezVwjGpAlYLVmtRQYU80I4bWu5sePHRS",
+    "id": "XED",
+    "username": "GG9781351T",
+    "password": "$2b$10$fbjEYhn9o38ZgH6CimTpPeRje/Y.l59GF5pERYt1tjXtdw5JJE6Iu",
+    "emailReferente": "michele.tarantino@isitgo.it",
     "nomeScuola": "Galileo Galilei",
     "tipologia": "Tecnico",
-    "emailReferente": "michele.tarntino@isitgo.it",
-    "codiceMeccanografico": "goiss10",
+    "codiceMeccanografico": "GOISS10201",
     "role": "admin",
     "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "8BL",
-    "id": "HA7",
-    "username": "MR5899101D",
-    "password": "$2b$10$hPp3NMlQOb2z719muD2mpOTxdXV3Gyq6of3TYtd7AWysJbH73.7Em",
+    "idAdmin": "XED",
+    "id": "DTG",
+    "username": "MR1459166D",
+    "password": "$2b$10$UV6vt80a1.TZMc96l5/0c.RE7melEertRdgocwr.TeoeW/Lk7CBLm",
     "email": "mario.rossi@example.com",
     "role": "docente",
     "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "8BL",
-    "id": "817",
-    "username": "LV9800680D",
-    "password": "$2b$10$djAr2U9/mF.kPBK8dc5oeO9jSCLF2JeYxtGEbezl7zV/ValNDYMVm",
+    "idAdmin": "XED",
+    "id": "HE1",
+    "username": "LV7171147D",
+    "password": "$2b$10$maW.wct6mZBz/XCbjqEZweJoeZulj2pC3CIQrO4pyIVumRVBxTMb.",
     "email": "luigi.verdi@example.com",
     "role": "docente",
-    "firstLogin": false
+    "firstLogin": true
+  },
+  {
+    "attivo": true,
+    "idAdmin": "XED",
+    "id": "P6Q",
+    "username": "GB4170226D",
+    "password": "$2b$10$CWaHNm3vcdqULq1L7JnYKeffSXDLc42VX6n1nEU42JI4YmqIEn2O2",
+    "email": "giulia.bianchi@example.com",
+    "role": "docente",
+    "firstLogin": true
+  },
+  {
+    "attivo": true,
+    "idAdmin": "XED",
+    "id": "MCE",
+    "username": "FN5610142D",
+    "password": "$2b$10$6ba3OuroGQy0iub8o/Bxju9.XBno4GsRO55iVximQrcEYbWXi7nvO",
+    "email": "francesca.neri@example.com",
+    "role": "docente",
+    "firstLogin": true
   }
 ]

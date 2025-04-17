@@ -100,7 +100,11 @@ export const AdminEsistenti = async (req, res) => {
   const adminUsers = users.filter(user => user.role === 'admin');
 
   if (adminUsers.length === 0) {
-    return res.status(404).json({ success: false, message: "Nessun amministratore trovato." });
+    return res.status(200).json({
+      "success": true,
+      "adminUsers": []
+    }
+    );
   }
 
   return res.status(200).json({ success: true, adminUsers });
@@ -313,6 +317,10 @@ export const Segnalazioni = async (req, res) => {
   }
 
   let segnalazioni = JSON.parse(readFileSync(SEGNALE_FILE));
+
+  if (segnalazioni.length === 0) {
+    return res.status(200).json({ success: true, segnalazioni: [] });
+  }
 
   const oggi = new Date();
 

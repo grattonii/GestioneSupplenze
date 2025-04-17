@@ -390,7 +390,7 @@ function Impostazioni() {
         </main>
       </div>
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Aggiungi Docenti</DialogTitle>
         <DialogContent>
           <Typography sx={{ fontFamily: "Poppins" }}>Carica il file contenente i dati dei docenti{" "}<FontAwesomeIcon

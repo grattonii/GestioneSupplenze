@@ -19,7 +19,7 @@ function DashboardRoot() {
     const AccountAdmin = async () => {
       try {
         const token = sessionStorage.getItem("accessToken");
-        const res = await fetchWithRefresh("http://localhost:5000/root/admin", {
+        const res = await fetchWithRefresh("http://localhost:5000/root/accountAdmin", {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"

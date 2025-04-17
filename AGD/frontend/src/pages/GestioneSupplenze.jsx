@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Select, MenuItem, InputLabel, FormControl, Autocomplete } from "@mui/material";
 import SupplenzeTable from "../components/SupplenzeTabella.jsx";
 import { FaPlusCircle } from "react-icons/fa";
 import Navbar from "../components/Navbar2.jsx";
@@ -15,7 +15,9 @@ dayjs.extend(customParseFormat);
 function GestioneSupplenze() {
   const [supplenze, setSupplenze] = useState([]);
   const [openSupplenza, setOpenSupplenza] = useState(false);
+  const [suggestioniDocenti, setSuggestioniDocenti] = useState([]);
   const [fasceOrarie, setFasceOrarie] = useState([]);
+  const [Classi, setClassi] = useState([]);
   const [nuovaSupplenza, setNuovaSupplenza] = useState({
     id: "",
     docente: "",
@@ -97,6 +99,59 @@ function GestioneSupplenze() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const fetchClassi = async () => {
+      try {
+        const res = await fetchWithRefresh("http://localhost:5000/supplenze/classi");
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const classiEstratte = data
+            .map(c => c.nome || c.id)
+            .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          setClassi(classiEstratte);
+        } else {
+          toast.error("Errore nel caricamento delle classi");
+        }
+      } catch (err) {
+        console.error("Errore nel recupero delle classi:", err);
+        toast.error("Errore nel caricamento delle classi");
+      }
+    };
+
+    fetchClassi();
+  }, []);
+
+  useEffect(() => {
+    if (
+      nuovaSupplenza.data &&
+      nuovaSupplenza.ora &&
+      nuovaSupplenza.classe &&
+      validateDate(nuovaSupplenza.data)
+    ) {
+      fetchDocentiDisponibili(nuovaSupplenza.data, nuovaSupplenza.ora);
+    }
+  }, [nuovaSupplenza.data, nuovaSupplenza.ora, nuovaSupplenza.classe]);
+
+  const fetchDocentiDisponibili = async (data, ora) => {
+    try {
+      if (!nuovaSupplenza.classe) return;
+
+      const res = await fetchWithRefresh(
+        `http://localhost:5000/docenti/disponibili?data=${data}&ora=${encodeURIComponent(ora)}&classe=${encodeURIComponent(nuovaSupplenza.classe)}`
+      );
+
+      const dataRes = await res.json();
+      if (Array.isArray(dataRes)) {
+        setSuggestioniDocenti(dataRes);
+      } else {
+        setSuggestioniDocenti([]);
+      }
+    } catch (err) {
+      console.error("Errore nel recupero dei docenti disponibili:", err);
+    }
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -111,39 +166,9 @@ function GestioneSupplenze() {
         </button>
       </div>
 
-      <Dialog open={openSupplenza} onClose={handleCloseSupplenza}>
+      <Dialog open={openSupplenza} onClose={handleCloseSupplenza} fullWidth>
         <DialogTitle sx={{ color: "black" }}>Aggiungi Supplenza</DialogTitle>
         <DialogContent>
-          <TextField label="Docente" name="docente" fullWidth value={nuovaSupplenza.docente} onChange={handleChangeSupplenza} margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "#f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }} />
-          <TextField label="Classe" name="classe" fullWidth value={nuovaSupplenza.classe} onChange={handleChangeSupplenza} margin="dense" sx={{
-            "& .MuiInputBase-root": {
-              fontFamily: "Poppins",
-              fontSize: "16px",
-              color: "#333",
-              backgroundColor: "f9f9f9",
-              borderRadius: "5px",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#ccc",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#666",
-            },
-          }} />
           <TextField
             label="Data"
             name="data"
@@ -176,6 +201,60 @@ function GestioneSupplenze() {
               ))}
             </Select>
           </FormControl>
+          <Autocomplete
+            options={Classi}
+            getOptionLabel={(option) => typeof option === "string" ? option : option.nome}
+            onChange={(e, value) => {
+              setNuovaSupplenza({ ...nuovaSupplenza, classe: value });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Classe"
+                fullWidth
+                margin="dense"
+                sx={{
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "5px",
+                }}
+              />
+            )}
+            renderOption={(props, option) => (
+              <li
+                {...props}
+                style={{
+                  fontSize: "16px", // Cambia qui la dimensione del font
+                  padding: "8px 16px",
+                }}
+              >
+                {typeof option === "string" ? option : option.nome}
+              </li>
+            )}
+          />
+          <Autocomplete
+            disabled={!nuovaSupplenza.data || !nuovaSupplenza.ora}
+            options={suggestioniDocenti}
+            getOptionLabel={(option) => typeof option === "string" ? option : option.nome}
+            onChange={(e, value) => {
+              setNuovaSupplenza({ ...nuovaSupplenza, docente: value });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Docente"
+                fullWidth
+                margin="dense"
+                helperText={
+                  !nuovaSupplenza.data || !nuovaSupplenza.ora
+                    ? "Inserisci prima data, fascia oraria e classe"
+                    : ""
+                }
+              />
+            )}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseSupplenza}>Annulla</Button>

@@ -1,6 +1,6 @@
 [
   {
-    "id": "HA7",
+    "id": "DTG",
     "nome": "Mario",
     "cognome": "Rossi",
     "email": "mario.rossi@example.com",
@@ -12,7 +12,7 @@
     ]
   },
   {
-    "id": "817",
+    "id": "HE1",
     "nome": "Luigi",
     "cognome": "Verdi",
     "email": "luigi.verdi@example.com",
@@ -21,6 +21,30 @@
     "classi": [
       "3C",
       "4D"
+    ]
+  },
+  {
+    "id": "P6Q",
+    "nome": "Giulia",
+    "cognome": "Bianchi",
+    "email": "giulia.bianchi@example.com",
+    "numero": "1122334455",
+    "materie": "Italiano",
+    "classi": [
+      "2A",
+      "3B"
+    ]
+  },
+  {
+    "id": "MCE",
+    "nome": "Francesca",
+    "cognome": "Neri",
+    "email": "francesca.neri@example.com",
+    "numero": "5566778899",
+    "materie": "Storia",
+    "classi": [
+      "1C",
+      "4A"
     ]
   }
 ]

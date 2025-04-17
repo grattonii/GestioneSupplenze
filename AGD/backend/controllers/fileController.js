@@ -10,6 +10,7 @@ const { Workbook } = pkg;
 const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
 const MATERIE_FILE = './data/materie.txt';
+const CLASSI_FILE = './data/classi.txt';
 
 function loadMaterie() {
     if (!existsSync(MATERIE_FILE)) {
@@ -97,6 +98,7 @@ export const uploadDocenti = async (req, res) => {
         const worksheet = workbook.getWorksheet(1);
 
         const docenti = [];
+        const classiUniche = new Set();
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         worksheet.eachRow((row, rowNumber) => {
@@ -109,6 +111,10 @@ export const uploadDocenti = async (req, res) => {
                 const materie = row.getCell(5).text.trim();
 
                 const classi = row.getCell(6).text.trim().split(',').map(c => c.trim());
+
+                classi.forEach(c => {
+                    if (c) classiUniche.add(c);
+                });
 
                 if (!nome || !cognome || !email) {
                     console.warn(`Dati incompleti per: ${nome} ${cognome}, saltato.`);
@@ -143,6 +149,12 @@ export const uploadDocenti = async (req, res) => {
 
         writeFileSync(DOCENTI_FILE, JSON.stringify(docenti, null, 2));
         generateAccounts(req, docenti);
+
+        try {
+            writeFileSync(CLASSI_FILE, [...classiUniche].sort().join('\n'));
+        } catch (err) {
+            console.error("Errore durante la scrittura di classi.txt:", err);
+        }
 
         res.json({ success: true, message: 'Dati docenti caricati con successo!' });
 
