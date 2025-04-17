@@ -119,7 +119,7 @@ function GestioneFile() {
               <ul>
                 <li>Cognome e Nome in ordine alfabetico</li>
                 <li>Classi</li>
-                <li>Materie</li>
+                <li>Ore buche segnate con X</li>
               </ul>
             </ReactTooltip>
 

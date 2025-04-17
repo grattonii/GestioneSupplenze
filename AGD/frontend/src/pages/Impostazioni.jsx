@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
 import "../styles/Impostazioni.css";
@@ -9,6 +8,10 @@ import UtentiTabella from "../components/UtentiTabella";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchWithRefresh } from "../utils/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import { faFileExcel, faFileArrowUp, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 
 const sections = [
   { id: "Orario", label: "Configurazione orario" },
@@ -20,6 +23,9 @@ const sections = [
 function Impostazioni() {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("Carica file");
   const [activeSection, setActiveSection] = useState("");
   const [emailNotifiche, setEmailNotifiche] = useState(true);
   const [pushNotifiche, setPushNotifiche] = useState(false);
@@ -199,6 +205,54 @@ function Impostazioni() {
     }
   };
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleFileChange = (event) => {
+    if (event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+      setFileName(event.target.files[0].name);
+    }
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const token = sessionStorage.getItem('accessToken');
+
+    if (!token) {
+      const token = await refreshAccessToken();
+      if (!token) {
+        toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+        return;
+      }
+    }
+
+    if (!file) {
+      toast.warn("Seleziona un file prima di procedere!", { position: "top-center" });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await axios.post("http://localhost:5000/files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+    } catch (error) {
+      if (error.response)
+        toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" }); // Errore specifico dal backend
+      else
+        toast.error("Errore di connessione al server!", { position: "top-center" });
+    }
+  };
+
   return (
     <>
       <ToastContainer />
@@ -301,7 +355,7 @@ function Impostazioni() {
             <h3>Modifica i permessi e assegna ruoli agli utenti.</h3>
             <UtentiTabella rows={user} setRows={setUser} />
             <div className="button-container">
-              <button className="aggiunto"><FaPlusCircle />Aggiungi nuovo utente</button>
+              <button className="aggiunto" onClick={handleOpen}><FaPlusCircle />Aggiungi nuovo utente</button>
             </div>
           </section>
 
@@ -310,7 +364,7 @@ function Impostazioni() {
             <h3>Hai riscontrato un problema? Segnalalo al team di sviluppo.</h3>
             <form className="absence-form" onSubmit={handleAbsenceSubmit}>
               <div className="direzione">
-                <label style={{ fontSize: "20px"}}>
+                <label style={{ fontSize: "20px" }}>
                   Descrizione del problema:
                 </label>
                 <textarea
@@ -320,7 +374,7 @@ function Impostazioni() {
                   placeholder="Descrivi brevemente il problema riscontrato..."
                   value={inputText}
                   onChange={handleInputChange}
-                  style={{ fontSize: "18px",resize: "none", minHeight: "150px", maxHeight: "200px" }}
+                  style={{ fontSize: "18px", resize: "none", minHeight: "150px", maxHeight: "200px" }}
                   required
                 />
               </div>
@@ -335,6 +389,85 @@ function Impostazioni() {
           </section>
         </main>
       </div>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "black" }}>Aggiungi Docenti</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontFamily: "Poppins" }}>Carica il file contenente i dati dei docenti{" "}<FontAwesomeIcon
+            icon={faCircleQuestion}
+            data-tooltip-id="professoriTip"
+            style={{ cursor: "pointer", color: "#007BFF" }}
+          /></Typography>
+          <ReactTooltip id="professoriTip" place="right" effect="solid">
+            <strong>Formato del file Excel:</strong>
+            <ul>
+              <li>Cognome (ordine alfabetico)</li>
+              <li>Nome</li>
+              <li>Email</li>
+              <li>Telefono</li>
+              <li>Classi</li>
+              <li>Materie</li>
+            </ul>
+          </ReactTooltip>
+          <div className="uploadBottoni">
+            <button
+              className="custom-file-upload"
+              type="button"
+              onClick={() => document.getElementById("fileInput1").click()}
+            >
+              <input
+                id="fileInput1"
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              <FontAwesomeIcon
+                icon={file ? faFileExcel : faFileArrowUp}
+                style={{ color: file ? "#217346" : "#007BFF" }}
+              />{" "}
+              <span>{fileName} </span>
+            </button>
+          </div>
+          <Typography sx={{ fontFamily: "Poppins" }}>Carica il file contenente gli orari dei docenti{" "}<FontAwesomeIcon
+            icon={faCircleQuestion}
+            data-tooltip-id="professoriTip2"
+            style={{ cursor: "pointer", color: "#007BFF" }}
+          /></Typography>
+          <ReactTooltip id="professoriTip2" place="right" effect="solid">
+            <strong>Formato del file Excel:</strong>
+            <ul>
+              <li>Cognome e Nome (ordine alfabetico)</li>
+              <li>Classi</li>
+              <li>Ore buche segnate con X</li>
+            </ul>
+          </ReactTooltip>
+          <div className="uploadBottoni">
+            <button
+              className="custom-file-upload"
+              type="button"
+              onClick={() => document.getElementById("fileInput1").click()}
+            >
+              <input
+                id="fileInput1"
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              <FontAwesomeIcon
+                icon={file ? faFileExcel : faFileArrowUp}
+                style={{ color: file ? "#217346" : "#007BFF" }}
+              />{" "}
+              <span>{fileName} </span>
+            </button>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{ fontFamily: "Poppins" }} onClick={handleClose}>Annulla</Button>
+          <Button color="error" sx={{ fontFamily: "Poppins" }}>Aggiungi</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

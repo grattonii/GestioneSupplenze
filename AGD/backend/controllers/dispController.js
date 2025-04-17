@@ -31,19 +31,19 @@ export const salvaDisponibilita = (req, res) => {
 
   const { id, disponibilita } = req.body;
 
-  if (!idDocente || !disponibilita || typeof disponibilita !== 'object') {
-    return res.status(400).json({ error: 'Formato non valido: idDocente e disponibilita richiesti' });
+  if (!id || !disponibilita || typeof disponibilita !== 'object') {
+    return res.status(400).json({ error: 'Formato non valido: id e disponibilita richiesti' });
   }
 
   // Valorizza i dati esistenti
   let data = loadData();
 
   // Trova o aggiorna la disponibilità del docente
-  const index = data.findIndex(item => item.idDocente === idDocente);
+  const index = data.findIndex(item => item.id === id);
   if (index !== -1) {
     data[index].disponibilita = disponibilita;
   } else {
-    data.push({ idDocente, disponibilita });
+    data.push({ id, disponibilita });
   }
 
   try {
