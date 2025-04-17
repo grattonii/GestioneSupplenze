@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useRef  } from "react";
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import React from "react";
+import {
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton
+} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import "../styles/Tabelle.css";
 
-function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
-
+function AssenzeTabella({ rows }) {
   return (
     <TableContainer
       component={Paper}
       sx={{
         maxWidth: "1200px",
         margin: "auto",
-        marginBottom: 15,
         borderRadius: 2,
         boxShadow: 3,
       }}
@@ -27,7 +34,7 @@ function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
           }}
         >
           <TableRow>
-            {["Docente", "Data", "Motivazione", "Azione"].map((header) => (
+            {["Data", "Docente", "Motivo", "Note", "Azione"].map((header) => (
               <TableCell
                 key={header}
                 sx={{
@@ -52,19 +59,10 @@ function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
           }}
         >
           {rows.length === 0 ? (
-            <TableRow
-              sx={{
-                display: "table",
-                tableLayout: "fixed",
-                width: "100%",
-              }}
-            >
-              <TableCell colSpan={4} sx={{ textAlign: "center", padding: 3 }}>
-                <Typography
-                  variant="h6"
-                  sx={{ fontSize: "1.2rem", fontWeight: 500 }}
-                >
-                  Nessuna richiesta disponibile al momento.
+            <TableRow sx={{ display: "table", width: "100%", tableLayout: "fixed" }}>
+              <TableCell colSpan={5} sx={{ textAlign: "center", padding: 3 }}>
+                <Typography variant="h6" sx={{ fontSize: "1.1rem", fontWeight: 500 }}>
+                  Nessun richiesta disponibile al momento.
                 </Typography>
               </TableCell>
             </TableRow>
@@ -76,34 +74,32 @@ function AssenzeTabella({ rows, acceptSubstitution, rejectSubstitution }) {
                   display: "table",
                   tableLayout: "fixed",
                   width: "100%",
-                  transition: "background 0.2s",
+                  transition: "background-color 0.2s",
                   "&:hover": {
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#f9f9f9",
                   },
                 }}
               >
-                <TableCell
-                  sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}
-                >
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>
+                  {row.date}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>
                   {row.docente}
                 </TableCell>
-                <TableCell
-                  sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}
-                >
-                  {row.data}
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>
+                  {row.reason}
                 </TableCell>
-                <TableCell
-                  sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}
-                >
-                  {row.motivazione}
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 600 }}>
+                  {row.note || "Nessuna nota"}
                 </TableCell>
-                <TableCell
-                  sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}
-                >
-                  <IconButton color="success" onClick={() => acceptSubstitution(row)}>
+                <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
+                  <IconButton
+                    color="success"
+                    onClick={() => handleAcceptAvailability(sub.date, sub.time, sub.class)}
+                  >
                     <CheckIcon />
                   </IconButton>
-                  <IconButton color="error" onClick={() => rejectSubstitution(row)}>
+                  <IconButton color="error" onClick={() => rejectSubstitution(sub)}>
                     <CloseIcon />
                   </IconButton>
                 </TableCell>

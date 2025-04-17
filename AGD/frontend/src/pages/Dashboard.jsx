@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaChalkboardTeacher, FaUsers, FaClipboardList, FaChartBar, FaRegCalendarAlt } from "react-icons/fa";
@@ -9,11 +9,37 @@ import ReportTabella from "../components/ReportTabella.jsx";
 import DisponibilitaTabellaMini from "../components/DisponibilitaTabellaMini.jsx";
 import AssenzeTabellaMini from "../components/AssenzeTabellaMini.jsx";
 import StoricoTabellaMini from "../components/StoricoTabella.jsx";
+import { fetchWithRefresh } from "../utils/api";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [assenze, setAssenze] = useState([]);
 
-  // Dati di esempio per i widget
+  useEffect(() => {
+    fetchAssenze();
+  }, []);
+
+  const fetchAssenze = async () => {
+    const token = sessionStorage.getItem("accessToken");
+
+    try {
+      const response = await fetchWithRefresh("http://localhost:5000/assenze/docenti", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAssenze(data);
+      } else {
+        console.error("Errore durante il recupero delle assenze");
+      }
+    } catch (error) {
+      console.error("Errore di rete:", error);
+    }
+  };
+
   const supplenzeOggi = 5;
   const supplenzeInAttesa = 2;
   const ultimeSupplenze = [
@@ -36,12 +62,6 @@ function Dashboard() {
     { docente: "Mario Rossi", disponibilità: "8", pagamento: "100" },
     { docente: "Luca Bianchi", disponibilità: "6", pagamento: "80" },
     { docente: "Anna Verdi", disponibilità: "10", pagamento: "120" },
-  ];
-
-  const assenzeDocenti = [
-    { docente: "Mario Rossi", data: "31-05-2025", motivazione: "salute" },
-    { docente: "Luca Bianchi", data: "31-05-2025", motivazione: "salute" },
-    { docente: "Anna Verdi", data: "31-05-2025", motivazione: "famiglia" },
   ];
 
   const totaleDocentiDisponibili = docentiDisponibiliOggi.length;
@@ -103,10 +123,14 @@ function Dashboard() {
                 <h2 className="titolo">
                   GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
                 </h2>
+                <ul className="widget-list">
+                  <li>Richieste di assenza totali: {assenze.length}</li>
+                  <li>Richieste in attesa: {assenze.filter(assenza => !assenza.accettata).length}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultime 3 richieste:</h3>
-                <AssenzeTabellaMini rows={assenzeDocenti} />
+                <AssenzeTabellaMini rows={assenze.slice(0,3)} />
               </div>
             </motion.div>
 

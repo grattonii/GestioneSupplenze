@@ -62,14 +62,14 @@ function Impostazioni() {
             sessionStorage.removeItem("accessToken");
             navigate("/");
           } else {
-            toast.error("Errore nel caricamento degli account");
+            toast.error("Errore nel caricamento degli account", { position: "top-center" });
           }
           return;
         }
 
         setUser(data.Users);
       } catch (err) {
-        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        toast.error("Sessione scaduta. Effettua di nuovo il login.", { position: "top-center" });
         sessionStorage.removeItem("accessToken");
         navigate("/");
       }
@@ -115,7 +115,7 @@ function Impostazioni() {
         const data = await res.json();
 
         if (!data || typeof data !== "object") {
-          toast.error("Errore nel caricamento degli orari.");
+          toast.error("Errore nel caricamento degli orari.", { position: "top-center" });
           return;
         }
 
@@ -130,7 +130,7 @@ function Impostazioni() {
 
       } catch (error) {
         console.error("Errore nel recupero degli orari:", error);
-        toast.error("Sessione scaduta. Effettua di nuovo il login.");
+        toast.error("Sessione scaduta. Effettua di nuovo il login.", { position: "top-center" });
         sessionStorage.removeItem("accessToken");
         navigate("/");
       }

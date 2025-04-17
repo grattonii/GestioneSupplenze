@@ -29,9 +29,6 @@ app.use("/root", rootRoutes);
 app.use("/orari", orariRoutes);
 app.use("/admin", adminRoutes);
 app.use("/supplenze", subRoutes);
-app.use("/api/assenze", asseRoutes);
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
+app.use("/assenze", asseRoutes);
 
 app.listen(5000, () => console.log("Server in ascolto sulla porta 5000"));

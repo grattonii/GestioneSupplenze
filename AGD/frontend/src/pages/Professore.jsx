@@ -7,11 +7,13 @@ import "../styles/Dashboard.css";
 import Navbar from "../components/NavbarProf.jsx";
 import WeeklySchedule from "../components/WeeklySchedule.jsx";
 import { FaCalendarWeek, FaCalendarCheck } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Professore() {
   const [schedule, setSchedule] = useState({});
   const [substitutions, setSubstitutions] = useState([]);
-  const [absenceNote, setabsenceNote] = useState([]);
+  const [absenceNote, setabsenceNote] = useState("");
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
   const [disponibilitaAccettate, setDisponibilitaAccettate] = useState([]);
@@ -41,7 +43,7 @@ function Professore() {
   const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
 
-    const token = sessionStorage.getItem("accessToken"); // Ottieni il token dal sessionStorage
+    const token = sessionStorage.getItem("accessToken");
 
     const absenceData = {
       date: absenceDate,
@@ -50,7 +52,7 @@ function Professore() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/assenze", {
+      const response = await fetch("http://localhost:5000/assenze/docente", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,19 +61,20 @@ function Professore() {
         body: JSON.stringify(absenceData),
       });
 
+      console.log(response);
+
       if (response.ok) {
         console.log("Richiesta assenza inviata con successo:", absenceData);
-        alert("Richiesta assenza inviata con successo!");
         setAbsenceDate("");
         setAbsenceReason("");
         setabsenceNote("");
       } else {
         console.error("Errore durante l'invio della richiesta di assenza");
-        alert("Errore durante l'invio della richiesta di assenza.");
+        toast.error("Errore durante l'invio della richiesta di assenza.", { position: "top-center" });
       }
     } catch (error) {
       console.error("Errore di rete:", error);
-      alert("Errore di rete durante l'invio della richiesta di assenza.");
+      toast.error("Errore di rete durante l'invio della richiesta di assenza.", { position: "top-center" });
     }
   };
 
@@ -115,6 +118,7 @@ function Professore() {
   
   return (
     <div style={{ fontFamily: "Poppins, sans-serif" }}>
+      <ToastContainer/>
       <Navbar />
       <Typography variant="h3" align="center" gutterBottom className="title">
         Dashboard Professore
