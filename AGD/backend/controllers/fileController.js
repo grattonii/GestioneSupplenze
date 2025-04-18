@@ -10,7 +10,7 @@ const { Workbook } = pkg;
 const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
 const MATERIE_FILE = './data/materie.txt';
-const CLASSI_FILE = './data/classi.txt';
+const CLASSI_FILE = './data/classi.json';
 
 function loadMaterie() {
     if (!existsSync(MATERIE_FILE)) {
@@ -89,7 +89,12 @@ export const generateAccounts = (req, docenti) => {
 };
 
 export const uploadDocenti = async (req, res) => {
-    const filePath = req.file.path;
+    const fileDocenti = req.files['fileDocenti']?.[0];
+    const fileOrari = req.files['fileOrari']?.[0];
+
+    if (!fileDocenti || !fileOrari) {
+        return res.status(400).json({ message: "Entrambi i file sono richiesti: file docenti e file orari." });
+    }
 
     try {
         const materieList = loadMaterie();
@@ -151,10 +156,37 @@ export const uploadDocenti = async (req, res) => {
         generateAccounts(req, docenti);
 
         try {
-            writeFileSync(CLASSI_FILE, [...classiUniche].sort().join('\n'));
+            const token = req.headers.authorization?.split(" ")[1];
+            const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+            const idAdmin = decodedToken?.id;
+
+            if (!idAdmin) {
+                return res.status(401).json({ message: "Token non valido: ID admin non trovato." });
+            }
+
+            const nuoveClassi = [...classiUniche].sort();
+
+            let classiData = [];
+            if (existsSync(CLASSI_FILE)) {
+                classiData = JSON.parse(readFileSync(CLASSI_FILE));
+            }
+
+            const index = classiData.findIndex(entry => entry.idAdmin === idAdmin);
+
+            if (index >= 0) {
+                // Unione e rimozione duplicati
+                const classiSet = new Set([...classiData[index].classi, ...nuoveClassi]);
+                classiData[index].classi = Array.from(classiSet).sort();
+            } else {
+                classiData.push({ idAdmin, classi: nuoveClassi });
+            }
+
+            writeFileSync(CLASSI_FILE, JSON.stringify(classiData, null, 2));
         } catch (err) {
-            console.error("Errore durante la scrittura di classi.txt:", err);
+            console.error("Errore durante la scrittura di classi.json:", err);
         }
+
+        OrarioDocente(req, docenti, fileOrari); // Chiamata alla funzione per caricare gli orari
 
         res.json({ success: true, message: 'Dati docenti caricati con successo!' });
 
@@ -165,3 +197,7 @@ export const uploadDocenti = async (req, res) => {
         }
     }
 };
+
+export const OrarioDocente = async (req, res) => {
+    
+}

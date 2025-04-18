@@ -3,12 +3,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
 import 'dayjs/locale/it.js';
+import jwt from "jsonwebtoken";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DISP_FILE = path.join(__dirname, "../data/disp.json");
 const DOCENTI_FILE = path.join(__dirname, "../data/docenti.json");
-const CLASSI_FILE = path.join(__dirname, "../data/classi.txt");
+const CLASSI_FILE = path.join(__dirname, "../data/classi.json");
 
 export const Disponibili = async (req, res) => {
     const { data, ora, classe } = req.query;
@@ -59,15 +60,27 @@ export const getClassi = (req, res) => {
         return res.status(500).json({ error: "File non trovato" });
     }
 
-    const classiRaw = readFileSync(CLASSI_FILE, "utf8")
-        .split("\n")
-        .map(line => line.trim())
-        .filter(Boolean);
+    const token = req.headers.authorization?.split(' ')[1]; // Estrarre il token dall'header
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Token mancante' });
+    }
 
-    const classi = classiRaw.map(classe => ({
-        id: classe,
-        nome: classe
-    }));
+    try {
+        // Decodifica il token
+        const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+        const idAdmin = decodedToken?.id;
 
-    res.json(classi);
+        if (!idAdmin) {
+            return res.status(400).json({ success: false, message: 'ID non trovato nel token' });
+        }
+
+        const classiData = JSON.parse(readFileSync(CLASSI_FILE));
+        const classi = classiData.find(entry => entry.idAdmin === idAdmin)?.classi || [];
+
+        res.json(classi.map(c => ({ id: c, nome: c })));
+    }
+    catch (error) {
+        console.error('Errore durante la lettura del file classi.json:', error);
+        res.status(500).json({ error: "Errore durante la lettura del file classi.json" });
+    }
 };

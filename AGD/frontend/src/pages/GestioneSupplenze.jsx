@@ -142,6 +142,8 @@ function GestioneSupplenze() {
       );
 
       const dataRes = await res.json();
+      console.log("Docenti disponibili:", dataRes);
+
       if (Array.isArray(dataRes)) {
         setSuggestioniDocenti(dataRes);
       } else {
@@ -203,7 +205,7 @@ function GestioneSupplenze() {
           </FormControl>
           <Autocomplete
             options={Classi}
-            getOptionLabel={(option) => typeof option === "string" ? option : option.nome}
+            getOptionLabel={(option) => option}
             onChange={(e, value) => {
               setNuovaSupplenza({ ...nuovaSupplenza, classe: value });
             }}
@@ -230,7 +232,7 @@ function GestioneSupplenze() {
                   padding: "8px 16px",
                 }}
               >
-                {typeof option === "string" ? option : option.nome}
+                {option}
               </li>
             )}
           />

@@ -9,14 +9,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel, faFileArrowUp, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 
 function GestioneFile() {
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("Carica file");
+  const [fileDocenti, setFileDocenti] = useState(null);
+  const [fileOrari, setFileOrari] = useState(null);
+  const [fileNameDocenti, setFileNameDocenti] = useState("Carica file");
+  const [fileNameOrari, setFileNameOrari] = useState("Carica file");
   const navigate = useNavigate();
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event, type) => {
     if (event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-      setFileName(event.target.files[0].name);
+      const file = event.target.files[0];
+      if (type === "docenti") {
+        setFileDocenti(file);
+        setFileNameDocenti(file.name);
+      } else if (type === "orari") {
+        setFileOrari(file);
+        setFileNameOrari(file.name);
+      }
     }
   };
 
@@ -32,24 +40,27 @@ function GestioneFile() {
       }
     }
 
-    if (!file) {
-      toast.warn("Seleziona un file prima di procedere!", { position: "top-center" });
+    if (!fileDocenti || !fileOrari) {
+      toast.warn("Seleziona entrambi i file prima di procedere!", { position: "top-center" });
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("fileDocenti", fileDocenti);
+    formData.append("fileOrari", fileOrari);
 
     try {
       await axios.post("http://localhost:5000/files/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" ,
-                  'Authorization': `Bearer ${token}`},
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${token}`
+        },
       });
 
       navigate("/gestione-orari");
     } catch (error) {
       if (error.response)
-        toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" }); // Errore specifico dal backend
+        toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" });
       else
         toast.error("Errore di connessione al server!", { position: "top-center" });
     }
@@ -57,7 +68,7 @@ function GestioneFile() {
 
   return (
     <>
-      <ToastContainer/>
+      <ToastContainer />
       <div id="FilesBox">
         <div id="titolo">
           <h1>Caricamento File</h1>
@@ -66,7 +77,7 @@ function GestioneFile() {
         <form onSubmit={handleUpload}>
           <div id="formFiles">
             <h3>
-              <span> Carica il file contenente i dati dei docenti </span>
+              <span>Carica il file contenente i dati dei docenti{" "}</span>
               <FontAwesomeIcon
                 icon={faCircleQuestion}
                 data-tooltip-id="professoriTip"
@@ -89,25 +100,25 @@ function GestioneFile() {
               <button
                 className="custom-file-upload"
                 type="button"
-                onClick={() => document.getElementById("fileInput1").click()}
+                onClick={() => document.getElementById("fileInputDocenti").click()}
               >
                 <input
-                  id="fileInput1"
+                  id="fileInputDocenti"
                   type="file"
                   accept=".xls,.xlsx"
-                  onChange={handleFileChange}
+                  onChange={(e) => handleFileChange(e, "docenti")}
                   style={{ display: "none" }}
                 />
                 <FontAwesomeIcon
-                  icon={file ? faFileExcel : faFileArrowUp}
-                  style={{ color: file ? "#217346" : "#007BFF" }}
-                />{" "}
-                <span>{fileName} </span>
+                  icon={fileDocenti ? faFileExcel : faFileArrowUp}
+                  style={{ color: fileDocenti ? "#217346" : "#007BFF" }}
+                />
+                <span>{" "}{fileNameDocenti}</span>
               </button>
             </div>
 
             <h3>
-              <span> Carica il file contenente gli orari dei docenti </span>
+              <span>Carica il file contenente gli orari dei docenti{" "}</span>
               <FontAwesomeIcon
                 icon={faCircleQuestion}
                 data-tooltip-id="professoriTip2"
@@ -127,29 +138,28 @@ function GestioneFile() {
               <button
                 className="custom-file-upload"
                 type="button"
-                onClick={() => document.getElementById("fileInput1").click()}
+                onClick={() => document.getElementById("fileInputOrari").click()}
               >
                 <input
-                  id="fileInput1"
+                  id="fileInputOrari"
                   type="file"
                   accept=".xls,.xlsx"
-                  onChange={handleFileChange}
+                  onChange={(e) => handleFileChange(e, "orari")}
                   style={{ display: "none" }}
                 />
                 <FontAwesomeIcon
-                  icon={file ? faFileExcel : faFileArrowUp}
-                  style={{ color: file ? "#217346" : "#007BFF" }}
-                />{" "}
-                <span>{fileName} </span>
+                  icon={fileOrari ? faFileExcel : faFileArrowUp}
+                  style={{ color: fileOrari ? "#217346" : "#007BFF" }}
+                />
+                <span>{" "}{fileNameOrari}</span>
               </button>
             </div>
-
             <div id="containerPulsanti" className="side">
               <button type="submit" className="side">Avanti</button>
             </div>
           </div>
-        </form>
-      </div>
+        </form >
+      </div >
     </>
   );
 }

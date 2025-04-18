@@ -9,7 +9,7 @@
     "attivo": true,
     "id": "XED",
     "username": "GG9781351T",
-    "password": "$2b$10$fbjEYhn9o38ZgH6CimTpPeRje/Y.l59GF5pERYt1tjXtdw5JJE6Iu",
+    "password": "$2b$10$gX9onSwuaewvpfnxdi2mbucdXzf1YaPqNzsw0XkCSi9Uvm3gC1z4C",
     "emailReferente": "michele.tarantino@isitgo.it",
     "nomeScuola": "Galileo Galilei",
     "tipologia": "Tecnico",
@@ -20,19 +20,19 @@
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "DTG",
-    "username": "MR1459166D",
-    "password": "$2b$10$UV6vt80a1.TZMc96l5/0c.RE7melEertRdgocwr.TeoeW/Lk7CBLm",
+    "id": "A8R",
+    "username": "MR3723889D",
+    "password": "$2b$10$aAYDaPG5k7FH7myJEnWEXeuLablZeRTqu//JpN0AHtW8CNNQ.k45y",
     "email": "mario.rossi@example.com",
     "role": "docente",
-    "firstLogin": false
+    "firstLogin": true
   },
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "HE1",
-    "username": "LV7171147D",
-    "password": "$2b$10$maW.wct6mZBz/XCbjqEZweJoeZulj2pC3CIQrO4pyIVumRVBxTMb.",
+    "id": "QTW",
+    "username": "LV9058696D",
+    "password": "$2b$10$M.Zzl2BZ47hHE6uY/5UBQuKaosg24nDqoUtwBKPdmjzolhhI9OMse",
     "email": "luigi.verdi@example.com",
     "role": "docente",
     "firstLogin": true
@@ -40,9 +40,9 @@
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "P6Q",
-    "username": "GB4170226D",
-    "password": "$2b$10$CWaHNm3vcdqULq1L7JnYKeffSXDLc42VX6n1nEU42JI4YmqIEn2O2",
+    "id": "GVF",
+    "username": "GB4724369D",
+    "password": "$2b$10$MXNQvvhUBt6QTjIQSKJEEeaLelAcZoeiy.KcgMmeOz.sJLjNGnlVW",
     "email": "giulia.bianchi@example.com",
     "role": "docente",
     "firstLogin": true
@@ -50,9 +50,9 @@
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "MCE",
-    "username": "FN5610142D",
-    "password": "$2b$10$6ba3OuroGQy0iub8o/Bxju9.XBno4GsRO55iVximQrcEYbWXi7nvO",
+    "id": "65Q",
+    "username": "FN7058441D",
+    "password": "$2b$10$Yr8AB3ExdWoVjJSJIOnvO..zrsfZ2LkJia3cba4hHVjQUBgDoG7Ke",
     "email": "francesca.neri@example.com",
     "role": "docente",
     "firstLogin": true
