@@ -89,7 +89,7 @@ function SetAdmin() {
       console.log("Token decodificato:", decodedToken);  // Aggiungi un log per il token decodificato
 
       if (decodedToken?.role == "admin") {
-        navigate("/gestione-file");
+        navigate("/gestione-orari");
       } else {
         navigate("/disponibilita-docente");
       }

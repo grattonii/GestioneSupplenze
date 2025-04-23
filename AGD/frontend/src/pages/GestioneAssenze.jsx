@@ -36,7 +36,7 @@ function GestioneAssenze() {
       <Navbar />
       <h1 className="title">Gestione Assenze</h1>
       <h3 className="spiegazione">Gestisci le richieste di assenza dei docenti</h3>
-      <AssenzeTabella rows={assenze} />
+      <AssenzeTabella rows={assenze} setRows={setAssenze} />
     </>
   );
 }

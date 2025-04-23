@@ -81,7 +81,7 @@ function GestioneOrari() {
       .then((response) => response.json())
       .then((data) => {
         console.log('Orari salvati:', data);
-        navigate("/dashboard");
+        navigate("/gestione-file");
       })
       .catch((error) => {
         console.error("Errore durante l'invio:", error);

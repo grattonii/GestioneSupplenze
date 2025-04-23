@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "idAssenza": "SUF3",
+    "id": "VS8",
+    "idAdmin": "XED",
+    "date": "2025-05-29",
+    "reason": "Salute",
+    "note": "",
+    "accettata": true
+  }
+]

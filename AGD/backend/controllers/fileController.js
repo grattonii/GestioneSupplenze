@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import pkg from 'exceljs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import fs from 'fs';
 
 dotenv.config();
 const { Workbook } = pkg;
@@ -11,6 +12,8 @@ const USERS_FILE = './data/users.json';
 const DOCENTI_FILE = './data/docenti.json';
 const MATERIE_FILE = './data/materie.txt';
 const CLASSI_FILE = './data/classi.json';
+const ORARIDOCENTI_FILE = './data/orariDocenti.json';
+const ORARI_FILE = './data/orario.json';
 
 function loadMaterie() {
     if (!existsSync(MATERIE_FILE)) {
@@ -96,6 +99,8 @@ export const uploadDocenti = async (req, res) => {
         return res.status(400).json({ message: "Entrambi i file sono richiesti: file docenti e file orari." });
     }
 
+    const { path: filePath } = fileDocenti;
+
     try {
         const materieList = loadMaterie();
         const workbook = new Workbook();
@@ -109,8 +114,8 @@ export const uploadDocenti = async (req, res) => {
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
                 const id = generateUniqueID();
-                const nome = row.getCell(1).text.trim();
-                const cognome = row.getCell(2).text.trim();
+                const cognome = row.getCell(1).text.trim();
+                const nome = row.getCell(2).text.trim();
                 const email = row.getCell(3).text.trim();
                 const numero = row.getCell(4).text.trim();
                 const materie = row.getCell(5).text.trim();
@@ -186,9 +191,17 @@ export const uploadDocenti = async (req, res) => {
             console.error("Errore durante la scrittura di classi.json:", err);
         }
 
-        OrarioDocente(req, docenti, fileOrari); // Chiamata alla funzione per caricare gli orari
+        const esitoOrario = await OrarioDocente(req, docenti, fileOrari);
 
-        res.json({ success: true, message: 'Dati docenti caricati con successo!' });
+        if (esitoOrario?.error) {
+            return res.status(esitoOrario.status || 500).json({
+                message: 'Errore nel file orari.',
+                dettagli: esitoOrario.dettagli || []
+            });
+        }
+
+        return res.json({ success: true, message: 'Dati docenti caricati con successo!' });
+
 
     } catch (error) {
         console.error('Errore nel caricamento:', error);
@@ -198,6 +211,186 @@ export const uploadDocenti = async (req, res) => {
     }
 };
 
-export const OrarioDocente = async (req, res) => {
-    
-}
+const espandiGiorni = range => {
+    const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+    const abbreviazioni = ["lun", "mar", "mer", "gio", "ven", "sab"];
+
+    const [start, end] = range.split('-').map(s => s.trim().toLowerCase());
+    const startIndex = abbreviazioni.indexOf(start);
+    const endIndex = abbreviazioni.indexOf(end);
+
+    if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) return [];
+
+    return giorniSettimana.slice(startIndex, endIndex + 1);
+};
+
+export const OrarioDocente = async (req, docenti, fileOrari) => {
+    const { path: filePath } = fileOrari;
+    const workbook = new Workbook();
+
+    try {
+        await workbook.xlsx.readFile(filePath);
+    } catch (err) {
+        console.error("Errore durante la lettura del file Excel:", err);
+        return { error: true, status: 400, message: "Il file orari non è leggibile o non è un file Excel valido." };
+    }
+
+    const worksheet = workbook.getWorksheet(1);
+    if (!worksheet) {
+        return { error: true, status: 400, message: "Il foglio Excel non contiene dati." };
+    }
+
+    // Carica le fasce orarie dell'admin dal file orario.json
+    let fasceOrarieAdmin;
+    let giorniEspansi = [];
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+        const idAdmin = decodedToken?.id;
+
+        if (!idAdmin) throw new Error("ID amministratore non trovato nel token");
+
+        const orariData = fs.existsSync(ORARI_FILE) ? JSON.parse(fs.readFileSync(ORARI_FILE, "utf8")) : [];
+        const orariAdmin = orariData.find(o => o.idAdmin === idAdmin);
+
+        if (!orariAdmin || !orariAdmin.orari) {
+            return { error: true, status: 400, message: "Fasce orarie non trovate per questo amministratore." };
+        }
+
+        const { inizioPrimaLezione, fineUltimaLezione, durataLezioni, giorniLezione } = orariAdmin.orari;
+        giorniEspansi = espandiGiorni(giorniLezione); // ["Lunedì", ..., "Sabato"]
+
+
+        const convertiInMinuti = orario => {
+            const [ore, minuti] = orario.split(":").map(Number);
+            return ore * 60 + minuti;
+        };
+
+        const durataLezione = parseInt(durataLezioni, 10);
+        const inizio = convertiInMinuti(inizioPrimaLezione);
+        const fine = convertiInMinuti(fineUltimaLezione);
+        const numeroOre = Math.floor((fine - inizio) / durataLezione);
+        fasceOrarieAdmin = { giorni: giorniLezione, ore: numeroOre };
+
+    } catch (error) {
+        console.error("Errore durante il recupero delle fasce orarie:", error);
+        return { error: true, status: 400, message: "Impossibile validare le fasce orarie dell’amministratore." };
+    }
+
+    // Mappa colonne-giorni
+    const giorniMap = [];
+    const giornoRiga = worksheet.getRow(1);
+    const colCount = worksheet.columnCount;
+    let col = 2;
+    let giornoCorrente = null;
+    let colStart = col;
+
+    while (col <= colCount + 1) {
+        const cell = col <= colCount ? giornoRiga.getCell(col) : { text: '' };
+        const giorno = cell.text.trim();
+
+        if (giorno && giorno !== giornoCorrente) {
+            if (giornoCorrente !== null) {
+                giorniMap.push({ giorno: giornoCorrente, colStart, colEnd: col - 1 });
+            }
+            giornoCorrente = giorno;
+            colStart = col;
+        }
+
+        col++;
+    }
+
+    if (giornoCorrente !== null) {
+        giorniMap.push({ giorno: giornoCorrente, colStart, colEnd: col - 1 });
+    }
+
+    // Verifica struttura file
+    const giorniNelFile = giorniMap.map(g => g.giorno);
+    console.log("Giorni attesi:", giorniEspansi);
+    console.log("Giorni trovati nel file:", giorniNelFile);
+
+    if (
+        giorniNelFile.length !== giorniEspansi.length ||
+        !giorniEspansi.every(g => giorniNelFile.includes(g))
+    ) {
+        return {
+            error: true,
+            status: 400,
+            message: "I giorni presenti nel file orari non corrispondono a quelli configurati dall’amministratore.",
+            dettagli: { attesi: giorniEspansi, trovati: giorniNelFile }
+        };
+    }
+
+    const numOreNelFile = giorniMap[0]?.colEnd - giorniMap[0]?.colStart + 1;
+    console.log("Colonne nel file per giorno:", numOreNelFile);
+    console.log("Ore calcolate dal config admin:", fasceOrarieAdmin.ore);
+
+    if (numOreNelFile !== fasceOrarieAdmin.ore) {
+        return {
+            error: true,
+            status: 400,
+            message: `Il numero di ore per giorno (${numOreNelFile}) non corrisponde alle fasce orarie configurate (${fasceOrarieAdmin.ore}).`
+        };
+    }
+
+    const orariPerDocente = [];
+    const errori = [];
+
+    worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return;
+
+        const nomeCompleto = row.getCell(1).text.trim();
+        if (!nomeCompleto) {
+            console.warn(`Nome docente mancante alla riga ${rowNumber}`);
+            return;
+        }
+
+        const docente = docenti.find(d =>
+            `${d.cognome} ${d.nome}`.toLowerCase() === nomeCompleto.toLowerCase()
+        );
+
+        if (!docente) {
+            console.warn(`Docente non presente nei dati caricati: ${nomeCompleto} (riga ${rowNumber})`);
+            return;
+        }
+
+        const orario = {};
+        const classiOrario = new Set();
+
+        for (const g of giorniMap) {
+            orario[g.giorno] = [];
+            for (let col = g.colStart; col <= g.colEnd; col++) {
+                const cell = row.getCell(col);
+                const value = cell.text.trim();
+                if (value) {
+                    orario[g.giorno].push(value);
+                    classiOrario.add(value);
+                }
+            }
+        }
+
+        const classiNonValide = [...classiOrario]
+            .filter(classe => !docente.classi.includes(classe))  // Esclude le classi che il docente ha
+            .filter(classe => classe !== 'X'); // Esclude le ore buche (X) e valori undefined/null
+        if (classiNonValide.length > 0) {
+            errori.push(`Errore nelle classi per il docente "${nomeCompleto}" alla riga ${rowNumber}: ${classiNonValide.join(', ')}`);
+        }
+
+        orariPerDocente.push({
+            id: docente.id,
+            giorni: orario,
+        });
+    });
+
+    if (errori.length > 0) {
+        return { error: true, status: 400, dettagli: errori };
+    }
+
+    try {
+        writeFileSync(ORARIDOCENTI_FILE, JSON.stringify(orariPerDocente, null, 2));
+        console.log('Orari dei docenti salvati correttamente!');
+    } catch (err) {
+        console.error("Errore durante il salvataggio degli orari:", err);
+        return { error: true, status: 500, message: "Errore durante il salvataggio del file orari." };
+    }
+};

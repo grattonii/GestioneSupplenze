@@ -2,11 +2,30 @@ import { existsSync, writeFileSync, readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import jwt from "jsonwebtoken";
+import { CreazioneSub } from "../utils/GestioneSupplenze.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const assenzeFilePath = path.join(__dirname, "../data/assenze.json");
-const USERS_FILE = path.join(__dirname,"../data/users.json");
+const USERS_FILE = path.join(__dirname, "../data/users.json");
+
+function UniqueID() {
+    if (!existsSync(assenzeFilePath)) return new Set();
+
+    const prob = JSON.parse(readFileSync(assenzeFilePath));
+    let existingIDs = new Set(prob.map(prob => prob.id));
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let newID;
+    do {
+        newID = "";
+        for (let i = 0; i < 4; i++) {
+            newID += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+    } while (existingIDs.has(newID));
+
+    return newID;
+}
 
 // Funzione per leggere il file JSON
 const readAssenze = () => {
@@ -57,6 +76,7 @@ export const assenzaDocente = (req, res) => {
 
         const assenze = readAssenze();
         const newAbsence = {
+            idAssenza: UniqueID(),
             id: id,
             idAdmin: user.idAdmin,
             date,
@@ -81,3 +101,23 @@ export const Assenze = (req, res) => {
     const filteredAssenze = assenze.filter((assenza) => assenza.idAdmin === req.user.id);
     res.json(filteredAssenze);
 };
+
+export const assenzaAccettata = (req, res) => {
+    const { idAssenza } = req.params;
+    const assenze = readAssenze();
+
+    const assenzaIndex = assenze.findIndex((assenza) => assenza.idAssenza === idAssenza);
+
+    if (assenzaIndex === -1) {
+        return res.status(404).json({ error: "Assenza non trovata." });
+    }
+
+    assenze[assenzaIndex].accettata = true;
+    writeAssenze(assenze);
+
+    const result = CreazioneSub(req);  // ora non invia la risposta direttamente
+    res.json({
+        message: "Assenza accettata con successo.",
+        ...result
+    });
+}

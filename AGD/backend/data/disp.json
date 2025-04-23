@@ -1,1 +1,79 @@
-[]
+[
+  {
+    "id": "VS8",
+    "disponibilita": {
+      "Lunedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "09:17 - 10:09"
+          },
+          {
+            "fascia": "12:08 - 13:00"
+          }
+        ]
+      },
+      "Martedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Mercoledì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          }
+        ]
+      },
+      "Giovedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "13:00 - 13:52"
+          }
+        ]
+      },
+      "Venerdì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Sabato": {
+        "attivo": false,
+        "orari": []
+      }
+    }
+  },
+  {
+    "id": "Y9Q",
+    "disponibilita": {
+      "Lunedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Martedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          }
+        ]
+      },
+      "Mercoledì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Giovedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Venerdì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Sabato": {
+        "attivo": false,
+        "orari": []
+      }
+    }
+  }
+]

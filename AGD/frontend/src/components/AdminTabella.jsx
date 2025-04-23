@@ -133,7 +133,6 @@ function AdminTabella({ rows, setRows }) {
       return row;
     });
 
-    // Aggiorna lo stato a livello di UI
     setRows(updatedRows); 
 
     try {

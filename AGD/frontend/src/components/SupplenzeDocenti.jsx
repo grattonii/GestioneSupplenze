@@ -7,36 +7,11 @@ import { fetchWithRefresh } from "../utils/api";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-function SupplenzeDocenti({ rows, setRows, setDisponibilitaAccettates }) {
+function SupplenzeDocenti({ rows, setRows, setDisponibilitaAccettate }) {
     const rejectSubstitution = (sub) => {
         // Rimuovi la supplenza dalla lista delle supplenze in attesa
         const updatedSubstitutions = rows.filter((s) => s.id !== sub.id);
         setRows(updatedSubstitutions);
-    };
-
-    const acceptSubstitution = (sub) => {
-        const dayOfWeek = new Date(
-            sub.date.split(" ")[1] // Ottieni il giorno della settimana
-        ).toLocaleDateString("it-IT", { weekday: "long" });
-
-        setSchedule((prevSchedule) => {
-            const updatedSchedule = { ...prevSchedule };
-
-            if (!updatedSchedule[dayOfWeek]) {
-                updatedSchedule[dayOfWeek] = []; // Se il giorno non esiste, inizializzalo
-            }
-
-            // Aggiungi l'orario solo se non è già presente
-            if (!updatedSchedule[dayOfWeek].includes(sub.time)) {
-                updatedSchedule[dayOfWeek] = [...updatedSchedule[dayOfWeek], sub.time];
-            }
-
-            return { ...updatedSchedule }; // Restituiamo un nuovo oggetto per forzare il re-render
-        });
-
-        setRows((prevSubstitutions) =>
-            prevSubstitutions.filter((s) => s.id !== sub.id)
-        );
     };
 
     const handleAcceptAvailability = (date, time, className) => {

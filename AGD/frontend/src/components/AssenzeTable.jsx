@@ -12,8 +12,34 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { fetchWithRefresh } from "../utils/api";
 
-function AssenzeTabella({ rows }) {
+function AssenzeTabella({ rows, setRows }) {
+  const rejectSubstitution = async(row) => {
+    // Rimuovi la supplenza dalla lista delle supplenze in attesa
+    const updatedSubstitutions = rows.filter((s) => s.idAssenza !== row.idAssenza);
+    setRows(updatedSubstitutions);
+  };
+
+  const handleAccept = async(idAssenza) => {
+    const response = await fetchWithRefresh(`http://localhost:5000/assenze/docente/${idAssenza}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+      
+    const data = await response.json();
+    if (data.success) {
+      // Rimuovi la supplenza dalla lista delle supplenze in attesa
+      const updatedSubstitutions = rows.filter((s) => s.idAssenza !== idAssenza);
+      setRows(updatedSubstitutions);
+    } else {
+      console.error("Errore nell'accettazione della supplenza:", data.message);
+    }
+  };
+
   return (
     <TableContainer
       component={Paper}
@@ -69,7 +95,7 @@ function AssenzeTabella({ rows }) {
           ) : (
             rows.map((row) => (
               <TableRow
-                key={row.id}
+                key={row.idAssenza}
                 sx={{
                   display: "table",
                   tableLayout: "fixed",
@@ -95,11 +121,11 @@ function AssenzeTabella({ rows }) {
                 <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                   <IconButton
                     color="success"
-                    onClick={() => handleAcceptAvailability(sub.date, sub.time, sub.class)}
+                    onClick={() => handleAccept(row.idAssenza)}
                   >
                     <CheckIcon />
                   </IconButton>
-                  <IconButton color="error" onClick={() => rejectSubstitution(sub)}>
+                  <IconButton color="error" onClick={() => rejectSubstitution(row)}>
                     <CloseIcon />
                   </IconButton>
                 </TableCell>

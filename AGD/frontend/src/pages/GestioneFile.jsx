@@ -57,10 +57,18 @@ function GestioneFile() {
         },
       });
 
-      navigate("/gestione-orari");
+      navigate("/dashboard");
     } catch (error) {
-      if (error.response)
-        toast.error(error.response.data.message || "Errore sconosciuto!", { position: "top-center" });
+      if (error.response?.data?.dettagli) {
+        const dettagli = error.response.data.dettagli;
+        if (Array.isArray(dettagli)) {
+          dettagli.forEach(msg =>
+            toast.error(msg, { position: "top-center" })
+          );
+        } else {
+          toast.error(typeof dettagli === 'string' ? dettagli : JSON.stringify(dettagli), { position: "top-center" });
+        }
+      }      
       else
         toast.error("Errore di connessione al server!", { position: "top-center" });
     }

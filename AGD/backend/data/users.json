@@ -9,7 +9,7 @@
     "attivo": true,
     "id": "XED",
     "username": "GG9781351T",
-    "password": "$2b$10$gX9onSwuaewvpfnxdi2mbucdXzf1YaPqNzsw0XkCSi9Uvm3gC1z4C",
+    "password": "$2b$10$9dv2kIISffpUyvGfuetDr.MFcLgDWvAuTauctUdsSLeN1fv9bdMSq",
     "emailReferente": "michele.tarantino@isitgo.it",
     "nomeScuola": "Galileo Galilei",
     "tipologia": "Tecnico",
@@ -20,29 +20,29 @@
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "A8R",
-    "username": "MR3723889D",
-    "password": "$2b$10$aAYDaPG5k7FH7myJEnWEXeuLablZeRTqu//JpN0AHtW8CNNQ.k45y",
+    "id": "VS8",
+    "username": "MR9710408D",
+    "password": "$2b$10$vy0MHUX0F0NDV0RpqAGzz..77k1qivHce8pONt3AWhljsz2.o1Ssi",
     "email": "mario.rossi@example.com",
     "role": "docente",
-    "firstLogin": true
+    "firstLogin": false
   },
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "QTW",
-    "username": "LV9058696D",
-    "password": "$2b$10$M.Zzl2BZ47hHE6uY/5UBQuKaosg24nDqoUtwBKPdmjzolhhI9OMse",
+    "id": "Y9Q",
+    "username": "LV2427290D",
+    "password": "$2b$10$d/oCkzvuJbnXsLcSPyB58ejZCzJVxzKIMXYP749hzX3b1Xcgo.yli",
     "email": "luigi.verdi@example.com",
     "role": "docente",
-    "firstLogin": true
+    "firstLogin": false
   },
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "GVF",
-    "username": "GB4724369D",
-    "password": "$2b$10$MXNQvvhUBt6QTjIQSKJEEeaLelAcZoeiy.KcgMmeOz.sJLjNGnlVW",
+    "id": "YPU",
+    "username": "GB1012620D",
+    "password": "$2b$10$qwOoYs6UrEk2Uox3mUXzQ.JTM17DAeHoFMCFcCCtzGro1xwDPUIuq",
     "email": "giulia.bianchi@example.com",
     "role": "docente",
     "firstLogin": true
@@ -50,9 +50,9 @@
   {
     "attivo": true,
     "idAdmin": "XED",
-    "id": "65Q",
-    "username": "FN7058441D",
-    "password": "$2b$10$Yr8AB3ExdWoVjJSJIOnvO..zrsfZ2LkJia3cba4hHVjQUBgDoG7Ke",
+    "id": "QAK",
+    "username": "FN9416476D",
+    "password": "$2b$10$IiBwL8a1dNJD/k3zxg/Oweyl70XQ9OxXEnVUTp.5lMNpezJMgFxlW",
     "email": "francesca.neri@example.com",
     "role": "docente",
     "firstLogin": true
