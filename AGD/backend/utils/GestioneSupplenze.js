@@ -112,7 +112,7 @@ export const CreazioneSub = (req) => {
             })
             .map(d => d.id);
 
-        const candidati = docenti.filter(d => disponibili.includes(d.id));
+        const candidati = docenti.filter(d => disponibili.includes(d.id) && d.id !== id);
 
         let supplente =
             candidati.find(d => d.classi.includes(classe)) ||

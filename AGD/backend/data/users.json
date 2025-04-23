@@ -1,60 +1,60 @@
 [
   {
     "id": "R1",
-    "username": "AGDagency",
-    "password": "$2b$10$rDYbp.vyAmV7Xz82C/iwp.HcezACe98Ha0drBSfSkx2Hb1eHALzSC",
+    "username": "GDAgency",
+    "password": "$2b$10$Gd.FKQkvbzngk2TUuOoOOueGf4ojP..HvmHUwnmjSONWNVgic5QKO",
     "role": "root"
   },
   {
     "attivo": true,
-    "id": "XED",
-    "username": "GG9781351T",
-    "password": "$2b$10$9dv2kIISffpUyvGfuetDr.MFcLgDWvAuTauctUdsSLeN1fv9bdMSq",
+    "id": "8TP",
+    "username": "GG6194630T",
+    "password": "$2b$10$bMCQ/16YK7S7EEqwLn2B.uFxeuj./gkpSS5OyJAYWV89YHB6rm1nW",
     "emailReferente": "michele.tarantino@isitgo.it",
     "nomeScuola": "Galileo Galilei",
     "tipologia": "Tecnico",
-    "codiceMeccanografico": "GOISS10201",
+    "codiceMeccanografico": "GOISS10234",
     "role": "admin",
     "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "XED",
-    "id": "VS8",
-    "username": "MR9710408D",
-    "password": "$2b$10$vy0MHUX0F0NDV0RpqAGzz..77k1qivHce8pONt3AWhljsz2.o1Ssi",
+    "idAdmin": "8TP",
+    "id": "1LT",
+    "username": "MR5888486D",
+    "password": "$2b$10$9GNTx94CHymyP4pDV0myYOztD3OydhhaFZw2nS0Uy9TFQP8FrqmvS",
     "email": "mario.rossi@example.com",
     "role": "docente",
     "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "XED",
-    "id": "Y9Q",
-    "username": "LV2427290D",
-    "password": "$2b$10$d/oCkzvuJbnXsLcSPyB58ejZCzJVxzKIMXYP749hzX3b1Xcgo.yli",
+    "idAdmin": "8TP",
+    "id": "GCN",
+    "username": "LV1423663D",
+    "password": "$2b$10$iOTJL7vao1fUPVqCN6znHOG2a477.OMAv26IbaB6auPezgVSHMMb6",
     "email": "luigi.verdi@example.com",
     "role": "docente",
     "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "XED",
-    "id": "YPU",
-    "username": "GB1012620D",
-    "password": "$2b$10$qwOoYs6UrEk2Uox3mUXzQ.JTM17DAeHoFMCFcCCtzGro1xwDPUIuq",
+    "idAdmin": "8TP",
+    "id": "MFW",
+    "username": "GB5189715D",
+    "password": "$2b$10$AtemX20r3KGFDEQfYqZPjeV/sCfksXjFlQGLreuqj4U4fKjnY3Hoi",
     "email": "giulia.bianchi@example.com",
     "role": "docente",
-    "firstLogin": true
+    "firstLogin": false
   },
   {
     "attivo": true,
-    "idAdmin": "XED",
-    "id": "QAK",
-    "username": "FN9416476D",
-    "password": "$2b$10$IiBwL8a1dNJD/k3zxg/Oweyl70XQ9OxXEnVUTp.5lMNpezJMgFxlW",
+    "idAdmin": "8TP",
+    "id": "B58",
+    "username": "FN6912024D",
+    "password": "$2b$10$exDPcN5Eob7gBrinX3D2Qu5iUjtSk7z5muXvUaPio7NW8Y/dRTegS",
     "email": "francesca.neri@example.com",
     "role": "docente",
-    "firstLogin": true
+    "firstLogin": false
   }
 ]

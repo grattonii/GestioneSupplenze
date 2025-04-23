@@ -8,9 +8,9 @@ dotenv.config();
 
 // Se il file non esiste, creiamo l'root di default
 if (!existsSync(USERS_FILE)) {
-    const hashedAdminPassword = bcrypt.hashSync("AGDagency", 10);
+    const hashedAdminPassword = bcrypt.hashSync("GDAgency", 10);
     const defaultUsers = [
-        { id: "R1", username: "AGDagency", password: hashedAdminPassword, role: "root" }
+        { id: "R1", username: "GDAgency", password: hashedAdminPassword, role: "root" }
     ];
 
     writeFileSync(USERS_FILE, JSON.stringify(defaultUsers, null, 2));
@@ -32,7 +32,7 @@ export const login = async (req, res) => {
             console.error("Errore nella lettura del file utenti:", error);
             users = [];
         }
-        const user = users.find(u => u.username === username);
+        const user = users.find(u => u.username === username || u.email === username || u.emailReferente === username);
 
         if (!user) {
             return res.status(401).json({ message: "Credenziali errate!" });

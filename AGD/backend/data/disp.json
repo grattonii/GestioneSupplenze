@@ -1,8 +1,122 @@
 [
   {
-    "id": "VS8",
+    "id": "1LT",
     "disponibilita": {
       "Lunedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          }
+        ]
+      },
+      "Martedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Mercoledì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          },
+          {
+            "fascia": "09:17 - 10:09"
+          }
+        ]
+      },
+      "Giovedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "11:16 - 12:08"
+          }
+        ]
+      },
+      "Venerdì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Sabato": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "GCN",
+    "disponibilita": {
+      "Lunedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Martedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          }
+        ]
+      },
+      "Mercoledì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "13:00 - 13:52"
+          }
+        ]
+      },
+      "Giovedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          },
+          {
+            "fascia": "11:16 - 12:08"
+          }
+        ]
+      },
+      "Venerdì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          },
+          {
+            "fascia": "11:16 - 12:08"
+          }
+        ]
+      },
+      "Sabato": {
+        "attivo": false,
+        "orari": []
+      }
+    }
+  },
+  {
+    "id": "MFW",
+    "disponibilita": {
+      "Lunedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          },
+          {
+            "fascia": "11:16 - 12:08"
+          }
+        ]
+      },
+      "Martedì": {
+        "attivo": false,
+        "orari": []
+      },
+      "Mercoledì": {
         "attivo": true,
         "orari": [
           {
@@ -13,65 +127,85 @@
           }
         ]
       },
-      "Martedì": {
+      "Giovedì": {
         "attivo": false,
         "orari": []
       },
-      "Mercoledì": {
+      "Venerdì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "11:16 - 12:08"
+          }
+        ]
+      },
+      "Sabato": {
         "attivo": true,
         "orari": [
           {
             "fascia": "10:09 - 11:01"
           }
         ]
-      },
-      "Giovedì": {
+      }
+    }
+  },
+  {
+    "id": "B58",
+    "disponibilita": {
+      "Lunedì": {
         "attivo": true,
         "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          }
+        ]
+      },
+      "Martedì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "10:09 - 11:01"
+          },
+          {
+            "fascia": "13:00 - 13:52"
+          }
+        ]
+      },
+      "Mercoledì": {
+        "attivo": true,
+        "orari": [
+          {
+            "fascia": "08:25 - 09:17"
+          },
+          {
+            "fascia": "12:08 - 13:00"
+          }
+        ]
+      },
+      "Giovedì": {
+        "attivo": false,
+        "orari": [
+          {
+            "fascia": "12:08 - 13:00"
+          },
           {
             "fascia": "13:00 - 13:52"
           }
         ]
       },
       "Venerdì": {
-        "attivo": false,
-        "orari": []
-      },
-      "Sabato": {
-        "attivo": false,
-        "orari": []
-      }
-    }
-  },
-  {
-    "id": "Y9Q",
-    "disponibilita": {
-      "Lunedì": {
-        "attivo": false,
-        "orari": []
-      },
-      "Martedì": {
         "attivo": true,
         "orari": [
           {
-            "fascia": "10:09 - 11:01"
+            "fascia": "12:08 - 13:00"
+          },
+          {
+            "fascia": "13:00 - 13:52"
           }
         ]
       },
-      "Mercoledì": {
-        "attivo": false,
-        "orari": []
-      },
-      "Giovedì": {
-        "attivo": false,
-        "orari": []
-      },
-      "Venerdì": {
-        "attivo": false,
-        "orari": []
-      },
       "Sabato": {
-        "attivo": false,
+        "attivo": true,
         "orari": []
       }
     }
