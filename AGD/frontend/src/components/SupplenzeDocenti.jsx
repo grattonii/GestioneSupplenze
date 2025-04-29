@@ -7,7 +7,7 @@ import { fetchWithRefresh } from "../utils/api";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-function SupplenzeDocenti({ rows, setRows, setDisponibilitaAccettate }) {
+function SupplenzeDocenti({ rows, setRows, setSupplenzeAccettate }) {
     const rejectSubstitution = (sub) => {
         // Rimuovi la supplenza dalla lista delle supplenze in attesa
         const updatedSubstitutions = rows.filter((s) => s.id !== sub.id);
@@ -18,7 +18,7 @@ function SupplenzeDocenti({ rows, setRows, setDisponibilitaAccettate }) {
         const dayName = new Date(date).toLocaleDateString("it-IT", { weekday: "long" }); // Ottieni il giorno della settimana
         const nuovaDisponibilita = { day: dayName, time, className };
         setDisponibilitaAccettate((prev) => [...prev, nuovaDisponibilita]);
-        alert("Disponibilità accettata!");
+        toast.success("Disponibilità accettata!", {position: "top-center"});
     };
 
     return (

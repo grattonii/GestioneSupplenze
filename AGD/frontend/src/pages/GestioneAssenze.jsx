@@ -14,7 +14,7 @@ function GestioneAssenze() {
     const token = sessionStorage.getItem("accessToken");
 
     try {
-      const response = await fetchWithRefresh("http://localhost:5000/assenze/docenti", {
+      const response = await fetchWithRefresh(`http://localhost:5000/assenze/docenti`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

@@ -103,7 +103,7 @@ function UtentiTabella({ rows, setRows }) {
     try {
       const token = sessionStorage.getItem("accessToken");
       const response = await fetchWithRefresh(`http://localhost:5000/admin/annullaUtente/${rowToDelete}`, {
-        method: "PATCH",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

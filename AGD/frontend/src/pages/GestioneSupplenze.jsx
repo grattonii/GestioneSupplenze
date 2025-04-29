@@ -43,14 +43,32 @@ function GestioneSupplenze() {
     return parsedDate.isValid(); // Se la data è valida, ritorna true
   };
 
-  const handleAddSupplenza = () => {
-    const { data, ora } = nuovaSupplenza;
+  const handleAddSupplenza = async() => {
+    const { data } = nuovaSupplenza;
 
     if (nuovaSupplenza.docente && nuovaSupplenza.classe && validateDate(data)) {
+      try {
+        const token = sessionStorage.getItem("accessToken");
+        const response = await fetchWithRefresh("http://localhost:5000/supplenze/sub", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(nuovaSupplenza),
+        });
+
+        const data = await response.json();
+
+        
+      } catch (error) {
+        console.error("Errore nella richiesta:", error);
+      }
+
       setSupplenze((prev) => [...prev, { ...nuovaSupplenza, id: Date.now() }]);
       handleCloseSupplenza();
     } else {
-      if (!nuovaSupplenza.docente || !nuovaSupplenza.classe || !data || !ora) {
+      if (!nuovaSupplenza.docente || !nuovaSupplenza.classe || !data || !nuovaSupplenza.ora) {
         toast.error("Compila tutti i campi!", { position: "top-center" });
         return;
       }
@@ -59,6 +77,8 @@ function GestioneSupplenze() {
         return;
       }
     }
+    toast.success("Supplenza aggiunta con successo!", { position: "top-center" });
+    setNuovaSupplenza({ docente: "", classe: "", data: "", ora: "", stato: "In attesa" });
   };
 
   useEffect(() => {
@@ -100,6 +120,33 @@ function GestioneSupplenze() {
   }, []);
 
   useEffect(() => {
+    const fetchSupplenze = async () => {
+      try {
+        const res = await fetchWithRefresh("http://localhost:5000/supplenze/odierne");
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore imprevisto nel caricamento delle supplenze");
+          }
+          return;
+        }
+        setSupplenze(data);
+      } catch (err) {
+        toast.error("Errore: " + err.message, { position: "top-center" });
+      }
+    };
+
+    fetchSupplenze();
+    const interval = setInterval(fetchSupplenze, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     const fetchClassi = async () => {
       try {
         const res = await fetchWithRefresh("http://localhost:5000/supplenze/classi");
@@ -115,7 +162,7 @@ function GestioneSupplenze() {
         }
       } catch (err) {
         console.error("Errore nel recupero delle classi:", err);
-        toast.error("Errore nel caricamento delle classi");
+        toast.error("Errore nel caricamento delle classi", { position: "top-center" });
       }
     };
 
@@ -138,7 +185,7 @@ function GestioneSupplenze() {
       if (!nuovaSupplenza.classe) return;
 
       const res = await fetchWithRefresh(
-        `http://localhost:5000/docenti/disponibili?data=${data}&ora=${encodeURIComponent(ora)}&classe=${encodeURIComponent(nuovaSupplenza.classe)}`
+        `http://localhost:5000/supplenze/disponibili?data=${data}&ora=${encodeURIComponent(ora)}&classe=${encodeURIComponent(nuovaSupplenza.classe)}`
       );
 
       const dataRes = await res.json();
@@ -161,7 +208,7 @@ function GestioneSupplenze() {
       <h1 className="title">Supplenze</h1>
       <h3 className="spiegazione">Gestione supplenze odierne.</h3>
 
-      <SupplenzeTable rows={supplenze} setRows={setSupplenze} fasceOrarie={fasceOrarie} />
+      <SupplenzeTable rows={supplenze} setRows={setSupplenze} fasceOrarie={fasceOrarie} setFasceOrarie={setFasceOrarie} Classi={Classi} setClassi={setClassi} />
       <div className="aggiungi-container">
         <button type="button" className="aggiungi" onClick={handleOpenSupplenza}>
           <FaPlusCircle /> Aggiungi supplenza
@@ -224,24 +271,31 @@ function GestioneSupplenze() {
                 }}
               />
             )}
-            renderOption={(props, option) => (
-              <li
-                {...props}
-                style={{
-                  fontSize: "16px", // Cambia qui la dimensione del font
-                  padding: "8px 16px",
-                }}
-              >
-                {option}
-              </li>
-            )}
+            renderOption={(props, option) => {
+              const { key, ...rest } = props; // separa la chiave dagli altri props
+              return (
+                <li
+                  key={key} // passa `key` direttamente
+                  {...rest} // tutti gli altri props vengono spalmati
+                  style={{ fontSize: "16px", padding: "8px 16px" }}
+                >
+                  {option}
+                </li>
+              );
+            }}
           />
           <Autocomplete
             disabled={!nuovaSupplenza.data || !nuovaSupplenza.ora}
             options={suggestioniDocenti}
-            getOptionLabel={(option) => typeof option === "string" ? option : option.nome}
+            getOptionLabel={(option) => `${option.nome} ${option.cognome}`}
             onChange={(e, value) => {
-              setNuovaSupplenza({ ...nuovaSupplenza, docente: value });
+              if (value) {
+                setNuovaSupplenza({
+                  ...nuovaSupplenza,
+                  docente: `${value.nome} ${value.cognome}`,
+                  id: value.id
+                });
+              }
             }}
             renderInput={(params) => (
               <TextField

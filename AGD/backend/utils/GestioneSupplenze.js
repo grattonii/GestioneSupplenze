@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync, readFileSync } from "fs";
+import { existsSync, writeFileSync, readFileSync, stat } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -124,7 +124,8 @@ export const CreazioneSub = (req) => {
                 id: supplente.id,
                 classe,
                 data: dataFormatted,
-                ora: fasce[ora] || "Orario sconosciuto"
+                ora: fasce[ora] || "Orario sconosciuto",
+                stato: "In attesa",
             });
         }
     });

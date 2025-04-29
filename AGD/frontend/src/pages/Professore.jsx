@@ -8,6 +8,7 @@ import { FaCalendarWeek, FaCalendarCheck } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SupplenzeDocenti from "../components/SupplenzeDocenti.jsx";
+import { fetchWithRefresh } from "../utils/api.js";
 
 function Professore() {
   const [schedule, setSchedule] = useState({});
@@ -15,29 +16,8 @@ function Professore() {
   const [absenceNote, setabsenceNote] = useState("");
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
-  const [disponibilitaAccettate, setDisponibilitaAccettate] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const filteredSubstitutions = [
-      { class: "3Ai", date: "24/03/2025", time: "10:00", id: 1 }, // supplenza futura
-      { class: "4Bi", date: "25/03/2025", time: "11:00", id: 2 }, // supplenza settimana successiva
-      { class: "5Ci", date: "28/03/2025", time: "12:00", id: 3 }, // supplenza questa settimana
-    ];
-
-    setSchedule({
-      "Lunedì": ["8:00 - 9:00", "10:00 - 11:00"],
-      "Martedì": ["9:00 - 10:00"],
-      "Mercoledì": ["11:00 - 12:00"],
-      "Giovedì": ["8:00 - 9:00", "10:00 - 11:00"],
-      "Venerdì": ["9:00 - 10:00"],
-    });
-
-    setSubstitutions(filteredSubstitutions); // Imposta le supplenze filtrate
-  };
+  const [disponibilita, setDisponibilita] = useState([]);
+  const [supplenzeAccettate, setSupplenzeAccettate] = useState([]);
 
   const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +31,7 @@ function Professore() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/assenze/docente", {
+      const response = await fetchWithRefresh("http://localhost:5000/assenze/docente", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,10 +56,56 @@ function Professore() {
       toast.error("Errore di rete durante l'invio della richiesta di assenza.", { position: "top-center" });
     }
   };
-  
+
+  useEffect(() => {
+    const fetchDisponibilitaAccettate = async () => {
+
+      try {
+        const response = await fetchWithRefresh(`http://localhost:5000/disp/disponibilita/${sessionStorage.getItem("accessToken")}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setDisponibilita(data.disponibilita);
+        } else if (response.status === 401) {
+          toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+          sessionStorage.removeItem("accessToken");
+        } else {
+          toast.error("Errore durante il recupero delle disponibilità accettate.", { position: "top-center" });
+        }
+      } catch (error) {
+        console.error("Errore di rete:", error);
+        toast.error("Errore di rete durante il recupero delle disponibilità accettate.", { position: "top-center" });
+      }
+    };
+
+    fetchDisponibilitaAccettate();
+  }, []);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const response = await fetchWithRefresh("http://localhost:5000/disp/calendario", {
+          method: "GET", 
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        });
+
+        if (response.ok) {
+        }}catch (error) {
+        }
+        }});
+
   return (
     <div style={{ fontFamily: "Poppins, sans-serif" }}>
-      <ToastContainer/>
+      <ToastContainer />
       <Navbar />
       <Typography variant="h3" align="center" gutterBottom className="title">
         Dashboard Professore
@@ -91,11 +117,11 @@ function Professore() {
         Calendario Disponibilità <FaCalendarWeek className="widget-icon" />
       </h2>
 
-      <WeeklySchedule schedule={schedule} disponibilita={disponibilitaAccettate} />
+      <WeeklySchedule schedule={schedule} disponibilita={disponibilita} />
 
       <h2>Accetta Disponibilità <FaCalendarCheck className="widget-icon" /></h2>
 
-      <SupplenzeDocenti rows={substitutions} setRows={setSubstitutions} setDisponibilitaAccettate={setDisponibilitaAccettate}/>
+      <SupplenzeDocenti rows={substitutions} setRows={setSubstitutions} setSupplenzeAccettate={setSupplenzeAccettate} />
 
       <h2>Richiedi Assenza</h2>
       <form className="absence-form" onSubmit={handleAbsenceSubmit}>

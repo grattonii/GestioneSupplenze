@@ -80,7 +80,7 @@ function GestioneAccount() {
         setAdminData(newAdmin); // aggiornamento con dati reali
         handleClose();
       } else {
-        alert("Errore: " + data.message);
+        toast.error("Errore: " + data.message, { position: "top-center" });
       }
     } catch (error) {
       console.error("Errore nella richiesta:", error);

@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, writeFileSync } from 'fs';
 import path from "path";
 import { fileURLToPath } from "url";
 import dayjs from "dayjs";
@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 const DISP_FILE = path.join(__dirname, "../data/disp.json");
 const DOCENTI_FILE = path.join(__dirname, "../data/docenti.json");
 const CLASSI_FILE = path.join(__dirname, "../data/classi.json");
+const SUB_FILE = path.join(__dirname, '../data/sub.json');
 
 export const Disponibili = async (req, res) => {
     const { data, ora, classe } = req.query;
@@ -52,7 +53,14 @@ export const Disponibili = async (req, res) => {
         return res.status(404).json({ error: "Nessun docente disponibile" });
     }
 
-    res.json(risultatoFinale);
+    // Restituisci solo ID, nome e cognome
+    const docentiRitorno = risultatoFinale.map(docente => ({
+        id: docente.id,
+        nome: docente.nome,
+        cognome: docente.cognome
+    }));
+
+    res.json(docentiRitorno);
 };
 
 export const getClassi = (req, res) => {
@@ -83,4 +91,50 @@ export const getClassi = (req, res) => {
         console.error('Errore durante la lettura del file classi.json:', error);
         res.status(500).json({ error: "Errore durante la lettura del file classi.json" });
     }
+};
+
+export const aggiungiSupplenza = (req, res) => {
+    const nuova = req.body;
+
+    if (!nuova || !nuova.id || !nuova.docente || !nuova.classe || !nuova.data || !nuova.ora) {
+        return res.status(400).json({ error: 'Dati mancanti' });
+    }
+
+    const supplenze = existsSync(SUB_FILE)
+        ? JSON.parse(readFileSync(SUB_FILE, 'utf8'))
+        : [];
+
+    supplenze.push(nuova);
+
+    try {
+        writeFileSync(SUB_FILE, JSON.stringify(supplenze, null, 2), 'utf8');
+        res.json({ success: true, id: nuova.id });
+    } catch (err) {
+        console.error('Errore scrittura sub.json:', err);
+        res.status(500).json({ error: 'Errore scrittura file' });
+    }
+};
+
+// Funzione per leggere solo le supplenze di oggi
+export const getSupplenzeOdierne = (req, res) => {
+    if (!existsSync(SUB_FILE)) {
+        return res.status(200).json([]);
+    }
+
+    const tutte = JSON.parse(readFileSync(SUB_FILE, 'utf8'));
+    const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
+
+    const oggi = dayjs().format("DD/MM/YYYY");
+    const odierne = tutte 
+        .filter(s => s.data === oggi)
+        .map((s) => {
+            const docente = docenti.find(d => d.id === s.id);
+            const docenteName = docente ? `${docente.nome} ${docente.cognome}` : "Docente non trovato";
+            return {
+                ...s,
+                docente: docenteName,
+            };
+        });
+
+    res.json(odierne);
 };

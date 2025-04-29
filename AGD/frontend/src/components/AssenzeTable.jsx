@@ -16,9 +16,22 @@ import { fetchWithRefresh } from "../utils/api";
 
 function AssenzeTabella({ rows, setRows }) {
   const rejectSubstitution = async(row) => {
-    // Rimuovi la supplenza dalla lista delle supplenze in attesa
-    const updatedSubstitutions = rows.filter((s) => s.idAssenza !== row.idAssenza);
-    setRows(updatedSubstitutions);
+    const response = await fetchWithRefresh(`http://localhost:5000/assenze/negata/${idAssenza}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+      
+    const data = await response.json();
+    if (data.success) {
+      // Rimuovi la supplenza dalla lista delle supplenze in attesa
+      const updatedSubstitutions = rows.filter((s) => s.idAssenza !== idAssenza);
+      setRows(updatedSubstitutions);
+    } else {
+      console.error("Errore nell'accettazione della supplenza:", data.message);
+    }
   };
 
   const handleAccept = async(idAssenza) => {

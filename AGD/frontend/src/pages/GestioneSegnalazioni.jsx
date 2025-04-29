@@ -25,7 +25,7 @@ const GestioneSegnalazioni = () => {
         try {
             const token = sessionStorage.getItem("accessToken");
             const response = await fetchWithRefresh(`http://localhost:5000/root/annullaSegnalazione`, {
-                method: "PATCH",
+                method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,

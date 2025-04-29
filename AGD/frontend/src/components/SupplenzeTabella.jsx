@@ -1,20 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Select, MenuItem, InputLabel, FormControl, Autocomplete } from "@mui/material";
 import { FaHourglassHalf, FaCheckCircle, FaTimesCircle, FaTrash } from "react-icons/fa";
 import "../styles/Tabelle.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { fetchWithRefresh } from "../utils/api";
 
 dayjs.extend(customParseFormat);
 
-function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
+function SupplenzeTabella({ rows, setRows, fasceOrarie, Classi }) {
   const [open, setOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  
+  const [suggestioniDocenti, setSuggestioniDocenti] = useState([]);
+
   // Apri il dialog con la riga selezionata
   const handleOpen = (row) => {
     setSelectedRow({ ...row }); // Copia i dati per evitare mutazioni dello stato originale
@@ -34,28 +36,58 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
 
   const validateDate = (date) => {
     // Controlla se la data è nel formato corretto usando dayjs con il formato 'DD-MM-YYYY'
-    const parsedDate = dayjs(date, "DD-MM-YYYY", true); // 'true' forza la validazione esatta del formato
+    const parsedDate = dayjs(date, "DD/MM/YYYY", true); // 'true' forza la validazione esatta del formato
     return parsedDate.isValid(); // Se la data è valida, ritorna true
   };
 
-  // Aggiorna la tabella con i nuovi valori
   const handleUpdate = () => {
-    const { data, ora } = selectedRow;
-
-    if (selectedRow.docente && selectedRow.classe && validateDate(data)) {
-      setRows((prevRows) =>
-        prevRows.map((row) => (row.id === selectedRow.id ? { ...selectedRow } : row))
-      );
-      handleClose();
+    if (!selectedRow.docente || !selectedRow.classe || !selectedRow.data || !selectedRow.ora) {
+      toast.error("Compila tutti i campi!", { position: "top-center" });
+      return;
     }
-    else {
-      if (!selectedRow.docente || !selectedRow.classe || !data || !ora) {
-        toast.error("Compila tutti i campi!", { position: "top-center" });
-        return;
+
+    if (!validateDate(selectedRow.data)) {
+      toast.error("Formato data non valido. Usa il formato DD/MM/YYYY", { position: "top-center" });
+      return;
+    }
+
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === selectedRow.id ? { ...row, ...selectedRow } : row
+      )
+    );
+
+    handleClose();
+  };
+
+  useEffect(() => {
+    if (
+      selectedRow?.data &&
+      selectedRow?.ora &&
+      selectedRow?.classe &&
+      validateDate(selectedRow?.data)
+    ) {
+      fetchDocentiDisponibili();
+    }
+  }, [open, selectedRow?.data, selectedRow?.ora, selectedRow?.classe]);
+
+  const fetchDocentiDisponibili = async () => {
+    try {
+      if (!selectedRow.classe) return;
+
+      const res = await fetchWithRefresh(
+        `http://localhost:5000/supplenze/disponibili?data=${selectedRow.data}&ora=${encodeURIComponent(selectedRow.ora)}&classe=${encodeURIComponent(selectedRow.classe)}`
+      );
+
+      const dataRes = await res.json();
+
+      if (Array.isArray(dataRes)) {
+        setSuggestioniDocenti(dataRes);
+      } else {
+        setSuggestioniDocenti([]);
       }
-      else if (!validateDate(data)) {
-        toast.error("Formato data non valido. Usa il formato DD-MM-YYYY", { position: "top-center" });
-      }
+    } catch (err) {
+      console.error("Errore nel recupero dei docenti disponibili:", err);
     }
   };
 
@@ -138,7 +170,7 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
             ) : (
               rows.map((row, index) => (
                 <TableRow
-                  key={row.id || index}
+                  key={row.id}
                   sx={{
                     display: "table",
                     tableLayout: "fixed",
@@ -174,97 +206,106 @@ function SupplenzeTabella({ rows, setRows, fasceOrarie }) {
       </TableContainer>
 
       {/* Dialog per modificare i dati */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ fontFamily: "Poppins", fontWeight: "bold", color: "#000" }}>Modifica Supplenza</DialogTitle>
+      <Dialog open={open} onClose={handleClose} fullWidth>
+        <DialogTitle sx={{ color: "black" }}>Modifica Supplenza</DialogTitle>
         <DialogContent>
-          {selectedRow && (
-            <>
-              <TextField
-                label="Docente"
-                name="docente"
-                value={selectedRow.docente || ""}
-                onChange={handleChange}
-                fullWidth
-                margin="dense"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                }}
-              />
+          <TextField
+            label="Data"
+            name="data"
+            type="text"
+            fullWidth
+            value={selectedRow?.data || ""}
+            onChange={handleChange}
+            margin="dense"
+            placeholder="DD/MM/YYYY"
+          />
 
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="ora-label" sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>
+              Fascia Oraria
+            </InputLabel>
+            <Select
+              labelId="ora-label"
+              name="ora"
+              value={selectedRow?.ora || ""}
+              onChange={handleChange}
+              sx={{
+                fontFamily: "Poppins",
+                fontSize: "16px",
+                color: "#333",
+                backgroundColor: "#f9f9f9",
+                borderRadius: "5px",
+              }}
+            >
+              {fasceOrarie.map((fascia, index) => (
+                <MenuItem key={index} value={fascia}>
+                  {fascia}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Autocomplete
+            options={Classi}
+            getOptionLabel={(option) => option}
+            value={selectedRow?.classe || ""}
+            onChange={(e, value) => {
+              handleChange({ target: { name: "classe", value } });
+            }}
+            renderInput={(params) => (
               <TextField
+                {...params}
                 label="Classe"
-                name="classe"
-                value={selectedRow.classe || ""}
-                onChange={handleChange}
                 fullWidth
                 margin="dense"
-
                 sx={{
-                  "& .MuiInputBase-root": {
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#ccc",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "5px",
                 }}
               />
+            )}
+            renderOption={(props, option) => (
+              <li
+                {...props}
+                style={{
+                  fontSize: "16px",
+                  padding: "8px 16px",
+                }}
+              >
+                {option}
+              </li>
+            )}
+          />
+          <Autocomplete
+            disabled={!selectedRow?.data || !selectedRow?.ora}
+            options={suggestioniDocenti}
+            getOptionLabel={(option) => `${option.nome} ${option.cognome}`}
+            value={selectedRow?.docente || ""}
+            onChange={(e, value) => {
+              handleChange({
+                target: { name: "docente", value: value || "" },
+              });
+            }}
+            renderInput={(params) => (
               <TextField
-                label="Data"
-                name="data"
-                type="text"
+                {...params}
+                label="Docente"
                 fullWidth
-                value={selectedRow.data}
-                onChange={handleChange}
                 margin="dense"
-                placeholder="DD-MM-YYYY"
+                helperText={
+                  !selectedRow?.data || !selectedRow?.ora
+                    ? "Inserisci prima data e fascia oraria"
+                    : ""
+                }
               />
-              <FormControl fullWidth margin="dense">
-                <InputLabel id="ora-label" sx={{ backgroundColor: "#fff", padding: "0px 10px 0px 5px" }}>Fascia Oraria</InputLabel>
-                <Select
-                  labelId="ora-label"
-                  name="ora"
-                  value={selectedRow.ora || ""}
-                  onChange={handleChange}
-                  sx={{
-                    fontFamily: "Poppins",
-                    fontSize: "16px",
-                    color: "#333",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {fasceOrarie.map((fascia, index) => (
-                    <MenuItem key={index} value={fascia}>
-                      {fascia}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </>
-          )}
+            )}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" sx={{ fontFamily: "Poppins" }} >Annulla</Button>
-          <Button onClick={handleUpdate} color="primary" sx={{ fontFamily: "Poppins" }}>Modifica</Button>
+          <Button onClick={handleClose}>Annulla</Button>
+          <Button onClick={handleUpdate}>Modifica</Button>
         </DialogActions>
       </Dialog>
 

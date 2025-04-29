@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const assenzeFilePath = path.join(__dirname, "../data/assenze.json");
 const USERS_FILE = path.join(__dirname, "../data/users.json");
+const DOCENTI_FILE = path.join(__dirname, "../data/docenti.json");
 
 function UniqueID() {
     if (!existsSync(assenzeFilePath)) return new Set();
@@ -82,7 +83,7 @@ export const assenzaDocente = (req, res) => {
             date,
             reason,
             note,
-            accettata: false,
+            accettata: undefined,
         };
 
         assenze.push(newAbsence);
@@ -96,11 +97,68 @@ export const assenzaDocente = (req, res) => {
 };
 
 export const Assenze = (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Token mancante' });
+        }
+
+        const decodedToken = jwt.verify(token, process.env.SECRET_ACCESS);
+        const id = decodedToken?.id;
+
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'ID non trovato nel token' });
+        }
+
+        if (!existsSync(USERS_FILE)) {
+            return res.status(404).json({ success: false, message: 'File utenti non trovato.' });
+        }
+
+        const utenti = JSON.parse(readFileSync(USERS_FILE));
+        const user = utenti.find(user => user.id === id);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Utente non trovato.' });
+        }
+
+        const assenze = readAssenze();
+        const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
+
+        const filteredAssenze = assenze
+            .filter((assenza) => assenza.idAdmin === id && assenza.accettata === undefined)
+            .map((assenza) => {
+                const docente = docenti.find(d => d.id === assenza.id);
+                const docenteName = docente ? `${docente.nome} ${docente.cognome}` : "Docente non trovato";
+                return {
+                    ...assenza,
+                    docente: docenteName,
+                };
+            });
+
+        res.json(filteredAssenze);
+
+    } catch (error) {
+        console.error("Errore nella decodifica del token:", error);
+        return res.status(401).json({ success: false, message: 'Token non valido' });
+    }
+};
+
+export const asssenzaNegata = (req, res) => {
+    const { idAssenza } = req.params;
     const assenze = readAssenze();
 
-    const filteredAssenze = assenze.filter((assenza) => assenza.idAdmin === req.user.id);
-    res.json(filteredAssenze);
-};
+    const assenzaIndex = assenze.findIndex((assenza) => assenza.idAssenza === idAssenza);
+
+    if (assenzaIndex === -1) {
+        return res.status(404).json({ error: "Assenza non trovata." });
+    }
+
+    assenze[assenzaIndex].accettata = false;
+    writeAssenze(assenze);
+
+    res.json({ message: "Assenza negata con successo." });
+
+}
 
 export const assenzaAccettata = (req, res) => {
     const { idAssenza } = req.params;
@@ -115,7 +173,7 @@ export const assenzaAccettata = (req, res) => {
     assenze[assenzaIndex].accettata = true;
     writeAssenze(assenze);
 
-    const result = CreazioneSub(req);  // ora non invia la risposta direttamente
+    const result = CreazioneSub(req);
     res.json({
         message: "Assenza accettata con successo.",
         ...result

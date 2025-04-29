@@ -98,7 +98,7 @@ function AdminTabella({ rows, setRows }) {
       const token = sessionStorage.getItem("accessToken");
       // Cerca il row che vogliamo eliminare dai dati originali (non serve se è solo per fetch)
       const response = await fetchWithRefresh(`http://localhost:5000/root/annullaAdmin/${id}`, {
-        method: "PATCH",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,

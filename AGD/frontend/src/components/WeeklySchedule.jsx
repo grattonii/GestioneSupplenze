@@ -97,6 +97,10 @@ const WeeklySchedule = ({ schedule, disponibilita }) => {
     return <Typography align="center">Caricamento in corso...</Typography>;
   }
 
+  console.log("fasceOrarie:", fasceOrarie);
+  console.log("giorni:", giorni);
+  console.log("disponibilita:", disponibilita);
+
   return (
     <TableContainer
       component={Paper}
@@ -157,7 +161,7 @@ const WeeklySchedule = ({ schedule, disponibilita }) => {
             <TableRow key={hourIndex}>
               <TableCell sx={{ textAlign: "center", fontWeight: "bold" }}>{hour}</TableCell>
               {giorni.map((giorno, dayIndex) => {
-                const isAccepted = disponibilita[giorno]?.orari.includes(hour);
+                const isAccepted = disponibilita[giorno]?.attivo && disponibilita[giorno]?.orari.some(o => o.fascia === hour);
                 return (
                   <TableCell
                     key={dayIndex}
