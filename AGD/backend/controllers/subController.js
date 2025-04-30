@@ -117,7 +117,7 @@ export const aggiungiSupplenza = (req, res) => {
 
 // Funzione per leggere solo le supplenze di oggi
 export const getSupplenzeOdierne = (req, res) => {
-    if (!existsSync(SUB_FILE)) {
+    if (!existsSync(SUB_FILE) || !existsSync(DOCENTI_FILE)) {
         return res.status(200).json([]);
     }
 
@@ -125,7 +125,7 @@ export const getSupplenzeOdierne = (req, res) => {
     const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
 
     const oggi = dayjs().format("DD/MM/YYYY");
-    const odierne = tutte 
+    const odierne = tutte
         .filter(s => s.data === oggi)
         .map((s) => {
             const docente = docenti.find(d => d.id === s.id);
@@ -138,3 +138,50 @@ export const getSupplenzeOdierne = (req, res) => {
 
     res.json(odierne);
 };
+
+export const getStoricoSupplenze = (req, res) => {
+    if (!existsSync(SUB_FILE) || !existsSync(DOCENTI_FILE)) {
+        return res.status(200).json([]);
+    }
+
+    const tutte = JSON.parse(readFileSync(SUB_FILE, 'utf8'));
+    const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
+
+    const oggi = dayjs().format("DD/MM/YYYY");
+    const storiche = tutte
+        .filter(s => dayjs(s.data, "DD/MM/YYYY").isBefore(oggi))
+        .map((s) => {
+            const docente = docenti.find(d => d.id === s.id);
+            const docenteName = docente ? `${docente.nome} ${docente.cognome}` : "Docente non trovato";
+            return {
+                ...s,
+                docente: docenteName,
+            };
+        });
+
+    res.json(storiche);
+};
+
+export const getSupplenzeDocente = (req, res) => {
+    const { id } = req.params;
+
+    if (!existsSync(SUB_FILE) || !existsSync(DOCENTI_FILE)) {
+        return res.status(200).json([]);
+    }
+
+    const tutte = JSON.parse(readFileSync(SUB_FILE, 'utf8'));
+    const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
+
+    const supplenzeDocente = tutte
+        .filter(s => s.id === id)
+        .map((s) => {
+            const docente = docenti.find(d => d.id === s.id);
+            const docenteName = docente ? `${docente.nome} ${docente.cognome}` : "Docente non trovato";
+            return {
+                ...s,
+                docente: docenteName,
+            };
+        });
+
+    res.json(supplenzeDocente);
+}

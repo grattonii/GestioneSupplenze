@@ -88,20 +88,33 @@ function Professore() {
   }, []);
 
   useEffect(() => {
-    const fetchSchedule = async () => {
+    const fetchSupplenze = async () => {
+      const token = sessionStorage.getItem("accessToken");
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const idDocente = decodedToken.id;
+
       try {
-        const response = await fetchWithRefresh("http://localhost:5000/disp/calendario", {
-          method: "GET", 
+        const response = await fetchWithRefresh(`http://localhost:5000/supplenze/sub/${idDocente}`, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
-        }}catch (error) {
+          const data = await response.json();
+          setSubstitutions(data.supplenze);
         }
-        }});
+      } catch (error) {
+        console.error("Errore di rete:", error);
+        toast.error("Errore di rete durante il recupero delle supplenze.", { position: "top-center" });
+      }
+    }
+
+    fetchSupplenze();
+
+  });
 
   return (
     <div style={{ fontFamily: "Poppins, sans-serif" }}>

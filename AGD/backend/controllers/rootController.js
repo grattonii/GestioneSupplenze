@@ -7,6 +7,10 @@ const PROFESSORS_FILE = "./data/docenti.json";
 const TIME_TABLE_FILE = "./data/orario.json";
 const DISPONIBILITA_FILE = "./data/disp.json";
 const SEGNALE_FILE = './data/segnalazioni.json';
+const ORARI_FILE = "./data/orariDocenti.json";
+const SUB_FILE = "./data/sub.json";
+const ASSENZE_FILE = "./data/assenze.json";
+const CLASSI_FILE = "./data/classi.json";
 
 function generateUniqueID() {
   if (!existsSync(USERS_FILE)) return new Set();
@@ -193,6 +197,30 @@ export const EliminaAdmin = async (req, res) => {
     const orari = JSON.parse(readFileSync(TIME_TABLE_FILE));
     const updatedOrari = orari.filter(orario => orario.idAdmin !== id);
     writeFileSync(TIME_TABLE_FILE, JSON.stringify(updatedOrari, null, 2));
+  }
+
+  if (existsSync(CLASSI_FILE)) {
+    const classiData = JSON.parse(readFileSync(CLASSI_FILE));
+    const updatedClassi = classiData.filter(classe => classe.idAdmin !== id);
+    writeFileSync(CLASSI_FILE, JSON.stringify(updatedClassi, null, 2));
+  }
+
+  if (existsSync(ORARI_FILE)) {
+    const orariDocenti = JSON.parse(readFileSync(ORARI_FILE));
+    const updatedOrariDocenti = orariDocenti.filter(orario => !professoriAssociati.includes(orario.id));
+    writeFileSync(ORARI_FILE, JSON.stringify(updatedOrariDocenti, null, 2));
+  }
+
+  if (existsSync(SUB_FILE)) {
+    const subData = JSON.parse(readFileSync(SUB_FILE));
+    const updatedSub = subData.filter(sub => !professoriAssociati.includes(sub.id));
+    writeFileSync(SUB_FILE, JSON.stringify(updatedSub, null, 2));
+  }
+
+  if (existsSync(ASSENZE_FILE)) {
+    const assenzeData = JSON.parse(readFileSync(ASSENZE_FILE));
+    const updatedAssenze = assenzeData.filter(assenza => !professoriAssociati.includes(assenza.id));
+    writeFileSync(ASSENZE_FILE, JSON.stringify(updatedAssenze, null, 2));
   }
 
   return res.status(200).json({

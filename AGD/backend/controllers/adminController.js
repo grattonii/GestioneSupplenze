@@ -8,7 +8,9 @@ const __dirname = path.dirname(__filename);
 const PROFESSORS_FILE = path.join(__dirname,"../data/docenti.json");
 const USERS_FILE = path.join(__dirname,"../data/users.json");
 const DISP_FILE = path.join(__dirname,"../data/disp.json");
-
+const ORARI_FILE = path.join(__dirname,"../data/orariDocenti.json");
+const SUB_FILE = path.join(__dirname,"../data/sub.json");
+const ASSENZE_FILE = path.join(__dirname,"../data/assenze.json");
 
 export const UtentiEsistenti = async (req, res) => {
     if (!existsSync(USERS_FILE)) return res.status(404).json({ success: false, message: "Nessun utente trovato." });
@@ -85,6 +87,36 @@ export const EliminaUtente = async (req, res) => {
         if (dispIndex !== -1) {
             disp.splice(dispIndex, 1); // Rimuoviamo la disponibilità dall'array
             writeFileSync(DISP_FILE, JSON.stringify(disp, null, 2));
+        }
+    }
+
+    if (existsSync(ORARI_FILE)) {
+        const orari = JSON.parse(readFileSync(ORARI_FILE));
+        const orariIndex = orari.findIndex(o => o.id === id);
+
+        if (orariIndex !== -1) {
+            orari.splice(orariIndex, 1); // Rimuoviamo l'orario dall'array
+            writeFileSync(ORARI_FILE, JSON.stringify(orari, null, 2));
+        }
+    }
+
+    if (existsSync(SUB_FILE)) {
+        const sub = JSON.parse(readFileSync(SUB_FILE));
+        const subIndex = sub.findIndex(s => s.id === id);
+
+        if (subIndex !== -1) {
+            sub.splice(subIndex, 1); // Rimuoviamo il supplente dall'array
+            writeFileSync(SUB_FILE, JSON.stringify(sub, null, 2));
+        }
+    }
+
+    if (existsSync(ASSENZE_FILE)) {
+        const assenze = JSON.parse(readFileSync(ASSENZE_FILE));
+        const assenzeIndex = assenze.findIndex(a => a.id === id);
+
+        if (assenzeIndex !== -1) {
+            assenze.splice(assenzeIndex, 1); // Rimuoviamo l'assenza dall'array
+            writeFileSync(ASSENZE_FILE, JSON.stringify(assenze, null, 2));
         }
     }
 

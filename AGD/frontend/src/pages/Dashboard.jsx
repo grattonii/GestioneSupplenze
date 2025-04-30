@@ -14,6 +14,10 @@ import { fetchWithRefresh } from "../utils/api";
 function Dashboard() {
   const navigate = useNavigate();
   const [assenze, setAssenze] = useState([]);
+  const [supplenzeOggi, setSupplenzeOggi] = useState([]);
+  const [storicosupplenze, setStoricoSupplenze] = useState([]);
+  const [reportSupplenze, setReportSupplenze] = useState([]);
+  const [disponibilitaDocenti, setDisponibilitaDocenti] = useState([]);
 
   useEffect(() => {
     fetchAssenze();
@@ -40,31 +44,59 @@ function Dashboard() {
     }
   };
 
-  const supplenzeOggi = 5;
-  const supplenzeInAttesa = 2;
-  const ultimeSupplenze = [
-    { docente: "Mario Rossi", classe: "3A", data: "31/03/2025", ora: "08:00-09:00", stato: "Confermato" },
-    { docente: "Luca Bianchi", classe: "2B", data: "31/03/2025", ora: "09:00-10:00", stato: "In attesa" },
-    { docente: "Anna Verdi", classe: "1C", data: "31/03/2025", ora: "10:00-11:00", stato: "Confermato" },
-  ];
+  useEffect(() => {
+    const fetchSupplenze = async () => {
+      try {
+        const res = await fetchWithRefresh("http://localhost:5000/supplenze/odierne");
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore imprevisto nel caricamento delle supplenze");
+          }
+          return;
+        }
+        setSupplenzeOggi(data);
+      } catch (err) {
+        toast.error("Errore: " + err.message, { position: "top-center" });
+      }
+    };
 
-  const docentiDisponibiliOggi = ["Mario Rossi", "Luca Bianchi", "Anna Verdi"];
-  const orePagateMese = 120;
-  const mediaOreDisponibilita = 30;
+    fetchSupplenze();
+    const interval = setInterval(fetchSupplenze, 5000);
 
-  const disponibilitaDocenti = [
-    { docente: "Mario Rossi", giorno: "Martedì", ora: "08:00-09:00" },
-    { docente: "Luca Bianchi", giorno: "Martedì", ora: "09:00-10:00" },
-    { docente: "Anna Verdi", giorno: "Martedì", ora: "10:00-11:00" },
-  ];
+    return () => clearInterval(interval);
+  }, []);
 
-  const reportSupplenze = [
-    { docente: "Mario Rossi", disponibilità: "8", pagamento: "100" },
-    { docente: "Luca Bianchi", disponibilità: "6", pagamento: "80" },
-    { docente: "Anna Verdi", disponibilità: "10", pagamento: "120" },
-  ];
+  useEffect(() => {
+    const fetchStorico = async () => {
+      try {
+        const res = await fetchWithRefresh("http://localhost:5000/supplenze/storico");
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          if (data?.error === "Token non valido o scaduto") {
+            toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+            sessionStorage.removeItem("accessToken");
+            navigate("/");
+          } else {
+            toast.error("Errore imprevisto nel caricamento delle supplenze");
+          }
+          return;
+        }
+        setStoricoSupplenze(data);
+      } catch (err) {
+        toast.error("Errore: " + err.message, { position: "top-center" });
+      }
+    };
 
-  const totaleDocentiDisponibili = docentiDisponibiliOggi.length;
+    fetchStorico();
+    const interval = setInterval(fetchStorico, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -84,12 +116,13 @@ function Dashboard() {
                   GESTIONE SUPPLENZE <FaChalkboardTeacher className="widget-icon" />
                 </h2>
                 <h3>Gestisci tutte le supplenze con facilità</h3>
-                <p>Supplenze assegnate oggi: {supplenzeOggi}</p>
-                <p>Supplenze in attesa: {supplenzeInAttesa}</p>
+                <ul className="widget-list">
+                  <li>Supplenze assegnate oggi: {supplenzeOggi.length}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultime 3 supplenze:</h3>
-                <SupplenzeTabellaMini rows={ultimeSupplenze} />
+                <SupplenzeTabellaMini rows={supplenzeOggi} />
               </div>
             </motion.div>
 
@@ -104,8 +137,9 @@ function Dashboard() {
                   DISPONIBILITÀ DOCENTI<FaUsers className="widget-icon" />
                 </h2>
                 <h3>Verifica la disponibilità dei docenti</h3>
-                <p>Totale docenti disponibili: {totaleDocentiDisponibili}</p>
-                <p>Docenti disponibili oggi: {docentiDisponibiliOggi.join(", ")}</p>
+                <ul className="widget-list">
+                  <li>Disponibilità totali: {disponibilitaDocenti.length}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultime 3 disponibilità:</h3>
@@ -123,6 +157,7 @@ function Dashboard() {
                 <h2 className="titolo">
                   GESTIONE ASSENZE <FaRegCalendarAlt className="widget-icon" />
                 </h2>
+                <h3>Gestisci le richieste di assenza</h3>
                 <ul className="widget-list">
                   <li>Richieste di assenza totali: {assenze.length}</li>
                   <li>Richieste in attesa: {assenze.filter(assenza => !assenza.accettata).length}</li>
@@ -130,7 +165,7 @@ function Dashboard() {
               </div>
               <div>
                 <h3>Ultime 3 richieste:</h3>
-                <AssenzeTabellaMini rows={assenze.slice(0,3)} />
+                <AssenzeTabellaMini rows={assenze.slice(0, 3)} />
               </div>
             </motion.div>
 
@@ -145,10 +180,14 @@ function Dashboard() {
                   STORICO SUPPLENZE <FaClipboardList className="widget-icon" />
                 </h2>
                 <h3>Consulta lo storico delle supplenze</h3>
+                <ul className="widget-list">
+                  <li>Totale supplenze: {storicosupplenze.length}</li>
+                  <li>Ultima supplenza: {storicosupplenze[0]?.data}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultime 3 supplenze:</h3>
-                <StoricoTabellaMini rows={ultimeSupplenze} />
+                <StoricoTabellaMini rows={storicosupplenze} />
               </div>
             </motion.div>
 
@@ -163,8 +202,10 @@ function Dashboard() {
                   REPORT <FaChartBar className="widget-icon" />
                 </h2>
                 <h3>Visualizza i report dettagliati</h3>
-                <p>Totale ore pagate nel mese: {orePagateMese}</p>
-                <p>Media ore di disponibilità per docente: {mediaOreDisponibilita}</p>
+                <ul className="widget-list">
+                  <li>Report totali: {reportSupplenze.length}</li>
+                  <li>Ultimo report: {reportSupplenze[0]?.data}</li>
+                </ul>
               </div>
               <div>
                 <h3>Ultimi 3 report:</h3>
