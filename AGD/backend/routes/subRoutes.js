@@ -9,6 +9,6 @@ router.get("/classi", authenticateToken, getClassi);
 router.post("/sub", authenticateToken, aggiungiSupplenza);
 router.get("/odierne", authenticateToken, getSupplenzeOdierne);
 router.get("/storico", authenticateToken, getStoricoSupplenze);
-router.get("/sub/:id", authenticateToken, getSupplenzeDocente);
+router.get("/sub/:idDocente", authenticateToken, getSupplenzeDocente);
 
 export default router;

@@ -8,6 +8,12 @@ function GestioneAssenze() {
 
   useEffect(() => {
     fetchAssenze();
+
+    const interval = setInterval(() => {
+      fetchAssenze();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchAssenze = async () => {

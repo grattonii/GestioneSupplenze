@@ -7,7 +7,9 @@ import { fetchWithRefresh } from "../utils/api";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-function SupplenzeDocenti({ rows, setRows, setSupplenzeAccettate }) {
+function SupplenzeDocenti({ rows, setRows}) {
+    const [supplenzeAccettate, setSupplenzeAccettate] = useState([]);
+
     const rejectSubstitution = (sub) => {
         // Rimuovi la supplenza dalla lista delle supplenze in attesa
         const updatedSubstitutions = rows.filter((s) => s.id !== sub.id);
@@ -40,7 +42,7 @@ function SupplenzeDocenti({ rows, setRows, setSupplenzeAccettate }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.length === 0 ? (
+                        {Array.isArray(rows) && rows.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={6} sx={{ textAlign: "center", padding: 3, fontFamily: "Poppins" }}>
                                     <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
@@ -51,9 +53,9 @@ function SupplenzeDocenti({ rows, setRows, setSupplenzeAccettate }) {
                         ) : (
                             rows.map((sub) => (
                                 <TableRow key={sub.id}>
-                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.class}</TableCell>
-                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.date}</TableCell>
-                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.time}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.classe}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.data}</TableCell>
+                                    <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>{sub.ora}</TableCell>
                                     <TableCell sx={{ textAlign: "center", fontFamily: "Poppins", fontWeight: "bold" }}>
                                         <IconButton
                                             color="success"

@@ -11,13 +11,12 @@ import SupplenzeDocenti from "../components/SupplenzeDocenti.jsx";
 import { fetchWithRefresh } from "../utils/api.js";
 
 function Professore() {
-  const [schedule, setSchedule] = useState({});
+  const [schedule, setSchedule] = useState([]);
   const [substitutions, setSubstitutions] = useState([]);
   const [absenceNote, setabsenceNote] = useState("");
   const [absenceReason, setAbsenceReason] = useState("");
   const [absenceDate, setAbsenceDate] = useState("");
   const [disponibilita, setDisponibilita] = useState([]);
-  const [supplenzeAccettate, setSupplenzeAccettate] = useState([]);
 
   const handleAbsenceSubmit = async (e) => {
     e.preventDefault();
@@ -104,7 +103,8 @@ function Professore() {
 
         if (response.ok) {
           const data = await response.json();
-          setSubstitutions(data.supplenze);
+          console.log("Dati ricevuti:", data);
+          setSubstitutions(data);
         }
       } catch (error) {
         console.error("Errore di rete:", error);
@@ -132,9 +132,9 @@ function Professore() {
 
       <WeeklySchedule schedule={schedule} disponibilita={disponibilita} />
 
-      <h2>Accetta Disponibilità <FaCalendarCheck className="widget-icon" /></h2>
+      <h2>Accetta Supplenze <FaCalendarCheck className="widget-icon" /></h2>
 
-      <SupplenzeDocenti rows={substitutions} setRows={setSubstitutions} setSupplenzeAccettate={setSupplenzeAccettate} />
+      <SupplenzeDocenti rows={substitutions} setRows={setSubstitutions}/>
 
       <h2>Richiedi Assenza</h2>
       <form className="absence-form" onSubmit={handleAbsenceSubmit}>

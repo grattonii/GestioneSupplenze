@@ -76,20 +76,20 @@ export const CreazioneSub = (req) => {
     const docenti = JSON.parse(readFileSync(DOCENTI_FILE, "utf8"));
     const orario = JSON.parse(readFileSync(ORARIO_FILE, "utf8"));
     const orariDocenti = JSON.parse(readFileSync(ORARIDOCENTI_FILE, "utf8"));
+    const supplenzeEsistenti = existsSync(SUB_FILE)
+        ? JSON.parse(readFileSync(SUB_FILE, "utf8"))
+        : [];
 
     const assenza = assenze.find(a => a.idAssenza === idAssenza);
-
-    if (!assenza) {
-        return { error: "Assenza non trovata" };
-    }
+    if (!assenza) return { error: "Assenza non trovata" };
 
     const { id, idAdmin, date } = assenza;
     const giorno = formattaGiorno(date);
     const dataFormatted = new Date(date).toLocaleDateString("it-IT");
+
     const orarioDocenteAssente = orariDocenti.find(o => o.id === id);
-    if (!orarioDocenteAssente) {
-        return { error: "Orario del docente assente non trovato" };
-    }
+    if (!orarioDocenteAssente) return { error: "Orario del docente assente non trovato" };
+
     const oreGiornaliere = orarioDocenteAssente.giorni[giorno];
     const oreBuca = oreGiornaliere
         .map((classe, i) => ({ ora: i, classe }))
@@ -102,7 +102,7 @@ export const CreazioneSub = (req) => {
     if (!adminData) return { error: "Orari admin non trovati" };
 
     const fasce = calcolaFasceOrarie(adminData.orari);
-    const supplenze = [];
+    const nuoveSupplenze = [];
 
     oreBuca.forEach(({ ora, classe }) => {
         const disponibili = disp
@@ -120,22 +120,36 @@ export const CreazioneSub = (req) => {
             candidati[Math.floor(Math.random() * candidati.length)];
 
         if (supplente) {
-            supplenze.push({
+            const nuovaSupplenza = {
                 id: supplente.id,
                 classe,
                 data: dataFormatted,
                 ora: fasce[ora] || "Orario sconosciuto",
-                stato: "In attesa",
-            });
+                stato: "In attesa"
+            };
+
+            const normalizzaOra = (ora) => ora.replace(/\s/g, ""); // rimuove spazi
+
+            const esiste = supplenzeEsistenti.some(s =>
+                s.id === nuovaSupplenza.id &&
+                s.classe === nuovaSupplenza.classe &&
+                s.data === nuovaSupplenza.data &&
+                normalizzaOra(s.ora) === normalizzaOra(nuovaSupplenza.ora)
+            );
+
+
+            if (!esiste) {
+                nuoveSupplenze.push(nuovaSupplenza);
+            }
         }
     });
 
-    // Salvataggio su file sub.json
-    writeFileSync(SUB_FILE, JSON.stringify(supplenze, null, 2));
+    const aggiornato = [...supplenzeEsistenti, ...nuoveSupplenze];
+    writeFileSync(SUB_FILE, JSON.stringify(aggiornato, null, 2), "utf8");
 
     return {
         success: true,
         message: "Supplenze create e salvate con successo",
-        supplenze
+        supplenze: nuoveSupplenze
     };
 };

@@ -163,7 +163,7 @@ export const getStoricoSupplenze = (req, res) => {
 };
 
 export const getSupplenzeDocente = (req, res) => {
-    const { id } = req.params;
+    const { idDocente } = req.params;
 
     if (!existsSync(SUB_FILE) || !existsSync(DOCENTI_FILE)) {
         return res.status(200).json([]);
@@ -173,7 +173,7 @@ export const getSupplenzeDocente = (req, res) => {
     const docenti = JSON.parse(readFileSync(DOCENTI_FILE));
 
     const supplenzeDocente = tutte
-        .filter(s => s.id === id)
+        .filter(s => s.id === idDocente)
         .map((s) => {
             const docente = docenti.find(d => d.id === s.id);
             const docenteName = docente ? `${docente.nome} ${docente.cognome}` : "Docente non trovato";
