@@ -5,21 +5,7 @@ import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
 
 function DisponibilitaDocenti() {
-  const [disponibilita, setDisponibilita] = useState([
-    {
-      id: 1,
-      docente: "Mario Rossi",
-      giorno: "Lunedi",
-      ora: "08:00-09:00",
-    },
-    {
-      id: 2,
-      docente: "Luca Bianchi",
-      giorno: "Martedi",
-      ora: "09:00-10:00",
-    },
-  ]);
-
+  const [disponibilita, setDisponibilita] = useState([]);
   const [newDisponibilita, setNewDisponibilita] = useState({
     docente: "",
     giorno: "",

@@ -10,6 +10,8 @@ import DisponibilitaTabellaMini from "../components/DisponibilitaTabellaMini.jsx
 import AssenzeTabellaMini from "../components/AssenzeTabellaMini.jsx";
 import StoricoTabellaMini from "../components/StoricoTabella.jsx";
 import { fetchWithRefresh } from "../utils/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -93,13 +95,11 @@ function Dashboard() {
     };
 
     fetchStorico();
-    const interval = setInterval(fetchStorico, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
     <>
+      <ToastContainer />
       <div className="dashboard">
         <Navbar />
         <h1 className="dashboard-title">DASHBOARD</h1>

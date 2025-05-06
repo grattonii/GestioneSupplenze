@@ -1,38 +1,43 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import StoricoTable from "../components/StoricoTabella.jsx";
 import Navbar from "../components/Navbar2.jsx";
 import "../styles/Pagine.css";
+import { fetchWithRefresh } from "../utils/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function storicoSupplenze() {
-  const [supplenze, setSupplenze] = useState([
-    {
-      id: 1,
-      docente: "Mario Rossi",
-      classe: "3A",
-      data: "12/03/2025",
-      ora: "08:00-09:00",
-      stato: "Accettata",
-    },
-    {
-      id: 2,
-      docente: "Luca Bianchi",
-      classe: "2B",
-      data: "13/03/2025",
-      ora: "09:00-10:00",
-      stato: "Rifiutata",
-    },
-    {
-      id: 3,
-      docente: "Michele Tarantino",
-      classe: "4Bi",
-      data: "14/03/2025",
-      ora: "09:00-10:00",
-      stato: "In attesa",
-    },
-  ]);
+  const [supplenze, setSupplenze] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const fetchStorico = async () => {
+        try {
+          const res = await fetchWithRefresh("http://localhost:5000/supplenze/storico");
+          const data = await res.json();
+          if (!Array.isArray(data)) {
+            if (data?.error === "Token non valido o scaduto") {
+              toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+              sessionStorage.removeItem("accessToken");
+              navigate("/");
+            } else {
+              toast.error("Errore imprevisto nel caricamento delle supplenze");
+            }
+            return;
+          }
+          setSupplenze(data);
+        } catch (err) {
+          toast.error("Errore: " + err.message, { position: "top-center" });
+        }
+      };
+  
+      fetchStorico();
+    }, []);
 
   return (
     <div>
+      <ToastContainer />
       <Navbar />
       <h1 className="title">Storico Supplenze</h1>
       <h3 className="spiegazione">Visualizza lo storico delle supplenze</h3>
