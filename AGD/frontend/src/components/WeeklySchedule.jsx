@@ -172,7 +172,14 @@ const WeeklySchedule = ({ schedule, disponibilita }) => {
                       fontWeight: "bold",
                     }}
                   >
-                    {isAccepted ? "Disponibile" : "Non disponibile"}
+                    {isAccepted ? (
+                      <>
+                        Disponibile
+                        <div>Classe: {disponibilita[giorno]?.classe || "N/A"}</div>
+                      </>
+                    ) : (
+                      "Non disponibile"
+                    )}
                   </TableCell>
                 );
               })}
