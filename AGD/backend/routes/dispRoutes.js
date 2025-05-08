@@ -7,5 +7,6 @@ const router = express.Router();
 // Route per salvare le disponibilità, con autenticazione se necessaria
 router.post("/disponibilita", authenticateToken, salvaDisponibilita);
 router.get("/disponibilita/:token", authenticateToken, getDisponibilita);
+router.get("/orarioDocente/:token", authenticateToken, );
 
 export default router;

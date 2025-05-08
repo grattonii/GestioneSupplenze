@@ -8,6 +8,7 @@ import "../styles/Accesso.css";
 function GestioneDisponibilita() {
   const [disponibilita, setDisponibilita] = useState({});
   const [fasceOrarie, setFasceOrarie] = useState([]);
+  const [orario, setOrario] = useState([]);
   const [giorni, setGiorni] = useState([]); // Aggiungi questa riga per definire 'giorni'
   const [loading, setLoading] = useState(true); // Stato per il caricamento
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -86,6 +87,34 @@ function GestioneDisponibilita() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) {
+      toast.warn("Sessione scaduta, effettua nuovamente il login!", { position: "top-center" });
+      navigate("/");
+      return;
+    }
+
+    const fetchOrarioDocente = () => {
+      fetch(`http://localhost:5000/disp/orarioDocente/${token}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            setOrario(data);
+          }
+        })
+        .catch((err) => {
+          console.error("Errore nel caricamento dell'orario del docente:", err);
+        });
+    };
+
+    fetchOrarioDocente();
+  });
+
   const mappaGiorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
   const espandiGiorniLezione = (range) => {
@@ -105,21 +134,40 @@ function GestioneDisponibilita() {
     });
   };
 
-  const aggiungiOrario = (giorno) => {
-    const orariGiorno = disponibilita[giorno].orari;
-
-    const esisteOrarioNonCompilato = orariGiorno.some(orario => orario.fascia === "");
-
-    if (esisteOrarioNonCompilato) {
-      toast.warning("Completa la fascia oraria esistente prima di aggiungerne un'altra.", { position: "top-center" });
-      return;
+  const checkDisponibilita = (giorno, fascia) => {
+    const orarioDocente = orario.find(o => o.giorni[giorno]);
+    if (!orarioDocente) {
+      toast.error(`Orario non trovato per il giorno ${giorno}`, { position: "top-center" });
+      return false;
     }
-
+  
+    const fasciaOraria = orarioDocente.giorni[giorno][fascia - 1]; // Accedi alla fascia oraria per il giorno e fascia
+    
+    if (fasciaOraria === "X") {
+      return true; // Disponibile
+    } else {
+      toast.error(`Impossibile impostare la disponibilità: il docente ha già la classe ${fasciaOraria} alla fascia ${fascia} di ${giorno}.`, { position: "top-center" });
+      return false; // Non disponibile
+    }
+  };
+  
+  
+  // Uso della funzione durante l'aggiunta/modifica dell'orario di disponibilità
+  const aggiungiOrario = (giorno, fascia) => {
+    // Verifica se il docente è disponibile in quella fascia oraria
+    const disponibile = checkDisponibilita(giorno, fascia);
+    
+    if (!disponibile) {
+      return; // Se non è disponibile, non aggiungere la fascia oraria
+    }
+  
+    // Aggiungi la fascia oraria (se disponibile)
+    const orariGiorno = disponibilita[giorno].orari;
     setDisponibilita({
       ...disponibilita,
       [giorno]: {
         ...disponibilita[giorno],
-        orari: [...orariGiorno, { fascia: "" }],
+        orari: [...orariGiorno, { fascia: `${fascia}° ora` }],
       },
     });
   };
